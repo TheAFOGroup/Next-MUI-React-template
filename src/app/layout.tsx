@@ -5,7 +5,7 @@ import * as React from 'react';
 
 import { SITE_CONFIG } from '@/constants';
 import { GLOBAL_STYLES } from '@/styles';
-
+export const runtime = "edge";
 // !STARTERCONF Change these default meta
 // !STARTERCONF Look at @/constant/config to change them
 export const metadata: Metadata = {
