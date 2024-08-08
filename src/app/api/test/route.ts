@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 
+export const runtime = 'edge';
 // Test local NextJs API /api/test method GET with parameters
 export const GET = async (req: Request) => {
   const { searchParams } = new URL(req.url);
