@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npx @cloudflare/next-on-pages",
-    "start": "npx wrangler pages dev .vercel/output/static",
+    "build": "next build",
+    "start": "next start",
     "lint": "next lint",
     "lint:fix": "eslint src --fix && yarn format",
     "lint:strict": "eslint --max-warnings=0 src",
@@ -16,7 +16,9 @@
     "format:check": "prettier -c .",
     "postbuild": "next-sitemap --config next-sitemap.config.js",
     "prepare": "husky install",
-    "api": "wrangler pages dev ."
+    "api": "wrangler pages dev .",
+    "cloudflare-build": "npx @cloudflare/next-on-pages",
+    "cloudflare-start": " npx wrangler pages dev .vercel/output/static"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
