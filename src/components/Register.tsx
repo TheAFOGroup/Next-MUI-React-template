@@ -10,22 +10,16 @@ interface Field {
 }
 
 const Register: React.FC = () => {
-  const [fields, setFields] = useState<Field[]>([
-    { label: 'Name', type: 'text' },
-    { label: 'Email', type: 'email' },
-    { label: 'Organization', type: 'text' },
-    { label: 'Surname', type: 'text' },
-    { label: 'Field', type: 'text' },
-  ]);
+  const [fields, setFields] = useState<Field[]>();
 
   const [formValues, setFormValues] = useState<{ [key: string]: string }>({});
   const [agree, setAgree] = useState(false);
 
   useEffect(() => {
     // Fetch API result and update fields state
-    fetch('https://api.example.com/fields')
+    fetch('/api/test')
       .then((response) => response.json())
-      .then((data) => setFields((prevFields) => [...prevFields, ...data]));
+      .then((data) => setFields(data.data));
   }, []);
 
   const handleInputChange = (label: string, value: string) => {
@@ -47,7 +41,7 @@ const Register: React.FC = () => {
       justifyContent='center'
       alignItems='center'
     >
-      {fields.map((field, index) => (
+      {fields?.map((field, index) => (
         <Grid item xs key={index}>
           <TextField
             key={index}
