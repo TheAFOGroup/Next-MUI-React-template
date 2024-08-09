@@ -1,0 +1,7 @@
+name = "d1-test"
+pages_build_output_dir = "./dist"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "d1-deni"
+database_id = "3a814d86-5af9-49bc-9615-f68fc64b4b70"
