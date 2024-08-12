@@ -49,6 +49,6 @@
     "node"
   ],
   "types": [
-    "@cloudflare/workers-types/2024-07-29"
+    "@cloudflare/workers-types"
   ]
 }
