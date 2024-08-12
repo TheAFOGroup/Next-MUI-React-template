@@ -1,5 +1,9 @@
 export const runtime = 'edge';
-
+export interface Env {
+  // If you set another name in wrangler.toml as the value for 'binding',
+  // replace "DB" with the variable name you defined.
+  DB: D1Database;
+}
 import { getRequestContext } from "@cloudflare/next-on-pages";
 import { NextResponse } from 'next/server';
 
