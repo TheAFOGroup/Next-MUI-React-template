@@ -1,10 +1,17 @@
 export const runtime = 'edge';
-//import { getRequestContext } from "@cloudflare/next-on-pages";
+import { D1Database } from '@cloudflare/workers-types'
 import { NextResponse } from 'next/server';
 
-export const GET = async () => {
-  //const db = getRequestContext().env.DB
-  const stmt = (process.env.DB as any)?.prepare('SELECT * FROM form_fields').all()
+export interface Env {
+  DB: D1Database;
+}
+import { getRequestContext } from '@cloudflare/next-on-pages'
 
-  return NextResponse.json(JSON.stringify(stmt));
-};
+
+export async function GET() {
+  const { env } = getRequestContext()
+  const myDb = env.DB;
+  const data: any = await myDb.prepare('SELECT * FROM form_fields').all();
+
+  return NextResponse.json(data.results);
+}

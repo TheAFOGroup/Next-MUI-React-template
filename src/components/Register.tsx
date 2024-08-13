@@ -19,7 +19,7 @@ const Register: React.FC = () => {
     // Fetch API result and update fields state
     fetch('/api/test')
       .then((response) => response.json())
-      .then((data) => setFields(data.data));
+      .then((data) => setFields(data as Field[]));
   }, []);
 
   const handleInputChange = (label: string, value: string) => {
