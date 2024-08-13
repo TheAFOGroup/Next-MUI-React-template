@@ -1,14 +1,11 @@
 import { NextResponse } from 'next/server';
 export const runtime = 'edge';
 export const GET = async () => {
-  return NextResponse.json({
-    data: [
-      { label: 'Name', type: 'text' },
-      { label: 'Email', type: 'email' },
-      { label: 'Organization', type: 'text' },
-      { label: 'Surname', type: 'text' },
-      { label: 'Field', type: 'text' },
-    ],
-    method: 'GET'
-  });
+  return NextResponse.json([
+    { field_name: 'Name', field_type: 'text' },
+    { field_name: 'Email', field_type: 'email' },
+    { field_name: 'Organization', field_type: 'text' },
+    { field_name: 'Surname', field_type: 'text' },
+    { field_name: 'Field', field_type: 'text' },
+  ]);
 };
