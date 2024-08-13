@@ -38,7 +38,6 @@ const AppHome = async () => {
 
   return (
     <Box>
-      <SignIn />
       <Register />
     </Box>
   );

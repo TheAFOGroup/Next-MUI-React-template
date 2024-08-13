@@ -1,5 +1,5 @@
 'use client';
-import { Button, Checkbox, TextField } from '@mui/material';
+import { Button, Checkbox, FormControl, TextField, Box } from '@mui/material';
 //import Container from '@mui/material';
 //import { FormControl } from '@mui/material';
 import Grid from '@mui/material/Grid';
@@ -12,7 +12,7 @@ interface Field {
 const Register: React.FC = () => {
   const [fields, setFields] = useState<Field[]>();
 
-  const [formValues, setFormValues] = useState<{ [key: string]: string }>({});
+  const [formValues, setFormValues] = useState<string[]>([]);
   const [agree, setAgree] = useState(false);
 
   useEffect(() => {
@@ -25,13 +25,27 @@ const Register: React.FC = () => {
   const handleInputChange = (label: string, value: string) => {
     setFormValues((prevValues) => ({
       ...prevValues,
-      [label]: value,
+      value,
     }));
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    console.log(JSON.stringify({ ...formValues, agree }));
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('Submitting form:', formValues);
+    try {
+      const response = await fetch('/api/submitForm', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formValues)
+      });
+
+      const result = await response.json();
+      console.log(result);
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
   };
 
   return (
@@ -41,22 +55,28 @@ const Register: React.FC = () => {
       justifyContent='center'
       alignItems='center'
     >
-      {fields?.map((field, index) => (
-        <Grid item xs key={index}>
-          <TextField
-            key={index}
-            label={field.field_name}
-            type={field.field_type}
-            fullWidth
-            margin='normal'
-            onChange={(e) => handleInputChange(field.field_name, e.target.value)}
-          />
+      <Box component='form' onSubmit={handleSubmit} noValidate alignItems='center'>
+        {fields?.map((field, index) => (
+          <Grid item xs key={index}>
+            <TextField
+              key={index}
+              label={field.field_name}
+              type={field.field_type}
+              fullWidth
+              margin='normal'
+              onChange={(e) => handleInputChange(field.field_name, e.target.value)}
+            />
+          </Grid>
+        ))}
+        <Grid item xs>
+          <Checkbox checked={agree} onChange={(e) => setAgree(e.target.checked)} />
         </Grid>
-      ))}
-      <Checkbox checked={agree} onChange={(e) => setAgree(e.target.checked)} />
-      <Button variant='contained' color='primary' type='submit'>
-        Register
-      </Button>
+        <Grid item xs>
+          <Button variant='contained' color='primary' type='submit'>
+            Register
+          </Button>
+        </Grid>
+      </Box>
     </Grid>
   );
 };

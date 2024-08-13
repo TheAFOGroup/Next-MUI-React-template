@@ -8,3 +8,14 @@ create table form_fields (
     created_at timestamp not null default current_timestamp,
     updated_at timestamp not null default current_timestamp
 );
+
+create table responses(
+    id serial primary key,
+    response text not null
+);
+
+INSERT INTO form_fields (form_id, field_name, field_type, field_order)
+VALUES 
+(1, 'Name', 'text', 1),
+(1, 'Email', 'email', 2),
+(1, 'Age', 'number', 3);
