@@ -13,14 +13,20 @@ export async function POST(req: NextRequest) {
   const { env } = getRequestContext()
   const myDb = env.DB;
 
-
   try {
     // Get JSON data from the POST request body
     const data = await req.json();
-    console.log('Data received:', data);
+    // Assuming data is an array of objects with { Field, Value }
+    const entriesArray = Array.from((data as any[]).entries()).map(([key, value]: [any, string]) => (value));
+    console.log(entriesArray)
+    // Construct the SQL statement
+    let stmt = "INSERT INTO responses (response) VALUES ";
+    const values = entriesArray.map(entry => `('${entry.Value}')`).join(", ");
+    stmt += values + ";";
+
     // Process the data as needed
-    const res = await myDb.prepare('INSERT INTO responses (response) VALUES (?);')
-      .bind((data as any).response).run();
+    console.log('Executing SQL statement:', stmt);
+    const res = await myDb.prepare(stmt).run();
 
     // Send a response back to the client
     return NextResponse.json({ message: 'Data received successfully', data, res });

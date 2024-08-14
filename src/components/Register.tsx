@@ -5,14 +5,15 @@ import { Button, Checkbox, FormControl, TextField, Box } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import React, { useEffect, useState } from 'react';
 interface Field {
+
   field_name: string;
   field_type: string;
 }
 
 const Register: React.FC = () => {
-  const [fields, setFields] = useState<Field[]>();
+  const [fields, setFields] = useState<Field[]>();;
 
-  const [formValues, setFormValues] = useState<string[]>([]);
+  const [formValues, setFormValues] = useState<Map<string, string>>(new Map());
   const [agree, setAgree] = useState(false);
 
   useEffect(() => {
@@ -23,14 +24,15 @@ const Register: React.FC = () => {
   }, []);
 
   const handleInputChange = (label: string, value: string) => {
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      value,
-    }));
+    setFormValues((prevValues: Map<string, string>) => {
+      prevValues.set(label, value);
+      return prevValues;
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const entriesArray = Array.from(formValues.entries()).map(([key, value]) => ({ Field: key, Value: value }));
     console.log('Submitting form:', formValues);
     try {
       const response = await fetch('/api/submitForm', {
@@ -38,7 +40,7 @@ const Register: React.FC = () => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(formValues)
+        body: JSON.stringify(entriesArray)
       });
 
       const result = await response.json();

@@ -1,6 +1,8 @@
 -- Migration number: 0001 	 2024-08-12T08:14:43.040Z
+
+
 create table form_fields (
-    id serial primary key,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     form_id integer not null,
     field_name varchar(255) not null,
     field_type varchar(255) not null,
@@ -10,7 +12,7 @@ create table form_fields (
 );
 
 create table responses(
-    id serial primary key,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     response text not null
 );
 
