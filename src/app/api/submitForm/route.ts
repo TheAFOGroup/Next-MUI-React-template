@@ -1,7 +1,7 @@
 export const runtime = 'edge';
 import { D1Database } from '@cloudflare/workers-types'
 import { NextRequest, NextResponse } from 'next/server';
-
+import { SubmitForm } from '@/app/api/submitForm/types';
 export interface Env {
   DB: D1Database;
 }
@@ -16,12 +16,14 @@ export async function POST(req: NextRequest) {
   try {
     // Get JSON data from the POST request body
     const data = await req.json();
-    // Assuming data is an array of objects with { Field, Value }
-    const entriesArray = Array.from((data as any[]).entries()).map(([key, value]: [any, string]) => (value));
-    console.log(entriesArray)
+    console.log('Received data:', data);
+    // Assuming data is an array of objects with { key, value }
+    const entriesArray = (data as SubmitForm[]).map(({ Field, Value }) => `${Value}`);
+    console.log(entriesArray);
+
     // Construct the SQL statement
     let stmt = "INSERT INTO responses (response) VALUES ";
-    const values = entriesArray.map(entry => `('${entry.Value}')`).join(", ");
+    const values = entriesArray.map(value => `('${value}')`).join(", ");
     stmt += values + ";";
 
     // Process the data as needed
