@@ -2,6 +2,7 @@ import { Box } from '@mui/material';
 
 import Register from '@/components/Register';
 import SignIn from '@/components/Signin';
+import MediaGrid from '@/components/events/MediaGrid';
 
 //import { PageParams } from '@/types';
 /*
@@ -38,7 +39,7 @@ const AppHome = async () => {
 
   return (
     <Box>
-      <Register />
+      <MediaGrid />
     </Box>
   );
 };
