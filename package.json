@@ -1,5 +1,5 @@
 {
-  "name": "nextjs-materia-mui-typescript-hook-form-scaffold-boilerplate-starter",
+  "name": "template",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -15,7 +15,13 @@
     "format": "prettier -w .",
     "format:check": "prettier -c .",
     "postbuild": "next-sitemap --config next-sitemap.config.js",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "api": "wrangler pages dev .",
+    "cloudflare-start": " npx wrangler pages dev .vercel/output/static",
+    "apply-d1-remote": "wrangler d1 migrations apply template-demo --remote",
+    "pages:build": "npx @cloudflare/next-on-pages",
+    "preview": "npm run pages:build && wrangler pages dev",
+    "deploy": "npm run pages:build && wrangler pages deploy"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -23,15 +29,20 @@
     "@hookform/resolvers": "^3.3.1",
     "@mui/icons-material": "^5.14.9",
     "@mui/material": "^5.14.10",
+    "@next/env": "^14.2.5",
+    "@types/node": "^22.2.0",
     "dayjs": "^1.11.10",
     "next": "^14.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.46.2",
     "react-icons": "^4.10.1",
+    "wrangler": "^3.70.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@cloudflare/next-on-pages": "^1.13.2",
+    "@cloudflare/workers-types": "^4.20240806.0",
     "@commitlint/cli": "^16.3.0",
     "@commitlint/config-conventional": "^16.2.4",
     "@svgr/webpack": "^8.0.1",
@@ -53,15 +64,16 @@
     "next-sitemap": "^2.5.28",
     "postcss": "^8.4.26",
     "prettier": "^2.8.8",
-    "typescript": "^4.9.5"
+    "typescript": "^4.9.5",
+    "vercel": "^35.2.4"
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": [
-      "eslint --max-warnings=0",
       "prettier -w"
     ],
     "**/*.{json,css,scss,md,webmanifest}": [
       "prettier -w"
     ]
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

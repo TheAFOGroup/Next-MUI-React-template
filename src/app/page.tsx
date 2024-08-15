@@ -1,9 +1,10 @@
-import Homepage from '@/components/Homepage';
+import { Box } from '@mui/material';
 
-import { getApiResponse } from '@/utils/shared/get-api-response';
+import Register from '@/components/Register';
+import SignIn from '@/components/Signin';
 
-import { NpmData, PageParams } from '@/types';
-
+//import { PageParams } from '@/types';
+/*
 const loadDataFromApi = async (slug?: string) => {
   if (slug === 'testError500') {
     throw new Error('This is mock a ssr 500 test error');
@@ -28,16 +29,17 @@ const loadDataFromApi = async (slug?: string) => {
     nextJsNpmData,
   };
 };
+*/
+//const AppHome = async ({ searchParams }: PageParams) => {
 
-const AppHome = async ({ searchParams }: PageParams) => {
-  const slug = searchParams?.slug;
-  const { reactNpmData, nextJsNpmData } = await loadDataFromApi(slug);
+const AppHome = async () => {
+  //const slug = searchParams?.slug;
+  //const { reactNpmData, nextJsNpmData } = await loadDataFromApi(slug);
 
   return (
-    <Homepage
-      reactVersion={reactNpmData?.version}
-      nextJsVersion={nextJsNpmData?.version}
-    />
+    <Box>
+      <Register />
+    </Box>
   );
 };
 

@@ -1,0 +1,11 @@
+name = "next-mui-react-template"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = ".vercel/output/static"
+compatibility_date = "2024-08-12"
+
+
+
+[[d1_databases]]
+binding = "DB" # i.e. available in your Worker on env.DB
+database_name = "demo2"
+database_id = "1150353f-e1c1-4326-a9cf-34ca66c52a5f"
