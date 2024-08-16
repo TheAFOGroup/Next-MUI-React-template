@@ -13,6 +13,7 @@ create table form_fields (
 
 create table responses(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    form_field_id integer not null,
     response text not null
 );
 

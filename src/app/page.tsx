@@ -1,8 +1,6 @@
 import { Box } from '@mui/material';
 
-import Register from '@/components/Register';
-import SignIn from '@/components/Signin';
-import MediaGrid from '@/components/events/MediaGrid';
+import { ScrollCard } from '@/components/events/ScrollCard';
 
 //import { PageParams } from '@/types';
 /*
@@ -39,7 +37,8 @@ const AppHome = async () => {
 
   return (
     <Box>
-      <MediaGrid />
+
+      <ScrollCard></ScrollCard>
     </Box>
   );
 };
