@@ -1,8 +1,8 @@
 import { Box } from '@mui/material';
 
-import ScrollCard from '@/components/events/ScrollCard';
-import Register from '@/components/Register';
 import MediaGrid from '@/components/events/MediaGrid';
+import ScrollCard from '@/components/events/Scrollcards/ScrollCard';
+import Register from '@/components/Register';
 
 //import { PageParams } from '@/types';
 /*
