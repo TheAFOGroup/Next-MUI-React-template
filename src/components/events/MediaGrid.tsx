@@ -1,9 +1,11 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import MediaCard from './MediaCard';
-import { Speaker } from '@/app/api/getSpeakers/types';
 import { Grid } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+
+import { Speaker } from '@/app/api/getSpeakers/types';
+
+import MediaCard from './MediaCard';
 
 const MediaGrid: React.FC = () => {
   const [speakers, setSpeakers] = useState<Speaker[]>([]);

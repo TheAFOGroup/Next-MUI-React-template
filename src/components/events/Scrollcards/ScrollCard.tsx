@@ -1,18 +1,18 @@
 "use client";
-import React, { useState, useEffect } from 'react';
-import {
-  ScrollMenu,
-  VisibilityContext,
-  type publicApiType,
-} from 'react-horizontal-scrolling-menu';
-import MediaCard from './MediaCard';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import IconButton from '@mui/material/IconButton';
+import React from 'react';
+import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu';
+
+import usePrevious from '@/components/events/Scrollcards/usePrevious';
+
 import { Speaker } from '@/app/api/getSpeakers/types';
-import styled from 'styled-jss';
-import { useIntersectionObserver } from 'usehooks-ts';
+
+import MediaCard from './MediaCardScroll';
 
 const OnScreenContext = React.createContext(true);
-
-type publicApiType = typeof publicApiType;
+type scrollVisibilityApiType = React.ContextType<typeof VisibilityContext>;
 
 
 const dummyMediaCards: Speaker[] = [
@@ -118,130 +118,83 @@ const dummyMediaCards: Speaker[] = [
   },
 ]
 
-export const ScrollCard = () => {
-  const { isIntersecting: isVisible, ref } = useIntersectionObserver({
-    threshold: 1,
-  });
+function ScrollCard() {
+  const [items, setItems] = React.useState(dummyMediaCards);
+
+  const itemsPrev = usePrevious(items);
+  const apiRef = React.useRef({} as scrollVisibilityApiType);
+  React.useEffect(() => {
+    if (items.length > itemsPrev?.length) {
+      apiRef.current?.scrollToItem?.(
+        apiRef.current?.getItemElementById(items.slice(-1)?.[0]?.id)
+        // same as
+        // document.querySelector(`[data-key='${items.slice(-1)?.[0]?.id}']`)
+      );
+    }
+  }, [items, itemsPrev]);
   return (
-    <div>
-      <div ref={ref}>
-        <NoScrollbar>
-          <OnScreenContext.Provider value={isVisible}>
-
-            <ScrollMenu
-              LeftArrow={LeftArrow}
-              RightArrow={RightArrow}
-              onWheel={onWheel}
-            >
-              {dummyMediaCards.map((speaker: Speaker) => (<MediaCard key={speaker.event_speaker_id} speaker={speaker} />))}
-            </ScrollMenu>
-          </OnScreenContext.Provider>
-        </NoScrollbar>
-      </div>
-
-      <div style={{ height: '300vh', backgroundColor: 'aqua', opacity: 0.2 }}>
-        filler
-      </div>
-    </div >
+    <ScrollMenu
+      LeftArrow={LeftArrow}
+      RightArrow={RightArrow}
+      onWheel={onWheel}
+      apiref={apiRef}
+    >
+      {dummyMediaCards.map((speaker: Speaker) => (<MediaCard key={speaker.event_speaker_id} speaker={speaker} />))}
+    </ScrollMenu>
   );
 };
 
-const NoScrollbar = styled('div')({
-  '& .react-horizontal-scrolling-menu--scroll-container::-webkit-scrollbar': {
-    display: 'none',
-  },
-  '& .react-horizontal-scrolling-menu--scroll-container': {
-    scrollbarWidth: 'none',
-    '-ms-overflow-style': 'none',
-  },
-});
-
+export default ScrollCard;
 
 function LeftArrow() {
-  const visibility = React.useContext<publicApiType>(VisibilityContext);
+  const { isFirstItemVisible, scrollPrev } = React.useContext(VisibilityContext);
   //const isFirstItemVisible = visibility.useIsVisible('first', true);
-  const isFirstItemVisible = true;
-
-  const isOnScreen = React.useContext(OnScreenContext);
-  const [disabled, setDisabled] = React.useState(isFirstItemVisible);
-  React.useEffect(() => {
-    if (isOnScreen) {
-      setDisabled(isFirstItemVisible);
-    }
-  }, [isOnScreen, isFirstItemVisible]);
-
+  // const isFirstItemVisible = true;
+  /*
+    const isOnScreen = React.useContext(OnScreenContext);
+    const [disabled, setDisabled] = React.useState(isFirstItemVisible);
+  
+    React.useEffect(() => {
+      if (isOnScreen) {
+        setDisabled(isFirstItemVisible);
+      }
+    }, [isOnScreen, isFirstItemVisible]);
+    */
   return (
-    <Arrow
-      disabled={disabled}
-      onClick={() => visibility.scrollPrev()}
-      testId="left-arrow"
+    <IconButton
+      disabled={isFirstItemVisible}
+      onClick={() => scrollPrev()}
     >
-      Left
-    </Arrow>
+      <ArrowBackIosNewIcon />
+    </IconButton>
+
   );
 }
 
 function RightArrow() {
-  const visibility = React.useContext<publicApiType>(VisibilityContext);
-  //const isLastItemVisible = visibility.useIsVisible('last', false);
-  const isLastItemVisible = true;
-
-  const isOnScreen = React.useContext(OnScreenContext);
-  const [disabled, setDisabled] = React.useState(isLastItemVisible);
-  React.useEffect(() => {
-    if (isOnScreen) {
-      setDisabled(isLastItemVisible);
-    }
-  }, [isOnScreen, isLastItemVisible]);
-
+  const { isFirstItemVisible, scrollNext } = React.useContext(VisibilityContext);
+  // isLastItemVisible = visibility.scrollNext('last', false);
+  //const isLastItemVisible = true;
+  /*
+    const isOnScreen = React.useContext(OnScreenContext);
+    const [disabled, setDisabled] = React.useState(isLastItemVisible);
+    React.useEffect(() => {
+      if (isOnScreen) {
+        setDisabled(isLastItemVisible);
+      }
+    }, [isOnScreen, isLastItemVisible]);
+  */
   return (
-    <Arrow
-      disabled={disabled}
-      onClick={() => visibility.scrollNext()}
-      testId="right-arrow"
+    <IconButton
+      disabled={isFirstItemVisible}
+      onClick={() => scrollNext()}
     >
-      Right
-    </Arrow>
+      <ArrowForwardIosIcon />
+    </IconButton>
   );
 }
 
-function Arrow({
-  children,
-  disabled,
-  onClick,
-  className,
-  testId,
-}: {
-  children: React.ReactNode;
-  disabled: boolean;
-  onClick: VoidFunction;
-  className?: string;
-  testId: string;
-}) {
-  return (
-    <ArrowButton
-      disabled={disabled}
-      onClick={onClick}
-      className={'arrow' + `-${className}`}
-      data-testid={testId}
-    >
-      {children}
-    </ArrowButton>
-  );
-}
-const ArrowButton = styled('button')({
-  cursor: 'pointer',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  marginBottom: '2px',
-  opacity: (props: any) => (props.disabled ? '0' : '1'),
-  userSelect: 'none',
-  borderRadius: '6px',
-  borderWidth: '1px',
-});
-
-function onWheel(apiObj: publicApiType, ev: React.WheelEvent): void {
+function onWheel(apiObj: scrollVisibilityApiType, ev: React.WheelEvent): void {
   // NOTE: no good standart way to distinguish touchpad scrolling gestures
   // but can assume that gesture will affect X axis, mouse scroll only Y axis
   // of if deltaY too small probably is it touchpad

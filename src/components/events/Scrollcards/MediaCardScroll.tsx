@@ -11,9 +11,19 @@ interface MediaCardProps {
   speaker: Speaker;
 }
 
-const MediaCard: React.FC<MediaCardProps> = ({ speaker, }) => {
+const MediaCard: React.FC<MediaCardProps> = ({ speaker }) => {
+
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card sx={{
+      maxWidth: 345,
+      margin: '0 10px',
+      width: '200px',
+      userSelect: 'none',
+      overflow: 'hidden',
+      height: '100%',
+    }}
+
+    >
       <CardMedia
         component="img"
         sx={{ height: 140 }}
@@ -24,7 +34,7 @@ const MediaCard: React.FC<MediaCardProps> = ({ speaker, }) => {
         <Typography gutterBottom variant="h5" component="div">
           {speaker.name}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography gutterBottom variant="body2" color="text.secondary" >
           {speaker.bio}
         </Typography>
       </CardContent>
@@ -32,7 +42,7 @@ const MediaCard: React.FC<MediaCardProps> = ({ speaker, }) => {
         <Button size="small">Share</Button>
         <Button size="small">Learn More</Button>
       </CardActions>
-    </Card>
+    </Card >
   );
 }
 
