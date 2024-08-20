@@ -1,48 +1,25 @@
 import { Box } from '@mui/material';
+import type { AppProps } from "next/app"
+import { SessionProvider } from "next-auth/react"
 
-import MediaGrid from '@/components/events/MediaGrid';
-import ScrollCard from '@/components/events/Scrollcards/ScrollCard';
-import Register from '@/components/Register';
+import { SignIn } from '@/components/auth/signinButton';
+import { SignOut } from '@/components/auth/signoutButton';
+import { auth } from "./api/auth/[...nextauth]/route"
 
-//import { PageParams } from '@/types';
-/*
-const loadDataFromApi = async (slug?: string) => {
-  if (slug === 'testError500') {
-    throw new Error('This is mock a ssr 500 test error');
-  }
 
-  // Fetch & cache data from 2 remote APIs test
-  const [reactNpmData, nextJsNpmData] = await Promise.all([
-    getApiResponse<NpmData>({
-      apiEndpoint: 'https://registry.npmjs.org/react/latest',
-      revalidate: 60 * 60 * 24, // 24 hours cache
-      timeout: 5000, // 5 seconds
-    }),
-    getApiResponse<NpmData>({
-      apiEndpoint: 'https://registry.npmjs.org/next/latest',
-      revalidate: 0, // no cache
-      timeout: 5000, // 5 seconds
-    }),
-  ]);
+const AppHome = async ({ Component, pageProps }: AppProps) => {
+  const session = await auth();
 
-  return {
-    reactNpmData,
-    nextJsNpmData,
-  };
-};
-*/
-//const AppHome = async ({ searchParams }: PageParams) => {
-
-const AppHome = async () => {
+  //const { session, ...restPageProps } = pageProps;
   //const slug = searchParams?.slug;
   //const { reactNpmData, nextJsNpmData } = await loadDataFromApi(slug);
-
   return (
+    //<SessionProvider session={pageProps?.session}>
     <Box>
-      <MediaGrid></MediaGrid>
-      <Register></Register>
-      <ScrollCard></ScrollCard>
+      {JSON.stringify(session)}
+      {session ? (<SignOut />) : (<SignIn />)}
     </Box>
+    // </SessionProvider>
   );
 };
 

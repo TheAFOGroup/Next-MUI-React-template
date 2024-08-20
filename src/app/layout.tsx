@@ -1,3 +1,4 @@
+export const runtime = 'edge'
 import { Container } from '@mui/material';
 import GlobalStyles from '@mui/material/GlobalStyles';
 import { Metadata } from 'next';
