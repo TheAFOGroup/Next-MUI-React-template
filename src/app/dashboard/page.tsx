@@ -1,10 +1,12 @@
-import type { AppProps } from "next/app"
-import { SessionProvider } from "next-auth/react"
-import { useSession } from "next-auth/react"
-import { auth } from "../api/auth/[...nextauth]/route"
-// {session?.data?.user?.email}
-const Dashboard: React.FC<AppProps> = async () => {
+//import { useSession } from "next-auth/react";
+import { auth } from '../../../auth';
+
+const Dashboard = async () => {
   const session = await auth();
+
+  if (!session) {
+    return <p>You must be logged in to view this page.</p>;
+  }
 
   return (
     <h1>

@@ -1,4 +1,4 @@
-import { signOut } from "../../app/api/auth/[...nextauth]/route"
+import { signOut } from "../../../auth"
 import { Button } from "@mui/material"
 
 export function SignOut() {
