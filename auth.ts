@@ -7,7 +7,7 @@ import Credentials from "next-auth/providers/credentials"
 import { encode, decode } from 'next-auth/jwt';
 import { User } from 'next-auth';
 import { env } from "process";
-
+import { getRequestContext } from "@cloudflare/next-on-pages";
 
 type credentials = Record<string, CredentialInput>;
 type CredentialInput = {
@@ -15,10 +15,10 @@ type CredentialInput = {
   type?: string;
   placeholder?: string;
 };
+
 export interface Env {
   DB: D1Database;
 }
-
 export const { handlers, signIn, signOut, auth } = NextAuth({
   // Configure one or more authentication providers
   providers: [
@@ -56,7 +56,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     })
 
   ],
-  adapter: D1Adapter(env.DB),
+  adapter: D1Adapter(() => {
+    const { env } = getRequestContext()
+    const myDb = env.DB;
+    return myDb;
+  }),
   session: {
     strategy: 'jwt',
   },
