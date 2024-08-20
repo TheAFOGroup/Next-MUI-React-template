@@ -9,6 +9,7 @@ import { User } from 'next-auth';
 import { env } from "process";
 import { getRequestContext } from "@cloudflare/next-on-pages";
 
+
 type credentials = Record<string, CredentialInput>;
 type CredentialInput = {
   label?: string;
@@ -56,11 +57,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     })
 
   ],
-  adapter: D1Adapter(() => {
-    const { env } = getRequestContext()
-    const myDb = env.DB;
-    return myDb;
-  }),
+  adapter: D1Adapter(process.env.DB),
   session: {
     strategy: 'jwt',
   },
