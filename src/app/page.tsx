@@ -10,9 +10,9 @@ const AppHome = async () => {
   return (
     <SessionProvider>
       <Box>
-        {JSON.stringify(session)}
+        session={JSON.stringify(session)}
         {session ? <SignOut /> : <SignIn />}
-        {JSON.stringify(process.env.DB)}
+        db={JSON.stringify(process.env.DB)}
       </Box>
     </SessionProvider>
 
