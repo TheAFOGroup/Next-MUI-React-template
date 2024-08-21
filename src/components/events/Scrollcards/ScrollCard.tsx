@@ -8,7 +8,7 @@ import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu';
 
 import usePrevious from '@/components/events/Scrollcards/usePrevious';
 
-import { Speaker } from '@/app/api/getSpeakers/types';
+import { Speaker } from '@/app/api/events/getSpeakers/types';
 
 import MediaCard from './MediaCardScroll';
 

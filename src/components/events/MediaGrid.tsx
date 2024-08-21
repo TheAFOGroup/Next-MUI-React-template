@@ -3,11 +3,15 @@
 import { Grid } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
-import { Speaker } from '@/app/api/getSpeakers/types';
+import { Speaker } from '@/app/api/events/getSpeakers/types';
 
 import MediaCard from './MediaCard';
 
-const MediaGrid: React.FC = () => {
+interface MediaGridProp {
+  eventId: string
+}
+
+const MediaGrid: React.FC<MediaGridProp> = ({ eventId }) => {
   const [speakers, setSpeakers] = useState<Speaker[]>([]);
 
   useEffect(() => {

@@ -6,7 +6,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { Speaker } from '@/app/api/getSpeakers/types';
+import { Speaker } from '@/app/api/events/getSpeakers/types';
 interface MediaCardProps {
   speaker: Speaker;
 }

@@ -1,15 +1,17 @@
 export const runtime = 'edge';
 import { D1Database } from '@cloudflare/workers-types'
-import { NextRequest, NextResponse } from 'next/server';
-import { SubmitForm } from '@/app/api/submitForm/types';
-import { Speaker } from './types';
+import { NextResponse } from 'next/server';
+
+import { Event } from './types';
 export interface Env {
   DB: D1Database;
 }
 import { getRequestContext } from '@cloudflare/next-on-pages'
 
 
-export async function GET(req: NextRequest) {
+export async function GET(request: Request) {
+  const url = new URL(request.url);
+  const eventId = url.searchParams.get('event_id'); // Get the 'event_id' parameter
 
   const { env } = getRequestContext()
   const myDb = env.DB;
@@ -21,10 +23,15 @@ export async function GET(req: NextRequest) {
     // Assuming data is an array of objects with { key, value }
 
     // Construct the SQL statement
-    const stmt = "select * from events_speaker where event_id = 1; ";
+
+    let stmt = "select * from events ";
+    if (eventId != null) {
+      stmt += "where event_id =" + eventId + ";"
+    }
 
     // Process the data as needed
-    const res = await myDb.prepare(stmt).all<Speaker[]>();
+
+    const res = await myDb.prepare(stmt).all<Event[]>();
 
     // Send a response back to the client
     return NextResponse.json(res.results);
