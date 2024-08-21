@@ -3,6 +3,11 @@ compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = ".vercel/output/static"
 compatibility_date = "2024-08-12"
 
+[[d1_databases]]
+binding = "DB" # i.e. available in your Worker on env.DB
+database_name = "nextjs-template"
+database_id = "9df130c4-4a23-4539-9c29-27bdfe9aac4e"
+
 [vars]
 AUTH_SECRET="noNpl/fUOUmBStiNn1BT2F9OP9gO/WW6L7DYAcvA710="
 AUTH_TRUST_HOST="localhost:8788"
