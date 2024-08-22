@@ -5,27 +5,42 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import IconButton from '@mui/material/IconButton';
 import React, { useEffect, useState } from 'react';
 import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu';
+import { redirect } from 'next/navigation'
 
 import usePrevious from '@/components/events/Scrollcards/usePrevious';
 
 import { Speaker } from '@/app/api/events/getSpeakers/types';
 
 import MediaCard from './MediaCardScroll';
+import { Loading } from '@/components/Loading';
+
 
 type ScrollVisibilityApiType = React.ContextType<typeof VisibilityContext>;
 
-function ScrollCard() {
-  const [items, setSpeakers] = useState<Speaker[]>([]);
+interface ScrollCardsProp {
+  eventId: string
+}
 
-  useEffect(() => {
-    fetch('/api/getSpeakers')
-      .then(response => response.json())
-      .then((data) => setSpeakers(data as Speaker[]))
-      .catch(error => console.error(error));
-  }, []);
+const ScrollCards: React.FC<ScrollCardsProp> = ({ eventId }) => {
+  const [items, setSpeakers] = useState<Speaker[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const itemsPrev = usePrevious(items);
   const apiRef = React.useRef<ScrollVisibilityApiType | null>(null);
+
+
+  useEffect(() => {
+    fetch('/api/events/getSpeakers?event_id=' + eventId)
+      .then(response => response.json())
+      .then((data) => {
+        setSpeakers(data as Speaker[])
+        setLoading(false)
+        if ((data as Speaker[]).length === 0) {
+          redirect('/404');
+        }
+      })
+      .catch(error => console.error(error));
+  }, []);
 
   useEffect(() => {
     if (items.length > (itemsPrev?.length || 0) && apiRef.current) {
@@ -38,6 +53,14 @@ function ScrollCard() {
       }
     }
   }, [items, itemsPrev]);
+
+
+  if (loading) {
+    return (
+      <Loading />
+    )
+  }
+
 
   return (
     <ScrollMenu
@@ -53,7 +76,7 @@ function ScrollCard() {
   );
 }
 
-export default ScrollCard;
+export default ScrollCards;
 
 function LeftArrow() {
   /*const { isFirstItemVisible, scrollPrev } = React.useContext(VisibilityContext);
@@ -88,10 +111,11 @@ function onWheel(apiObj: ScrollVisibilityApiType, ev: React.WheelEvent): void {
     ev.stopPropagation();
     return;
   }
-
-  if (ev.deltaY < 0) {
-    apiObj.scrollNext();
-  } else {
-    apiObj.scrollPrev();
-  }
+  /*
+    if (ev.deltaY < 0) {
+      apiObj.scrollNext();
+    } else {
+      apiObj.scrollPrev();
+    }
+      */
 }

@@ -1,1 +1,1 @@
-//declare module 'react-horizontal-scrolling-menu';
+declare module 'react-horizontal-scrolling-menu';

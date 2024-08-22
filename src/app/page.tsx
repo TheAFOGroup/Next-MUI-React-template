@@ -4,6 +4,7 @@ import { SignOut } from '@/components/auth/signoutButton';
 import { SessionProvider } from "next-auth/react";
 import { auth } from '../../auth';
 import Register from '@/components/Register';
+import { SignUp } from '@/components/auth/signUpButton';
 
 const AppHome = async () => {
   const session = await auth();
@@ -14,7 +15,7 @@ const AppHome = async () => {
     <SessionProvider>
       <Box>
         session={JSON.stringify(session)}
-        {session ? <SignOut /> : <SignIn />}
+        {session ? <SignOut /> : <div><SignIn /><SignUp /></div>}
         <Register></Register>
       </Box>
     </SessionProvider>
