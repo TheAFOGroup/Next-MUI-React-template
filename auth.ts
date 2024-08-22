@@ -6,8 +6,6 @@ import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import { encode, decode } from 'next-auth/jwt';
 import { User } from 'next-auth';
-import { env } from "process";
-import { getRequestContext } from "@cloudflare/next-on-pages";
 
 
 type credentials = Record<string, CredentialInput>;
@@ -35,22 +33,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           return null;
         }
 
-        const { email, password } = credentials;      /*
-        let user = null
-
-        // logic to salt and hash password
-        const pwHash = credentials?.password
-
-        // logic to verify if the user exists
-        user = await getUserFromDb(credentials?.email, pwHash)
-
-        if (!user) {
-          // No user found, so this is their first attempt to login
-          // meaning this is also the place you could do registration
-          throw new Error("User not found.")
-        }
-*/
-        // return user object with their profile data
+        const { email, password } = credentials;
         return { email: email } as User;
       }
       ,
@@ -61,13 +44,5 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   session: {
     strategy: 'jwt',
   },
-  jwt: { encode, decode },
-  /*pages: {
-    signIn: '/auth/signin',
-    signOut: '/auth/signout',
-    error: '/auth/error', // Error code passed in query string as ?error=
-    verifyRequest: '/auth/verify-request', // (used for check email message)
-    newUser: '/auth/new-user' // New users will be directed here on first sign in (leave the property out if not of interest)
-  }
-    */
+  jwt: { encode, decode }
 })

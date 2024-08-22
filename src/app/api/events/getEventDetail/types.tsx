@@ -1,4 +1,4 @@
-export type Event = {
+export interface Event {
   event_id: number; // Primary key, auto-incremented integer
   event_name: string; // Event name, required varchar
   event_description: string; // Event description, required text

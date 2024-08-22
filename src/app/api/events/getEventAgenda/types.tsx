@@ -1,4 +1,4 @@
-export type EventAgenda = {
+export interface EventAgenda {
   event_agenda_id: number; // Primary key, auto-incremented integer
   event_id: number; // Foreign key referencing the events table, required integer
   title: string; // Agenda title, required varchar
