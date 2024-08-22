@@ -1,10 +1,12 @@
 'use client';
 
 import { Box, Typography } from '@mui/material';
+import { notFound } from 'next/navigation'
 import React, { useEffect, useState } from 'react';
 
+import { Loading } from '@/components/Loading';
+
 import { Event } from '@/app/api/events/getEventDetail/types';
-import { Loading } from '@/components/loading';
 
 interface EventTitleProp {
   eventId: string
@@ -15,12 +17,11 @@ const EventTitle: React.FC<EventTitleProp> = ({ eventId }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/events/getEventDetail?event_id=1")
+    fetch("/api/events/getEventDetail?event_id=" + eventId)
       .then((response) => response.json()) // Return the JSON data here
       .then((data: unknown) => {
         setEventDetails(data as Event[])
         setLoading(false)
-          ; // Set the state with the fetched data
       })
       .catch((error) => console.error(error));
   }, []);
@@ -29,6 +30,9 @@ const EventTitle: React.FC<EventTitleProp> = ({ eventId }) => {
     return (
       <Loading />
     )
+  }
+  if (eventDetails.length === 0) {
+    notFound()
   }
   return (
     <Box>

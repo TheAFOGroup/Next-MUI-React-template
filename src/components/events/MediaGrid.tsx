@@ -3,11 +3,12 @@
 import { Grid } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
-import { Loading } from '@/components/loading';
+import { Loading } from '@/components/Loading';
 
 import { Speaker } from '@/app/api/events/getSpeakers/types';
 
 import MediaCard from './MediaCard';
+
 
 interface MediaGridProp {
   eventId: string
