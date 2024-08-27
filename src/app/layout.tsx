@@ -11,7 +11,7 @@ import ResponsiveAppBar from '@/components/ResponsiveAppBar';
 import { SITE_CONFIG } from '@/constants';
 import { GLOBAL_STYLES } from '@/styles';
 
-import { auth } from '../../auth';
+import { auth } from './auth';
 
 // !STARTERCONF Change these default meta
 // !STARTERCONF Look at @/constant/config to change them

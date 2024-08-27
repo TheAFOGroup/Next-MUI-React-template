@@ -36,21 +36,19 @@ const EventTitle: React.FC<EventTitleProp> = ({ eventId }) => {
   }
   return (
     <Box>
-      <Typography variant="h5" component="div" gutterBottom>
+      <Typography variant="h1" component="div" gutterBottom>
         {eventDetails[0].event_name}
       </Typography>
       <Typography color="textSecondary" sx={{ mb: 1.5 }}>
         {eventDetails[0].event_description}
       </Typography>
-      <Typography variant="body2">
-        Location {eventDetails[0].event_location}
+      <Typography variant="h5">
+        {eventDetails[0].event_location}
       </Typography>
-      <Typography variant="body2">
-        time {eventDetails[0].event_date} {eventDetails[0].event_time}
+      <Typography variant="h5">
+        {eventDetails[0].event_date}   {eventDetails[0].event_time}
       </Typography>
-      <Typography variant="h5" component="div" gutterBottom>
-        {eventDetails.length > 0 ? eventDetails[0].event_name : "Loading..."}
-      </Typography>    </Box>
+    </Box>
   );
 };
 

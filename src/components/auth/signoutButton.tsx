@@ -1,5 +1,6 @@
-import { signOut } from "../../../auth"
 import { Button } from "@mui/material"
+
+import { signOut } from "../../app/auth"
 
 export function SignOut() {
   return (

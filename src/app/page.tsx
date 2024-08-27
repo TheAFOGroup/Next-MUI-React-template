@@ -1,10 +1,12 @@
 import { Box } from '@mui/material';
+import { SessionProvider } from "next-auth/react";
+
 import { SignIn } from '@/components/auth/signinButton';
 import { SignOut } from '@/components/auth/signoutButton';
-import { SessionProvider } from "next-auth/react";
-import { auth } from '../../auth';
-import Register from '@/components/Register';
 import { SignUp } from '@/components/auth/signUpButton';
+import Register from '@/components/Register';
+
+import { auth } from './auth';
 
 const AppHome = async () => {
   const session = await auth();
