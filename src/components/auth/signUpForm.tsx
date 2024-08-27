@@ -115,7 +115,7 @@ export default function SignUpForm() {
           </Button>
           <Grid container justifyContent="flex-end">
             <Grid item>
-              <Link href="#" variant="body2" onClick={() => signIn(undefined, { callbackUrl: '/dashboard' })}>
+              <Link href="#" variant="body2" onClick={() => signIn(undefined, { callbackUrl: '/c0ntr0lPanne1/dashboard' })}>
                 Already have an account? Sign in
               </Link>
             </Grid>

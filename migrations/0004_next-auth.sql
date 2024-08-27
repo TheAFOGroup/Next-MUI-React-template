@@ -37,3 +37,9 @@ CREATE TABLE IF NOT EXISTS sessions (
     expires datetime NOT NULL DEFAULT NULL, 
     PRIMARY KEY (token)
 );
+
+  CREATE TABLE IF NOT EXISTS user_password (
+    email text DEFAULT NULL,
+    password text DEFAULT NULL,
+    PRIMARY KEY (email)
+);

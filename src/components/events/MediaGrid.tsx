@@ -1,6 +1,7 @@
 'use client';
 
 import { Grid } from '@mui/material';
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 
 import { Loading } from '@/components/Loading';
@@ -20,11 +21,18 @@ const MediaGrid: React.FC<MediaGridProp> = ({ eventId }) => {
 
 
   useEffect(() => {
-    fetch('/api/events/getSpeakers?event_id=' + eventId)
-      .then(response => response.json())
-      .then((data) => {
-        setSpeakers(data as Speaker[])
-        setLoading(false)
+    axios.get(process.env.NEXT_PUBLIC_HOST + '/api/events/getSpeakers', {
+      params: {
+        event_id: eventId
+      },
+      headers: {
+        'Api-Secret': process.env.NEXT_PUBLIC_API_SECRET
+      }
+    })
+      .then(response => {
+        const data = response.data;
+        setSpeakers(data as Speaker[]);
+        setLoading(false);
       })
       .catch(error => console.error(error));
   }, []);

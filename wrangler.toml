@@ -10,11 +10,15 @@ database_id = "9df130c4-4a23-4539-9c29-27bdfe9aac4e"
 
 [vars]
 AUTH_SECRET="noNpl/fUOUmBStiNn1BT2F9OP9gO/WW6L7DYAcvA710="
-AUTH_TRUST_HOST="localhost:8788"
+AUTH_TRUST_HOST="http://localhost:8788"
+NEXT_PUBLIC_HOST="http://localhost:8788"
+
 
 [env.preview.vars]
 AUTH_SECRET="noNpl/fUOUmBStiNn1BT2F9OP9gO/WW6L7DYAcvA710="
-AUTH_TRUST_HOST="eventspeaker.next-mui-react-template-7nm.pages.dev"
+AUTH_TRUST_HOST="http://eventspeaker.next-mui-react-template-7nm.pages.dev"
+NEXT_PUBLIC_HOST="http://eventspeaker.next-mui-react-template-7nm.pages.dev"
+
 d1_databases = [
   { binding = "DB", database_id = "9df130c4-4a23-4539-9c29-27bdfe9aac4e", database_name = "nextjs-template"}
 ]

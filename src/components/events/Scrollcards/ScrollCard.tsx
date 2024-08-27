@@ -1,19 +1,15 @@
 "use client";
 
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import IconButton from '@mui/material/IconButton';
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu';
-import { redirect } from 'next/navigation'
 
 import usePrevious from '@/components/events/Scrollcards/usePrevious';
+import { Loading } from '@/components/Loading';
 
 import { Speaker } from '@/app/api/events/getSpeakers/types';
 
 import MediaCard from './MediaCardScroll';
-import { Loading } from '@/components/Loading';
-
 
 type ScrollVisibilityApiType = React.ContextType<typeof VisibilityContext>;
 
@@ -30,14 +26,18 @@ const ScrollCards: React.FC<ScrollCardsProp> = ({ eventId }) => {
 
 
   useEffect(() => {
-    fetch('/api/events/getSpeakers?event_id=' + eventId)
-      .then(response => response.json())
-      .then((data) => {
-        setSpeakers(data as Speaker[])
-        setLoading(false)
-        if ((data as Speaker[]).length === 0) {
-          redirect('/404');
-        }
+    axios.get(process.env.NEXT_PUBLIC_HOST + '/api/events/getSpeakers', {
+      params: {
+        event_id: eventId
+      },
+      headers: {
+        'Api-Secret': process.env.NEXT_PUBLIC_API_SECRET
+      }
+    })
+      .then(response => {
+        const data = response.data;
+        setSpeakers(data as Speaker[]);
+        setLoading(false);
       })
       .catch(error => console.error(error));
   }, []);

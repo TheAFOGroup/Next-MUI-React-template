@@ -3,7 +3,9 @@ import { Box, Button, Checkbox, TextField } from '@mui/material';
 //import Container from '@mui/material';
 //import { FormControl } from '@mui/material';
 import Grid from '@mui/material/Grid';
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+
 interface Field {
 
   field_name: string;
@@ -18,10 +20,19 @@ const Register: React.FC = () => {
 
   useEffect(() => {
     // Fetch API result and update fields state
-    fetch('/api/getform')
-      .then((response) => response.json())
-      .then((data) => setFields(data as Field[]));
+    axios.get(process.env.NEXT_PUBLIC_HOST + '/api/getform', {
+      headers: {
+        'Api-Secret': process.env.NEXT_PUBLIC_API_SECRET
+      }
+    })
+      .then((response) => {
+        setFields(response.data as Field[]);
+      })
+      .catch((error) => {
+        console.error('Error fetching form:', error);
+      });
   }, []);
+
 
   const handleInputChange = (label: string, value: string) => {
     setFormValues((prevValues: Map<string, string>) => {

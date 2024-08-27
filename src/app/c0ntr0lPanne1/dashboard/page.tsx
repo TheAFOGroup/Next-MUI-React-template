@@ -1,5 +1,5 @@
 //import { useSession } from "next-auth/react";
-import { auth } from '../auth';
+import { auth } from '../../auth';
 
 const Dashboard = async () => {
   const session = await auth();

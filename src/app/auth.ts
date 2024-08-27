@@ -6,6 +6,9 @@ import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 import { encode, decode } from 'next-auth/jwt';
 import { User } from 'next-auth';
+import { z } from 'zod';
+import { GetUser } from "@/app/api/_lib/GetUser";
+
 
 
 type credentials = Record<string, CredentialInput>;
@@ -32,6 +35,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (!credentials) {
           return null;
         }
+        const parsedCredentials = z
+          .object({ email: z.string().email(), password: z.string().min(6) })
+          .safeParse(credentials);
+        if (parsedCredentials.success) {
+          const { email, password } = parsedCredentials.data;
+          const user = await GetUser(email, password);
+          if (!user) return null;
+        }
 
         const { email, password } = credentials;
         return { email: email } as User;
@@ -44,5 +55,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   session: {
     strategy: 'jwt',
   },
-  jwt: { encode, decode }
+  jwt: { encode, decode },
+  callbacks: {
+    authorized({ auth, request: { nextUrl } }) {
+      const isLoggedIn = !!auth?.user;
+      const isOnDashboard = nextUrl.pathname.startsWith('/c0ntr0lPanne1/dashboard');
+      if (isOnDashboard) {
+        if (isLoggedIn) return true;
+        return false; // Redirect unauthenticated users to login page
+      } else if (isLoggedIn) {
+        return Response.redirect(new URL('/c0ntr0lPanne1/dashboard', nextUrl));
+      }
+      return true;
+    },
+  },
 })

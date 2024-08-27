@@ -1,6 +1,7 @@
 'use client';
 
 import { Box, Typography } from '@mui/material';
+import axios from 'axios';
 import { notFound } from 'next/navigation'
 import React, { useEffect, useState } from 'react';
 
@@ -15,15 +16,22 @@ interface EventTitleProp {
 const EventTitle: React.FC<EventTitleProp> = ({ eventId }) => {
   const [eventDetails, setEventDetails] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
-
+  console.log(process.env.NEXT_PUBLIC_HOST + '/api/events/getEventDetail')
   useEffect(() => {
-    fetch("/api/events/getEventDetail?event_id=" + eventId)
-      .then((response) => response.json()) // Return the JSON data here
-      .then((data: unknown) => {
-        setEventDetails(data as Event[])
-        setLoading(false)
+    axios.get(process.env.NEXT_PUBLIC_HOST + '/api/events/getEventDetail', {
+      params: {
+        event_id: eventId
+      },
+      headers: {
+        'Api-Secret': process.env.NEXT_PUBLIC_API_SECRET
+      }
+    })
+      .then(response => {
+        const data = response.data;
+        setEventDetails(data as Event[]);
+        setLoading(false);
       })
-      .catch((error) => console.error(error));
+      .catch(error => console.error(error));
   }, []);
 
   if (loading) {
