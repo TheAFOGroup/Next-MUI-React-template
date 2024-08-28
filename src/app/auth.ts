@@ -8,7 +8,7 @@ import { encode, decode } from 'next-auth/jwt';
 import { User } from 'next-auth';
 import { z } from 'zod';
 import { GetUser } from "@/app/api/_lib/GetUser";
-
+import type { Provider } from 'next-auth/providers';
 
 
 type credentials = Record<string, CredentialInput>;
@@ -40,12 +40,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           .safeParse(credentials);
         if (parsedCredentials.success) {
           const { email, password } = parsedCredentials.data;
-          const user = await GetUser(email, password);
-          if (!user) return null;
-        }
+          const user = await GetUser(email)
+          if (user === null) return null;
+          if (user?.password != password) {
+            return null
+          }
 
-        const { email, password } = credentials;
-        return { email: email } as User;
+          return { email: email } as User;
+        }
+        return null
       }
       ,
     })
@@ -69,4 +72,34 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return true;
     },
   },
+  pages: {
+    signIn: "/c0ntr0lPanne1/signIn"
+  }
 })
+
+const providers: Provider[] = [
+  Credentials({
+    credentials: {
+      email: { label: 'Email Address', type: 'email' },
+      password: { label: 'Password', type: 'password' },
+    },
+    authorize(c) {
+      if (c.password !== 'password') {
+        return null;
+      }
+      return {
+        id: 'test',
+        name: 'Test User',
+        email: String(c.email),
+      };
+    },
+  }),
+];
+
+export const providerMap = providers.map((provider) => {
+  if (typeof provider === 'function') {
+    const providerData = provider();
+    return { id: providerData.id, name: providerData.name };
+  }
+  return { id: provider.id, name: provider.name };
+});
