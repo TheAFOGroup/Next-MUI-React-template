@@ -22,7 +22,7 @@ const EventTitle: React.FC<EventTitleProp> = ({ eventId }) => {
         event_id: eventId
       },
       headers: {
-        'Api-Secret': process.env.NEXT_PUBLIC_API_SECRET
+        'API_SECRET': process.env.NEXT_PUBLIC_API_SECRET
       }
     })
       .then(response => {

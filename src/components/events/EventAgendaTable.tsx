@@ -15,9 +15,10 @@ import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { EventAgenda } from '@/app/api/events/getEventsAgenda/types';
 
 import { Loading } from '@/components/Loading';
+
+import { EventAgenda } from '@/app/api/events/getEventsAgenda/types';
 
 interface EventAgendaTableProp {
   eventId: string
@@ -71,7 +72,7 @@ const EventAgendaTable: React.FC<EventAgendaTableProp> = ({ eventId }) => {
         event_id: eventId
       },
       headers: {
-        'Api-Secret': process.env.NEXT_PUBLIC_API_SECRET
+        'API_SECRET': process.env.NEXT_PUBLIC_API_SECRET
       }
     })
       .then(response => {

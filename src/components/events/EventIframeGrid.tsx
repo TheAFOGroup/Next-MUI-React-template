@@ -1,15 +1,13 @@
 'use client';
 
+import { Grid, Typography } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Grid, Typography } from '@mui/material';
-
+import { FacebookEmbed, InstagramEmbed, PinterestEmbed, XEmbed, YouTubeEmbed } from 'react-social-media-embed';
 
 import { Loading } from '@/components/Loading';
 
 import { EventIframe } from '@/app/api/events/getIframes/types';
-
-import { YouTubeEmbed, XEmbed, FacebookEmbed, InstagramEmbed, PinterestEmbed, TikTokEmbed } from 'react-social-media-embed';
 
 interface EventIframeProps {
   eventId: string
@@ -24,7 +22,7 @@ const EventIframeGrid: React.FC<EventIframeProps> = ({ eventId }) => {
         event_id: eventId
       },
       headers: {
-        'Api-Secret': process.env.NEXT_PUBLIC_API_SECRET
+        'API_SECRET': process.env.NEXT_PUBLIC_API_SECRET
       }
     })
       .then(response => {

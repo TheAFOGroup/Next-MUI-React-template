@@ -6,9 +6,14 @@ export interface Env {
   DB: D1Database;
 }
 import { getRequestContext } from '@cloudflare/next-on-pages'
+import { CheckAPIkey } from '@/app/api/_lib/CheckAPIkey';
 
 
 export async function SearchParamDb(request: Request, table: string) {
+  if (!(await CheckAPIkey(request))) {
+    return NextResponse.json({ message: 'Not Authorized' }, { status: 401 });
+  }
+
   const { env } = getRequestContext()
   const myDb = env.DB;
 
