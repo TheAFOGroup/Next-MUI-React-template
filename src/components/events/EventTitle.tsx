@@ -16,7 +16,6 @@ interface EventTitleProp {
 const EventTitle: React.FC<EventTitleProp> = ({ eventId }) => {
   const [eventDetails, setEventDetails] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
-  console.log(process.env.NEXT_PUBLIC_HOST + '/api/events/getEventDetail')
   useEffect(() => {
     axios.get(process.env.NEXT_PUBLIC_HOST + '/api/events/getEventDetail', {
       params: {

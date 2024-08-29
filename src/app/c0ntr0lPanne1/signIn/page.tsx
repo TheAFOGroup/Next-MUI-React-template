@@ -22,7 +22,7 @@ export default function AuthJsSignInApp() {
               email: formData.get('email'),
               password: formData.get('password'),
             }),
-            redirectTo: callbackUrl ?? '/c0ntr0lPanne1/dashboard',
+            redirectTo: '/c0ntr0lPanne1/dashboard',
           });
         } catch (error) {
           if (error instanceof Error && error.message === 'NEXT_REDIRECT') {
