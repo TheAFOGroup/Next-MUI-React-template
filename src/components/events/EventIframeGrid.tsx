@@ -3,7 +3,7 @@
 import { Grid, Typography } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { FacebookEmbed, InstagramEmbed, PinterestEmbed, XEmbed, YouTubeEmbed } from 'react-social-media-embed';
+import { FacebookEmbed, InstagramEmbed, PinterestEmbed, TikTokEmbed, XEmbed, YouTubeEmbed } from 'react-social-media-embed';
 
 import { Loading } from '@/components/Loading';
 
@@ -67,7 +67,7 @@ const EventIframeGrid: React.FC<EventIframeProps> = ({ eventId }) => {
             } else if (iframe.url.includes("pinterest")) {
               return <PinterestEmbed url={iframe.url} width={550} />
             } else if (iframe.url.includes("Tiktok")) {
-              return <PinterestEmbed url={iframe.url} width={550} />
+              return <TikTokEmbed url={iframe.url} width={550} />
             } else {
               return <iframe src={iframe.url} height="570" width="325" title={iframe.title}></iframe>
             }
