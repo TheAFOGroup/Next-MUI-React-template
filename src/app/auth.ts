@@ -61,7 +61,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   jwt: { encode, decode },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
-      const isLoggedIn = !!auth?.user;
+      const isLoggedIn = auth?.user;
       const isOnDashboard = nextUrl.pathname.startsWith('/c0ntr0lPanne1/dashboard');
       if (isOnDashboard) {
         if (isLoggedIn) return true;

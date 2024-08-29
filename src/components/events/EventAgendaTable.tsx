@@ -13,22 +13,17 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
-import * as React from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { EventAgenda } from '@/app/api/events/getEventsAgenda/types';
 
-function createData(
-  title: string,
-  startTime: number,
-  endTime: number,
-) {
-  return {
-    title: title,
-    startTime: startTime,
-    endTime: endTime,
-    description: "Discription",
-  };
+import { Loading } from '@/components/Loading';
+
+interface EventAgendaTableProp {
+  eventId: string
 }
 
-function Row(props: { row: ReturnType<typeof createData> }) {
+function Row(props: { row }) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
 
@@ -47,8 +42,8 @@ function Row(props: { row: ReturnType<typeof createData> }) {
         <TableCell component="th" scope="row">
           {row.title}
         </TableCell>
-        <TableCell align="right">{row.startTime}</TableCell>
-        <TableCell align="right">{row.endTime}</TableCell>
+        <TableCell align="right">{row.start_time}</TableCell>
+        <TableCell align="right">{row.end_time}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -65,15 +60,36 @@ function Row(props: { row: ReturnType<typeof createData> }) {
   );
 }
 
-const rows = [
-  createData('Greeting', 159, 6.0),
-  createData('Ice cream sandwich', 237, 9.0),
-  createData('Eclair', 262, 16.0),
-  createData('Cupcake', 305, 3.75),
-  createData('Gingerbread', 356, 16.0),
-];
 
-export default function EventAgendaTable() {
+const EventAgendaTable: React.FC<EventAgendaTableProp> = ({ eventId }) => {
+  const [agenda, setAgenda] = useState<EventAgenda[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    axios.get(process.env.NEXT_PUBLIC_HOST + '/api/events/getEventsAgenda', {
+      params: {
+        event_id: eventId
+      },
+      headers: {
+        'Api-Secret': process.env.NEXT_PUBLIC_API_SECRET
+      }
+    })
+      .then(response => {
+        const data = response.data;
+        setAgenda(data as EventAgenda[]);
+        setLoading(false);
+      })
+      .catch(error => console.error(error));
+  }, []);
+
+
+  if (loading) {
+    return (
+      <Loading />
+    )
+  }
+
+
   return (
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table">
@@ -86,11 +102,13 @@ export default function EventAgendaTable() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <Row key={row.title} row={row} />
+          {agenda.map((row) => (
+            <Row key={row.event_agenda_id} row={row} />
           ))}
         </TableBody>
       </Table>
     </TableContainer>
   );
 }
+
+export default EventAgendaTable;

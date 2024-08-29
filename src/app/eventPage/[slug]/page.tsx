@@ -1,10 +1,10 @@
 import { Box } from "@mui/material";
 import React from 'react';
 
+import EventAgendaTable from "@/components/events/EventAgendaTable";
 import EventTitle from "@/components/events/EventTitle";
 import MediaGrid from "@/components/events/MediaGrid";
 import ScrollCards from "@/components/events/Scrollcards/ScrollCard";
-import EventAgendaTable from "@/components/events/EventAgendaTable";
 
 
 const EventPage = ({ params }: { params: { slug: string } }) => {
@@ -15,7 +15,7 @@ const EventPage = ({ params }: { params: { slug: string } }) => {
       <EventTitle eventId={eventId}></EventTitle>
       <MediaGrid eventId={eventId}></MediaGrid>
       <ScrollCards eventId={eventId}></ScrollCards>
-      <EventAgendaTable />
+      <EventAgendaTable eventId={eventId} />
     </Box>
   )
 }
