@@ -1,5 +1,6 @@
 export interface Event {
   event_id: number; // Primary key, auto-incremented integer
+  event_UUID: string,
   event_name: string; // Event name, required varchar
   event_description: string; // Event description, required text
   event_date: string; // Date of the event, stored as a string in the format 'YYYY-MM-DD'

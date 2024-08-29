@@ -10,7 +10,7 @@ import { Loading } from '@/components/Loading';
 import { EventIframe } from '@/app/api/events/getIframes/types';
 
 interface EventIframeProps {
-  eventId: string
+  eventId: number
 }
 
 const EventIframeGrid: React.FC<EventIframeProps> = ({ eventId }) => {
@@ -57,7 +57,7 @@ const EventIframeGrid: React.FC<EventIframeProps> = ({ eventId }) => {
           <Typography variant='h3'>{iframe.title}</Typography>
           {(() => {
             if (iframe.url.includes("youtube")) {
-              return <YouTubeEmbed url={iframe.url} width={550} height={220} />;
+              return <YouTubeEmbed url={iframe.url} width={550} />;
             } else if (iframe.url.includes("twitter")) {
               return <XEmbed url={iframe.url} width={550} />;
             } else if (iframe.url.includes("facebook")) {

@@ -26,7 +26,7 @@ export async function SearchParamDb(request: Request, table: string) {
     stmt += " WHERE "
   }
   searchParams.forEach((value: string, key: string) => {
-    stmt += key + "=" + value + " AND "
+    stmt += key + "= '" + value + "' AND "
   })
   const lastAndIndex = stmt.lastIndexOf(" AND ");
   if (lastAndIndex !== -1) {

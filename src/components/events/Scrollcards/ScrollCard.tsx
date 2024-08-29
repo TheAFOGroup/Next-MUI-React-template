@@ -14,7 +14,7 @@ import MediaCard from './MediaCardScroll';
 type ScrollVisibilityApiType = React.ContextType<typeof VisibilityContext>;
 
 interface ScrollCardsProp {
-  eventId: string
+  eventId: number
 }
 
 const ScrollCards: React.FC<ScrollCardsProp> = ({ eventId }) => {

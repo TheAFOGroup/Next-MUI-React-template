@@ -12,7 +12,7 @@ import MediaCard from './MediaCard';
 
 
 interface MediaGridProp {
-  eventId: string
+  eventId: number
 }
 
 const MediaGrid: React.FC<MediaGridProp> = ({ eventId }) => {

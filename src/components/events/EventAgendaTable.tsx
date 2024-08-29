@@ -21,7 +21,7 @@ import { Loading } from '@/components/Loading';
 import { EventAgenda } from '@/app/api/events/getEventsAgenda/types';
 
 interface EventAgendaTableProp {
-  eventId: string
+  eventId: number
 }
 
 function Row(props: { row }) {
