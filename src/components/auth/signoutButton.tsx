@@ -7,7 +7,7 @@ export function SignOut() {
     <form
       action={async () => {
         "use server"
-        await signOut({ redirectTo: '/c0ntr0lPanne1/dashboard' });
+        await signOut({ redirectTo: '/c0ntr0lPanne1' });
       }}
     >
       <Button type="submit">Sign Out</Button>

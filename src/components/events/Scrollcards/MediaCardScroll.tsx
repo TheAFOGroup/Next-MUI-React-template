@@ -21,6 +21,7 @@ const MediaCard: React.FC<MediaCardProps> = ({ speaker }) => {
       userSelect: 'none',
       overflow: 'hidden',
       height: '100%',
+      mblank: "2"
     }}
 
     >

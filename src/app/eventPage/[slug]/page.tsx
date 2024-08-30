@@ -14,18 +14,26 @@ import ScrollCards from '@/components/events/Scrollcards/ScrollCard';
 import EventAgendaTable from '@/components/events/EventAgendaTable';
 import EventIframeGrid from '@/components/events/EventIframeGrid';
 
+import { Speaker } from '@/app/api/events/getSpeakers/types';
+
+
 const EventPage = ({ params }: { params: { slug: string } }) => {
   const eventUUID = params.slug
+
   const [eventDetails, setEventDetails] = useState<Event[]>([]);
+
   const [loading, setLoading] = useState(true);
+
+  const header = {
+    'API_SECRET': process.env.NEXT_PUBLIC_API_SECRET
+  }
+
   useEffect(() => {
     axios.get(process.env.NEXT_PUBLIC_HOST + '/api/events/getEventDetail', {
       params: {
         event_UUID: eventUUID
       },
-      headers: {
-        'API_SECRET': process.env.NEXT_PUBLIC_API_SECRET
-      }
+      headers: header
     })
       .then(response => {
         const data = response.data;

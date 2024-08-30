@@ -50,6 +50,7 @@ const EventIframeGrid: React.FC<EventIframeProps> = ({ eventId }) => {
       sx={{
         justifyContent: "space-around",
         alignItems: "flex-start",
+        mb: "2"
       }}
     >
       {iframes?.map((iframe: EventIframe) => (

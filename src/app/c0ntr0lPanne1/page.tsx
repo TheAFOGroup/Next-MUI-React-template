@@ -6,7 +6,7 @@ import { SignOut } from '@/components/auth/signoutButton';
 import { SignUp } from '@/components/auth/signUpButton';
 import Register from '@/components/Register';
 
-import { auth } from './auth';
+import { auth } from '../auth';
 
 const AppHome = async () => {
   const session = await auth();
@@ -17,6 +17,7 @@ const AppHome = async () => {
     <SessionProvider>
       <Box>
         session={JSON.stringify(session)}
+        {session ? <SignOut /> : <div><SignIn /><SignUp /></div>}
         <Register></Register>
       </Box>
     </SessionProvider>

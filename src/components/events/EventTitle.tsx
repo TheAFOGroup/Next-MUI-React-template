@@ -16,14 +16,14 @@ interface EventTitleProp {
 const EventTitle: React.FC<EventTitleProp> = ({ eventDetails }) => {
   console.log(eventDetails)
   return (
-    <Box>
+    <Box sx={{ mb: 2 }}>
       <Typography variant="h1" component="div" gutterBottom>
         {eventDetails.event_name}
       </Typography>
       <Typography color="textSecondary" sx={{ mb: 1.5 }}>
         {eventDetails.event_description}
       </Typography>
-      <Typography variant="h5">
+      <Typography variant="h5" sx={{ mb: 1 }}>
         {eventDetails.event_location}
       </Typography>
       <Typography variant="h5">
