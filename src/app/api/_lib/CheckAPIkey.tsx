@@ -6,5 +6,6 @@ export const runtime = 'edge';
  * @returns A promise that resolves to a boolean indicating whether the API key is valid.
  */
 export async function CheckAPIkey(request: Request): Promise<boolean> {
+  console.log(request.headers)
   return request.headers.get("API_SECRET") === process.env.NEXT_PUBLIC_API_SECRET;
 }

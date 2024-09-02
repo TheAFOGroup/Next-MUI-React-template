@@ -38,3 +38,9 @@ CREATE TABLE IF NOT EXISTS sessions (
     expires datetime NOT NULL DEFAULT NULL, 
     PRIMARY KEY (token)
 );
+
+  CREATE TABLE IF NOT EXISTS authorize (
+    id text NOT NULL DEFAULT '',
+    admin boolean NOT NULL DEFAULT FALSE,
+    PRIMARY KEY (id)
+);
