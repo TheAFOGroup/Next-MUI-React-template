@@ -1,5 +1,4 @@
 "use client"
-import CheckIcon from '@mui/icons-material/Check';
 import { Alert, Button, Checkbox, FormControlLabel, Grid, TextField, Typography } from '@mui/material';
 import axios from 'axios';
 import React, { useState } from 'react';
@@ -46,6 +45,7 @@ const AddUserPage: React.FC = () => {
     setConfirmPassword('');
     setIsAdmin(false);
     setConfirmPasswordError('');
+    setAlert('')
   };
 
   const handleSubmit = (event: React.FormEvent) => {
@@ -76,7 +76,9 @@ const AddUserPage: React.FC = () => {
       setUserCreated(true);
     })
       .catch((error) => {
-        setAlert(error)
+        setAlert(error.message || 'An error occurred');
+      }).finally(() => {
+        setAlert('An error occurred');
       })
   }
 
@@ -150,7 +152,7 @@ const AddUserPage: React.FC = () => {
         {
           alert.length ?
             <Grid item>
-              <Alert icon={<CheckIcon fontSize="inherit" />} severity="success">
+              <Alert severity="error">
                 {alert}
               </Alert>
             </Grid>
