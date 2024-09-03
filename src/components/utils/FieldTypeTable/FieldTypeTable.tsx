@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback, memo } from 'react';
 import {
   Container,
   Table,
@@ -16,15 +16,23 @@ import {
   Paper,
 } from '@mui/material';
 import { Add, Delete } from '@mui/icons-material';
-import { DynamicField } from '@/components/utils/DynamicTable/types';
+import { DynamicField } from '@/components/utils/FieldTypeTable/types';
 
-const types = ["text", "number", "email"];
-
-interface DynamicTableProps {
-  onSubmit: (fields: DynamicField[]) => void;
+interface FieldTypeTableProps {
+  dropdownTypes: string[];
+  onChange: (fields: DynamicField[]) => void;
 }
 
-const DynamicTable: React.FC<DynamicTableProps> = ({ onSubmit }) => {
+/**
+ * FieldTypeTable component for rendering a table with dynamic rows with textfield and a drop down menu.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {Array<string>} props.dropdownTypes - The dropdown types for field types.
+ * @param {Function} props.onChange - The callback function triggered when the table rows change.
+ * @returns {JSX.Element} The rendered FieldTypeTable component.
+ */
+const FieldTypeTable: React.FC<FieldTypeTableProps> = ({ dropdownTypes, onChange }) => {
   const [rows, setRows] = useState([{ field_name: '', field_type: '' }]);
 
   const handleAddRow = () => {
@@ -48,13 +56,13 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ onSubmit }) => {
     setRows(newRows);
   };
 
-  const handleSubmit = () => {
+  useEffect(() => {
     const fieldsWithOrder: DynamicField[] = rows.map((field, index) => ({
       ...field,
       field_order: index + 1
     }));
-    onSubmit(fieldsWithOrder);
-  };
+    onChange(fieldsWithOrder);
+  }, [rows, onChange]);
 
   return (
     <Container>
@@ -81,7 +89,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ onSubmit }) => {
                     value={row.field_type}
                     onChange={(e) => handleTypeChange(index, e.target.value)}
                   >
-                    {types.map((type) => (
+                    {dropdownTypes.map((type) => (
                       <MenuItem key={type} value={type}>
                         {type}
                       </MenuItem>
@@ -101,11 +109,8 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ onSubmit }) => {
       <Button onClick={handleAddRow} startIcon={<Add />}>
         Add Row
       </Button>
-      <Button onClick={handleSubmit} variant="contained" color="primary">
-        Submit
-      </Button>
     </Container>
   );
 };
 
-export default DynamicTable;
+export default memo(FieldTypeTable);

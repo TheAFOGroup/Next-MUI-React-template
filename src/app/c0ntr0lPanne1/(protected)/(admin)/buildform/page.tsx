@@ -1,16 +1,18 @@
 "use client"
-import React, { useState } from 'react';
-import DynamicTable from '@/components/utils/DynamicTable/DynamicField'; // Adjust the import path as needed
+import React, { useState, useCallback } from 'react';
+import DynamicTable from '@/components/utils/FieldTypeTable/FieldTypeTable'; // Adjust the import path as needed
 import axios from 'axios';
-import { TextField, Button, Grid } from '@mui/material';
+import { TextField, Button, Grid, Alert } from '@mui/material';
 import { BuildFormType } from '@/app/api/buildform/type';
-import { DynamicField } from '@/components/utils/DynamicTable/types';
-import { useSession } from 'next-auth/react';
 
 const BuildFormPage = () => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [formSubmitted, setFormSubmitted] = useState(false)
+  const [fields, setFields] = useState([]);
+  const [alert, setAlert] = useState("")
+
+  const dropdownTypes = ["text", "number", "email"];
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
@@ -20,7 +22,12 @@ const BuildFormPage = () => {
     setDescription(event.target.value);
   };
 
-  const handleSubmit = (fields: DynamicField[]) => {
+  const handleFieldsSubmit = useCallback((updatedFields) => {
+    setFields(updatedFields);
+    console.log('Updated Fields:', updatedFields);
+  }, []);
+
+  const handleSubmit = () => {
     // Add field_order to each field based on their order
     const data: BuildFormType = {
       form_name: name,
@@ -29,24 +36,30 @@ const BuildFormPage = () => {
       form_fields: fields
     }
 
-    axios.post(process.env.NEXT_PUBLIC_HOST + '/api/buildform', {
+    axios({
+      method: 'post',
+      url: process.env.NEXT_PUBLIC_HOST + '/api/buildform',
       data: data,
       headers: {
         'Content-Type': 'application/json',
         'API_SECRET': process.env.NEXT_PUBLIC_API_SECRET
       }
-    }).then((res) => {
-      setFormSubmitted(true)
-    }).catch((err) => {
-      console.log('Fields submitted unsuccessful:', err);
+    }).then(() => {
+      setFormSubmitted(true);
     })
+      .catch((error) => {
+        setAlert(error.message || 'An error occurred');
+      }).finally(() => {
+        setAlert('An error occurred');
+      })
   };
-
 
   const handleNewForm = () => {
     setName('');
     setDescription('');
     setFormSubmitted(false);
+    setFields([]);
+    setAlert("")
   };
 
   if (formSubmitted) {
@@ -81,8 +94,21 @@ const BuildFormPage = () => {
           />
         </Grid>
         <Grid item xs={6}>
-          <DynamicTable onSubmit={handleSubmit} />
+          <DynamicTable dropdownTypes={dropdownTypes} onChange={handleFieldsSubmit} />
         </Grid>
+        <Button variant="contained" color="primary" onClick={handleSubmit}>
+          Submit
+        </Button>
+        {
+          alert.length ?
+            <Grid item>
+              <Alert severity="error">
+                {alert}
+              </Alert>
+            </Grid>
+            :
+            <></>
+        }
       </Grid>
     </div>
   );
