@@ -10,3 +10,7 @@ interface FormField {
   field_type: string;
   field_order: number;
 }
+
+export interface BuildFormResponse {
+  UUID: string;
+}

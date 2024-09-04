@@ -1,8 +1,10 @@
 "use client"
-import React, { useState, useCallback } from 'react';
-import DynamicTable from '@/components/utils/FieldTypeTable/FieldTypeTable'; // Adjust the import path as needed
+import { Alert, Button, Grid, TextField, Typography, Link } from '@mui/material';
 import axios from 'axios';
-import { TextField, Button, Grid, Alert } from '@mui/material';
+import React, { useCallback, useState } from 'react';
+
+import DynamicTable from '@/components/utils/FieldTypeTable/FieldTypeTable'; // Adjust the import path as needed
+
 import { BuildFormType } from '@/app/api/buildform/type';
 
 const BuildFormPage = () => {
@@ -11,6 +13,7 @@ const BuildFormPage = () => {
   const [formSubmitted, setFormSubmitted] = useState(false)
   const [fields, setFields] = useState([]);
   const [alert, setAlert] = useState("")
+  const [uuid, setUUID] = useState("")
 
   const dropdownTypes = ["text", "number", "email"];
 
@@ -44,7 +47,9 @@ const BuildFormPage = () => {
         'Content-Type': 'application/json',
         'API_SECRET': process.env.NEXT_PUBLIC_API_SECRET
       }
-    }).then(() => {
+    }).then((res) => {
+      console.log(res.data)
+      setUUID(res.data.respond.UUID);
       setFormSubmitted(true);
     })
       .catch((error) => {
@@ -59,16 +64,31 @@ const BuildFormPage = () => {
     setDescription('');
     setFormSubmitted(false);
     setFields([]);
-    setAlert("")
+    setAlert("");
+    setUUID("");
   };
 
   if (formSubmitted) {
     return (
       <div>
-        <h1>Form Submitted Successfully</h1>
-        <Button variant="contained" color="primary" onClick={handleNewForm}>
-          Start New Form
-        </Button>
+        <Grid container direction="column" spacing={2}>
+          <Grid item>
+            <Typography variant="h3">Form Submitted Successfully</Typography>
+          </Grid>
+          <Grid item>
+            <Typography variant="body1">Click the link below:</Typography>
+          </Grid>
+          <Grid item>
+            <Link href={`${process.env.NEXT_PUBLIC_HOST}/forms/${uuid}`} target="_blank" rel="noopener noreferrer">
+              {`${process.env.NEXT_PUBLIC_HOST}/forms/${uuid}`}
+            </Link>
+          </Grid>
+          <Grid item>
+            <Button variant="contained" color="primary" onClick={handleNewForm}>
+              Start New Form
+            </Button>
+          </Grid>
+        </Grid>
       </div>
     );
   }
