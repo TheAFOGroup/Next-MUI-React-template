@@ -1,7 +1,12 @@
 "use client"
-import React, { useState, useEffect, useCallback, memo } from 'react';
+import { Add, Delete } from '@mui/icons-material';
 import {
+  Button,
   Container,
+  IconButton,
+  MenuItem,
+  Paper,
+  Select,
   Table,
   TableBody,
   TableCell,
@@ -9,13 +14,9 @@ import {
   TableHead,
   TableRow,
   TextField,
-  Select,
-  MenuItem,
-  Button,
-  IconButton,
-  Paper,
 } from '@mui/material';
-import { Add, Delete } from '@mui/icons-material';
+import React, { memo, useEffect, useState } from 'react';
+
 import { DynamicField } from '@/components/utils/FieldTypeTable/types';
 
 interface FieldTypeTableProps {

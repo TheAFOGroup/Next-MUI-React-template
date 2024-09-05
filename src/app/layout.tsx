@@ -3,7 +3,9 @@ import { Container } from '@mui/material';
 import GlobalStyles from '@mui/material/GlobalStyles';
 import { Metadata } from 'next';
 import * as React from 'react';
+import { Suspense } from 'react';
 
+import Loading from '@/app/loading';
 import { SITE_CONFIG } from '@/constants';
 import { GLOBAL_STYLES } from '@/styles';
 
@@ -55,7 +57,11 @@ export default async function RootLayout({
     <html lang='en'>
       <GlobalStyles styles={GLOBAL_STYLES} />
       <body>
-        <Container sx={{ pl: 0, pr: 0 }}>{children}</Container>
+        <Container sx={{ pl: 0, pr: 0 }}>
+          <Suspense fallback={<Loading />}>
+            {children}
+          </Suspense>
+        </Container>
       </body>
     </html>
   );
