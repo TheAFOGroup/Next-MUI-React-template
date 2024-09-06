@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
 
     const stmt = `INSERT INTO user_responses (form_id)
 VALUES 
-(1)
+(?)
 returning response_id;
 `;
 
@@ -56,6 +56,7 @@ returning response_id;
     data.form_fields.forEach((field) => {
       responseParams.push(field.form_field_id, field.response);
     });
+    console.log(responseParams)
     const res = await myDb.prepare(stmt2).bind(...responseParams).run();
 
     return NextResponse.json(res);

@@ -3,61 +3,71 @@ import { Box, TextField } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import React, { memo, useEffect, useState } from 'react';
 
-import { FormField } from '@/app/api/getform/types';
-import { SubmmitField } from '@/app/api/submitform/types';
+import { SubmmitField, FormField } from './types';
 
 interface DynamicFieldsTableProps {
   fields: FormField[];
   onChange: (submitFields: SubmmitField[]) => void;
 }
 
+/**
+ * Represents a dynamic fields table component.
+ * @param fields  the field name, field types and order 
+ * @param onChange when the field that is being input
+ * @component
+ * @example
+ * ```tsx
+ * <DynamicFieldsTable
+ *   fields={formFields}
+ *   onChange={handleFormFieldsChange}
+ * />
+ * ```
+ */
 const DynamicFieldsTable: React.FC<DynamicFieldsTableProps> = ({ fields, onChange }) => {
-  const initialFormValues: SubmmitField[] = fields.map((field) => ({
-    form_field_id: field.form_field_id,
-    response: ''
-  }));
+  const [formValues, setFormValues] = useState<SubmmitField[]>([]);
 
-  const [formValues, setFormValues] = useState<SubmmitField[]>(initialFormValues);
+  // Update formValues when fields prop changes
+  useEffect(() => {
+    if (fields && fields.length > 0) {
+      const initialFormValues: SubmmitField[] = fields.map((field) => ({
+        form_field_id: field.form_field_id,
+        response: '',
+      }));
+      setFormValues(initialFormValues);
+    }
+  }, [fields]);
 
   const handleInputChange = (form_field_id: number, response: string) => {
-    console.log(formValues)
     const updatedFormValues = formValues.map((field) => {
       if (field.form_field_id === form_field_id) {
         return {
           form_field_id: form_field_id,
-          response: response
+          response: response,
         };
       }
       return field;
     });
     setFormValues(updatedFormValues);
-    console.log(formValues)
   };
 
   useEffect(() => {
     onChange(formValues);
   }, [formValues, onChange]);
+
   return (
-    <Grid
-      container
-      direction='column'
-      justifyContent='center'
-      alignItems='center'
-    >
-      <Box component='form' noValidate alignItems='center' >
-        {fields?.map((field, index) => (
-          <Grid item key={index} >
-            <TextField
-              key={index}
-              label={field.field_name}
-              type={field.field_type}
-              fullWidth
-              margin='normal'
-              onChange={(e) => handleInputChange(field.form_field_id, e.target.value)}
-            />
-          </Grid>
-        ))}
-      </Box>
+    <Grid container direction="column">
+      {fields?.map((field, index) => (
+        <Grid item key={index}>
+          <TextField
+            key={index}
+            label={field.field_name}
+            type={field.field_type}
+            fullWidth
+            margin="normal"
+            onChange={(e) => handleInputChange(field.form_field_id, e.target.value)}
+          />
+        </Grid>
+      ))}
     </Grid>
   );
 };

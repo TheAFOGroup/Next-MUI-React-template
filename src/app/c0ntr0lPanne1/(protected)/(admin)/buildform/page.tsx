@@ -1,9 +1,9 @@
 "use client"
-import { Alert, Button, Grid, TextField, Typography, Link } from '@mui/material';
+import { Alert, Button, Grid, Link, TextField, Typography } from '@mui/material';
 import axios from 'axios';
 import React, { useCallback, useState } from 'react';
 
-import DynamicTable from '@/components/utils/FieldTypeTable/FieldTypeTable'; // Adjust the import path as needed
+import FieldTypeTable from '@/components/utils/FieldTypeTable/FieldTypeTable'; // Adjust the import path as needed
 
 import { BuildFormType } from '@/app/api/buildform/type';
 
@@ -114,7 +114,7 @@ const BuildFormPage = () => {
           />
         </Grid>
         <Grid item xs={6}>
-          <DynamicTable dropdownTypes={dropdownTypes} onChange={handleFieldsSubmit} />
+          <FieldTypeTable dropdownTypes={dropdownTypes} onChange={handleFieldsSubmit} />
         </Grid>
         <Button variant="contained" color="primary" onClick={handleSubmit}>
           Submit
