@@ -25,7 +25,7 @@ export interface Env {
 }
 import { getRequestContext } from '@cloudflare/next-on-pages'
 import { CheckAPIkey } from '@/app/api/_lib/CheckAPIkey';
-import { BuildFormType, BuildFormResponse } from '@/app/api/buildform/type';
+import { BuildFormType, BuildFormResponse } from '@/app/api/forms/buildform/type';
 
 interface formId {
   form_id: number

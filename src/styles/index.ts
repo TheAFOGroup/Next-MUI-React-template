@@ -1,7 +1,7 @@
 import { blue, grey } from '@mui/material/colors';
 
 export const GLOBAL_STYLES = {
-  h1: { color: "red", fontSize: "1rem" },
+  h1: { color: "red" },
   h2: { color: "green" },
   '.page-title': { color: 'darkblue' },
   '.page-subtitle': { color: grey[600] },
@@ -14,4 +14,5 @@ export const GLOBAL_STYLES = {
     lineHeight: '1.8',
     letterSpacing: '0.00938em',
   },
+
 };

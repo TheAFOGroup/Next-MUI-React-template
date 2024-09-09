@@ -11,7 +11,7 @@ const Page: React.FC = () => {
         <Link href="/admincp/admin/auth/adduser" variant="body1">Add User</Link>
       </Grid>
       <Grid item xs={12} sm={6} md={4}>
-        <Link href="/admincp/admin/auth/deleteaccount" variant="body1">Delete Account</Link>
+        <Link href="/admincp/admin/auth/deleteuser" variant="body1">Delete User</Link>
       </Grid>
       <Grid item xs={12} sm={6} md={4}>
         <Link href="/admincp/admin/auth/changepassword" variant="body1">Change Password</Link>

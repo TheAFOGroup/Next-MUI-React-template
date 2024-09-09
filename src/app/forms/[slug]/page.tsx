@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 
 import DynamicFieldsTable from "@/components/utils/DynamicFieldsTable/DynamicFieldTable";
 
-import { Form } from '@/app/api/getform/types';
+import { Form } from '@/app/api/forms/getform/types';
 import { SubmitForm, SubmmitField } from '@/app/api/submitform/types';
 
 const EventPage = ({ params }: { params: { slug: string } }) => {
@@ -20,7 +20,7 @@ const EventPage = ({ params }: { params: { slug: string } }) => {
   }
 
   useEffect(() => {
-    axios.get(process.env.NEXT_PUBLIC_HOST + '/api/getform', {
+    axios.get(process.env.NEXT_PUBLIC_HOST + '/api/form/getform', {
       params: {
         form_uuid: eventUUID
       },

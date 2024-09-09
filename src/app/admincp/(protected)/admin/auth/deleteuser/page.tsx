@@ -1,11 +1,11 @@
 "use client"
-import { Alert, Button, Checkbox, FormControlLabel, Grid, TextField, Typography } from '@mui/material';
+import { Alert, Button, Grid, TextField, Typography } from '@mui/material';
 import axios from 'axios';
 import React, { useState } from 'react';
 
 import { DeleteAccountData } from '@/app/api/auth/deleteaccount/type';
 
-const AddUserPage: React.FC = () => {
+const DeleteUserPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [userCreated, setUserCreated] = useState(false);
   const [alert, setAlert] = useState('')
@@ -68,7 +68,7 @@ const AddUserPage: React.FC = () => {
     <form onSubmit={handleSubmit}>
       <Grid container spacing={2} direction="column">
         <Grid item>
-          <Typography variant="h4">Add new user</Typography>
+          <Typography variant="h4">Delete user</Typography>
         </Grid>
         <Grid item>
           <TextField
@@ -99,4 +99,4 @@ const AddUserPage: React.FC = () => {
   );
 };
 
-export default AddUserPage;
+export default DeleteUserPage;

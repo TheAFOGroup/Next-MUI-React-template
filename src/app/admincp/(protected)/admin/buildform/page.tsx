@@ -5,7 +5,7 @@ import React, { useCallback, useState } from 'react';
 
 import FieldTypeTable from '@/components/utils/FieldTypeTable/FieldTypeTable'; // Adjust the import path as needed
 
-import { BuildFormType } from '@/app/api/buildform/type';
+import { BuildFormType } from '@/app/api/forms/buildform/type';
 
 const BuildFormPage = () => {
   const [name, setName] = useState('');
@@ -41,7 +41,7 @@ const BuildFormPage = () => {
 
     axios({
       method: 'post',
-      url: process.env.NEXT_PUBLIC_HOST + '/api/buildform',
+      url: process.env.NEXT_PUBLIC_HOST + '/api/form/buildform',
       data: data,
       headers: {
         'Content-Type': 'application/json',

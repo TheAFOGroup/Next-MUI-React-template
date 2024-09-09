@@ -20,7 +20,7 @@ const Register: React.FC = () => {
 
   useEffect(() => {
     // Fetch API result and update fields state
-    axios.get(process.env.NEXT_PUBLIC_HOST + '/api/getform', {
+    axios.get(process.env.NEXT_PUBLIC_HOST + '/api/form/getform', {
       headers: {
         'API_SECRET': process.env.NEXT_PUBLIC_API_SECRET
       }
