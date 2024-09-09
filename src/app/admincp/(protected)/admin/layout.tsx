@@ -3,12 +3,12 @@ import { Container, Typography } from '@mui/material';
 import GlobalStyles from '@mui/material/GlobalStyles';
 import * as React from 'react';
 
-import { SignIn } from '@/components/auth/signinButton';
-import { SignOut } from '@/components/auth/signoutButton';
 import ResponsiveAppBar from '@/components/ResponsiveAppBar';
+
+import { IsAdmin } from '@/app/api/_lib/IsAdmin';
 import { GLOBAL_STYLES } from '@/styles';
 
-import { auth } from '../../auth';
+import { auth } from '../../../auth';
 
 export default async function RootLayout({
   children,
@@ -16,21 +16,20 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const session = await auth();
+  const admin = await IsAdmin(session?.user?.id ?? "");
 
   return (
     <html lang='en'>
       <GlobalStyles styles={GLOBAL_STYLES} />
       <body>
-        <ResponsiveAppBar></ResponsiveAppBar>
-        {session ? (
+        {admin ? (
           <>
-            <SignOut />
+            <ResponsiveAppBar session={session}></ResponsiveAppBar>
             <Container sx={{ pl: 0, pr: 0 }}>{children}</Container>
           </>
         ) : (
           <>
-            <SignIn />
-            <Typography>You must sign in to continue</Typography>
+            <Typography>You must be an admin to see this pages</Typography>
           </>
         )}
       </body>

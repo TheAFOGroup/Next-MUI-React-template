@@ -1,6 +1,5 @@
 'use client';
-import { Box, TextField } from '@mui/material';
-import Grid from '@mui/material/Grid';
+import { Grid, TextField, Checkbox, Typography } from '@mui/material';
 import React, { memo, useEffect, useState } from 'react';
 
 import { SubmmitField, FormField } from './types';
@@ -54,10 +53,10 @@ const DynamicFieldsTable: React.FC<DynamicFieldsTableProps> = ({ fields, onChang
     onChange(formValues);
   }, [formValues, onChange]);
 
-  return (
-    <Grid container direction="column">
-      {fields?.map((field, index) => (
-        <Grid item key={index}>
+  const renderFieldType = (field: FormField, index: number) => {
+    if (field.field_type === 'text') {
+      return (
+        <div>
           <TextField
             key={index}
             label={field.field_name}
@@ -66,6 +65,57 @@ const DynamicFieldsTable: React.FC<DynamicFieldsTableProps> = ({ fields, onChang
             margin="normal"
             onChange={(e) => handleInputChange(field.form_field_id, e.target.value)}
           />
+        </div>
+      );
+    } else if (field.field_type === 'checkbox') {
+      const check = formValues.find((formValues) => formValues.form_field_id === field.form_field_id)?.response;
+      let isChecked = false
+      if (check == "true") {
+        isChecked = true
+      }
+      return (
+        <Grid
+          container
+          direction="row"
+          sx={{
+            justifyContent: "flex-start",
+            alignItems: "baseline",
+          }}
+          key={index}
+        >
+          <Grid item>
+            <Checkbox
+              checked={isChecked}
+              onChange={(e) => handleInputChange(field.form_field_id, e.target.checked.toString())}
+              inputProps={{ 'aria-label': 'controlled' }}
+            />
+          </Grid>
+          <Grid item>
+            <Typography variant="body1">{field.field_name}</Typography>
+          </Grid>
+        </Grid>
+      );
+    } else if (field.field_type === 'date') {
+      return <div><input type="date" /></div>;
+    } else if (field.field_type === 'select') {
+      return (
+        <div>
+          <select>
+            <option value="option1">Option 1</option>
+            <option value="option2">Option 2</option>
+          </select>
+        </div>
+      );
+    } else {
+      return <div><input type="text" /></div>;
+    }
+  };
+
+  return (
+    <Grid container direction="column">
+      {fields?.map((field, index) => (
+        <Grid item key={index}>
+          {renderFieldType(field, index)}
         </Grid>
       ))}
     </Grid>

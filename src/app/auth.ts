@@ -2,13 +2,15 @@ export const runtime = 'edge';
 
 import { D1Adapter } from "@auth/d1-adapter"
 import { D1Database } from '@cloudflare/workers-types'
+import bcrypt from 'bcryptjs';
 import NextAuth from "next-auth"
-import Credentials from "next-auth/providers/credentials"
-import { encode, decode } from 'next-auth/jwt';
 import { User } from 'next-auth';
-import { z } from 'zod';
-import { GetUser } from "@/app/api/_lib/GetUser";
+import { decode, encode } from 'next-auth/jwt';
 import type { Provider } from 'next-auth/providers';
+import Credentials from "next-auth/providers/credentials"
+import { z } from 'zod';
+
+import { GetUser } from "@/app/api/_lib/GetUser";
 
 
 type credentials = Record<string, CredentialInput>;
@@ -34,14 +36,17 @@ const providers: Provider[] = [
       const parsedCredentials = z
         .object({ email: z.string().email(), password: z.string() })
         .safeParse(credentials);
+
       if (parsedCredentials.success) {
         const { email, password } = parsedCredentials.data;
         const user = await GetUser(email)
         if (user === null) return null;
-        if (user?.password != password) {
-          return null
+
+        // check if password is valid
+        const isPasswordValid = await bcrypt.compare(password, user.password)
+        if (isPasswordValid) {
+          return { id: user.id, email: email } as User;
         }
-        return { id: user.id, email: email } as User;
       }
       return null
     }
@@ -86,19 +91,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = auth?.user;
-      const isOnDashboard = nextUrl.pathname.startsWith('/c0ntr0lPanne1/dashboard');
+      const isOnDashboard = nextUrl.pathname.startsWith('/admincp/dashboard');
       if (isOnDashboard) {
         if (isLoggedIn) return true;
         return false; // Redirect unauthenticated users to login page
       } else if (isLoggedIn) {
-        return Response.redirect(new URL('/c0ntr0lPanne1/dashboard', nextUrl));
+        return Response.redirect(new URL('/admincp/dashboard', nextUrl));
       }
       return true;
     },
 
   },
   pages: {
-    signIn: "/c0ntr0lPanne1/signIn"
+    signIn: "/admincp/signIn"
   }
 })
 

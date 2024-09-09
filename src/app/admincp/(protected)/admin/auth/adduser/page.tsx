@@ -3,7 +3,7 @@ import { Alert, Button, Checkbox, FormControlLabel, Grid, TextField, Typography 
 import axios from 'axios';
 import React, { useState } from 'react';
 
-import { SignUpData } from '@/app/api/signup/type';
+import { SignUpData } from '@/app/api/auth/signup/type';
 
 const AddUserPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -66,7 +66,7 @@ const AddUserPage: React.FC = () => {
   const createUser = (userData: SignUpData) => {
     axios({
       method: 'post',
-      url: process.env.NEXT_PUBLIC_HOST + '/api/signup',
+      url: process.env.NEXT_PUBLIC_HOST + '/api/auth/signup',
       data: userData,
       headers: {
         'Content-Type': 'application/json',

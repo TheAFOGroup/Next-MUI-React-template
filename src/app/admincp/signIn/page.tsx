@@ -1,9 +1,10 @@
 /* eslint-disable import/no-unresolved */
 
-import * as React from 'react';
-import { AuthError } from 'next-auth';
 import type { AuthProvider } from '@toolpad/core';
 import { SignInPage } from '@toolpad/core/SignInPage';
+import { AuthError } from 'next-auth';
+import * as React from 'react';
+
 import { providerMap, signIn } from '../../auth';
 
 export default function AuthJsSignInApp() {
@@ -22,7 +23,7 @@ export default function AuthJsSignInApp() {
               email: formData.get('email'),
               password: formData.get('password'),
             }),
-            redirectTo: '/c0ntr0lPanne1/dashboard',
+            redirectTo: '/admincp/dashboard',
           });
         } catch (error) {
           if (error instanceof Error && error.message === 'NEXT_REDIRECT') {

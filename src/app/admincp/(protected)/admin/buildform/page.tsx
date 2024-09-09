@@ -15,7 +15,7 @@ const BuildFormPage = () => {
   const [alert, setAlert] = useState("")
   const [uuid, setUUID] = useState("")
 
-  const dropdownTypes = ["text", "number", "email"];
+  const dropdownTypes = ["text", "checkbox"];
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
