@@ -1,5 +1,7 @@
 import React from "react";
 
+import DataTable from "@/components/utils/DataTable/DataTable";
+
 import { GetFormResult } from "@/app/api/forms/getformresult/getformresult";
 import { FormResult } from "@/app/api/forms/getformresult/types";
 
@@ -7,18 +9,18 @@ const ViewFormPage = async ({ params }: { params: { slug: string } }) => {
   const uuid = params.slug
 
   let formData: FormResult[] = [];
-  let column: string[] = [];
+  let columns: string[] = [];
   let responses: any[] = [];
 
   formData = await GetFormResult(uuid);
-  column = ["response_id"];
+  columns = ["response_id"];
   formData.forEach(item => {
-    if (!column.includes(item.field_name)) {
-      column.push(item.field_name);
+    if (!columns.includes(item.field_name)) {
+      columns.push(item.field_name);
     }
   });
-  column.push("created_at");
-  console.log("column", column)
+  columns.push("created_at");
+  console.log("column", columns)
 
   // Transform responses
   responses = formData.reduce((acc: any[], item) => {
@@ -41,7 +43,12 @@ const ViewFormPage = async ({ params }: { params: { slug: string } }) => {
   };
 
   return (
-    <></>
+    <DataTable
+      title="title"
+      data={responses}
+      columns={columns}
+      options={options}
+    />
   );
 };
 

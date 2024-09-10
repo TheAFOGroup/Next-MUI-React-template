@@ -1,8 +1,8 @@
 'use client';
-import { Grid, TextField, Checkbox, Typography } from '@mui/material';
+import { Checkbox, Grid, TextField, Typography } from '@mui/material';
 import React, { memo, useEffect, useState } from 'react';
 
-import { SubmmitField, FormField } from './types';
+import { FormField, SubmmitField } from './types';
 
 interface DynamicFieldsTableProps {
   fields: FormField[];
