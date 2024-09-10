@@ -45,7 +45,7 @@ const Register: React.FC = () => {
     const entriesArray = Array.from(formValues.entries()).map(([key, value]) => ({ Field: key, Value: value }));
     console.log('Submitting form:', formValues);
     try {
-      const response = await fetch('/api/submitForm', {
+      const response = await fetch('/api/forms/submitForm', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

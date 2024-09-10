@@ -6,7 +6,6 @@ export interface Env {
   DB: D1Database;
 }
 import { getRequestContext } from '@cloudflare/next-on-pages'
-import bcrypt from "bcryptjs";
 import { NextResponse } from 'next/server';
 
 import { CheckAPIkey } from '@/app/api/_lib/CheckAPIkey';

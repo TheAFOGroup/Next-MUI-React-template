@@ -6,7 +6,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import DynamicFieldsTable from "@/components/utils/DynamicFieldsTable/DynamicFieldTable";
 
 import { Form } from '@/app/api/forms/getform/types';
-import { SubmitForm, SubmmitField } from '@/app/api/submitform/types';
+import { SubmitForm, SubmmitField } from '@/app/api/forms/submitform/types';
 
 const EventPage = ({ params }: { params: { slug: string } }) => {
   const eventUUID = params.slug
@@ -46,7 +46,7 @@ const EventPage = ({ params }: { params: { slug: string } }) => {
 
     axios({
       method: 'post',
-      url: process.env.NEXT_PUBLIC_HOST + '/api/submitform',
+      url: process.env.NEXT_PUBLIC_HOST + '/api/forms/submitform',
       data: data,
       headers: {
         'Content-Type': 'application/json',

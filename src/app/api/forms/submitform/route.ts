@@ -1,8 +1,9 @@
 export const runtime = 'edge';
 import { D1Database } from '@cloudflare/workers-types'
 import { NextRequest, NextResponse } from 'next/server';
+
 import { CheckAPIkey } from '@/app/api/_lib/CheckAPIkey';
-import { SubmitForm } from '@/app/api/submitform/types';
+import { SubmitForm } from '@/app/api/forms/submitform/types';
 export interface Env {
   DB: D1Database;
 }

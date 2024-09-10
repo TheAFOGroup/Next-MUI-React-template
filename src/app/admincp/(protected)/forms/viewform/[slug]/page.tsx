@@ -53,14 +53,3 @@ const ViewFormPage = async ({ params }: { params: { slug: string } }) => {
 };
 
 export default ViewFormPage;
-
-/**
- * 
- *  <h1>Employee List</h1>
-      <MUIDataTable
-        title=""
-        data={data}
-        columns={columns}
-        options={options}
-      />
- */
