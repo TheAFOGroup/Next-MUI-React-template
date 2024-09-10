@@ -37,8 +37,10 @@ WHERE
       .bind(uuid)
       .first<Form>();
 
-    if (!formResult) {
-      throw new Error('Table not found');
+    console.log(formResult)
+
+    if (formResult == null) {
+      throw Error('Form not found');
     }
 
     const formId = formResult?.form_id;
@@ -59,6 +61,8 @@ WHERE
     `;
     const formFieldRes = await myDb.prepare(stmt2)
       .all<FormField>();
+
+    console.log(formFieldRes)
 
     // Send a response back to the client
     formResult.form_fields = formFieldRes?.results || [];

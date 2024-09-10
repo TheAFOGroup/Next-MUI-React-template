@@ -1,20 +1,18 @@
 "use client"
 
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import axios from 'axios';
 import { notFound } from 'next/navigation'
 import React, { useEffect, useState } from 'react';
 
-import { Loading } from '@/components/Loading';
-
-import { Event } from '@/app/api/events/getEventDetail/types';
+import EventAgendaTable from '@/components/events/EventAgendaTable';
+import EventIframeGrid from '@/components/events/EventIframeGrid';
 import EventTitle from '@/components/events/EventTitle';
 import MediaGrid from '@/components/events/MediaGrid';
 import ScrollCards from '@/components/events/Scrollcards/ScrollCard';
-import EventAgendaTable from '@/components/events/EventAgendaTable';
-import EventIframeGrid from '@/components/events/EventIframeGrid';
+import { Loading } from '@/components/Loading';
 
-import { Speaker } from '@/app/api/events/getSpeakers/types';
+import { Event } from '@/app/api/events/getEventDetail/types';
 
 
 const EventPage = ({ params }: { params: { slug: string } }) => {
