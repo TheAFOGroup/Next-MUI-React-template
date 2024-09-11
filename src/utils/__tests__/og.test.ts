@@ -1,3 +1,8 @@
+/**
+ * @jest-environment node
+ */
+
+
 import { openGraph } from '@/utils/shared/og';
 
 describe('Open Graph function should work correctly', () => {
