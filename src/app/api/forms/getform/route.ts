@@ -2,6 +2,7 @@ export const runtime = 'edge';
 import { NextRequest, NextResponse } from 'next/server';
 import { CheckAPIkey } from '@/app/api/_lib/CheckAPIkey';
 import { GetForm } from '@/app/api/forms/getform/getform';
+import { getD1Database } from '@/app/api/_lib/DBService/index';
 
 /**
  * Retrieves a form based on the provided form UUID.
@@ -26,7 +27,8 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const form = await GetForm(uuid);
+    const db = getD1Database()
+    const form = await GetForm(db, uuid);
     if (Object.keys(form as object).length > 0) {
       return NextResponse.json(form);
     } else {

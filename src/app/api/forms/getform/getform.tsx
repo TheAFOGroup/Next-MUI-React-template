@@ -6,7 +6,6 @@ export interface Env {
 import { getRequestContext } from '@cloudflare/next-on-pages'
 
 import { Form, FormField } from '@/app/api/forms/getform/types';
-
 /**
  * Retrieves a form from the database based on the provided UUID.
  * 
@@ -14,9 +13,7 @@ import { Form, FormField } from '@/app/api/forms/getform/types';
  * @returns A Promise that resolves to the retrieved form object.
  * @throws If the form is not found in the database or an error occurs during retrieval.
  */
-export async function GetForm(uuid: string) {
-  const { env } = getRequestContext()
-  const myDb = env.DB;
+export async function GetForm(myDb: D1Database, uuid: string) {
 
   try {
     // Get JSON data from the POST request body

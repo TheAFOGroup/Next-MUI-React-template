@@ -20,7 +20,7 @@ const EventPage = ({ params }: { params: { slug: string } }) => {
   }
 
   useEffect(() => {
-    axios.get(process.env.NEXT_PUBLIC_HOST + '/api/form/getform', {
+    axios.get(process.env.NEXT_PUBLIC_HOST + '/api/forms/getform', {
       params: {
         form_uuid: eventUUID
       },

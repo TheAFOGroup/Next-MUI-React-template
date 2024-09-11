@@ -15,7 +15,7 @@ const BuildFormPage = () => {
   const [alert, setAlert] = useState("")
   const [uuid, setUUID] = useState("")
 
-  const dropdownTypes = ["text", "checkbox"];
+  const dropdownTypes = ["text", "textarea", "checkbox"];
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
@@ -41,7 +41,7 @@ const BuildFormPage = () => {
 
     axios({
       method: 'post',
-      url: process.env.NEXT_PUBLIC_HOST + '/api/form/buildform',
+      url: process.env.NEXT_PUBLIC_HOST + '/api/forms/buildform',
       data: data,
       headers: {
         'Content-Type': 'application/json',
