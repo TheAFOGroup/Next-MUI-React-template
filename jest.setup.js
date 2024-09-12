@@ -8,7 +8,7 @@ import { TextDecoder, TextEncoder } from 'util';
 global.TextDecoder = TextDecoder;
 global.TextEncoder = TextEncoder;
 
-import { beforeAll } from '@jest/globals';
+import { beforeAll, afterAll } from '@jest/globals';
 import { ExecuteSQLFile } from '@/app/api/_lib/DBService/ExecuteSQLFile';
 import { Miniflare } from 'miniflare';
 
@@ -31,6 +31,11 @@ beforeAll(async () => {
   db = await mf.getD1Database("DB");
 
   await ExecuteSQLFile(db, '/home/apple/template/migrations/0002_user_responds.sql');
+});
+
+afterAll(async () => {
+  // Clean up any resources, such as closing the database connection
+  await mf.dispose();
 });
 
 export const getDatabase = () => db;

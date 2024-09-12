@@ -7,6 +7,8 @@ import { getDatabase } from 'jest.setup';
 
 import { GetForm } from './getform';
 
+import { Form } from '@/app/api/forms/getform/types';
+
 
 describe('GetForm', () => {
   let db: D1Database;
@@ -23,7 +25,7 @@ describe('GetForm', () => {
         INSERT INTO form_fields (form_id, field_name, field_type,field_order)
         VALUES
           (1, 'Name', 'text',1),
-          (1, 'Email', 'email',2),
+          (1, 'Field 2', 'checkbox',2),
           (2, 'Age', 'number',1),
           (2, 'Gender', 'radio',2);
       `,
@@ -50,13 +52,13 @@ describe('GetForm', () => {
 
   it('should retrieve the form and its fields', async () => {
     const form = await GetForm(db, "uuid-1");
-    expect(form).toEqual({
+    expect(form).toEqual<Form>({
       form_id: 1,
       form_name: 'Test Form',
       form_description: 'This is a test form',
-      fields: [
+      form_fields: [
         {
-          field_name: 'Field 1',
+          field_name: 'Name',
           field_type: 'text',
           field_order: 1,
           form_id: 1,

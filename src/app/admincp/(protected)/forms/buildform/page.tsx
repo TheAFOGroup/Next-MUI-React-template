@@ -7,6 +7,8 @@ import FieldTypeTable from '@/components/utils/FieldTypeTable/FieldTypeTable'; /
 
 import { BuildFormType } from '@/app/api/forms/buildform/type';
 
+import { DropDownType } from '@/components/utils/FieldTypeTable/types';
+
 const BuildFormPage = () => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -15,7 +17,44 @@ const BuildFormPage = () => {
   const [alert, setAlert] = useState("")
   const [uuid, setUUID] = useState("")
 
-  const dropdownTypes = ["text", "textarea", "checkbox"];
+  const dropdownTypes = [
+    {
+      "dropdown_type": "text",
+      "child_table": {
+        "enabled": false,
+        "hints": ""
+      }
+    },
+    {
+      "dropdown_type": "textarea",
+      "child_table": {
+        "enabled": false,
+        "hints": ""
+      }
+    },
+    {
+      "dropdown_type": "email",
+      "child_table": {
+        "enabled": true,
+        "hints": `Input the allowed email domain eg. *@gmail.com.
+         If you allow all email domain please leave it blank`
+      }
+    },
+    {
+      "dropdown_type": "checkbox",
+      "child_table": {
+        "enabled": false,
+        "hints": ""
+      }
+    },
+    {
+      "dropdown_type": "drop down",
+      "child_table": {
+        "enabled": true,
+        "hints": "Input the drop down entries"
+      }
+    },
+  ]
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
@@ -99,7 +138,7 @@ const BuildFormPage = () => {
       <Grid container direction="column" spacing={2}>
         <Grid item xs={6}>
           <TextField
-            label="Name"
+            label="Table name"
             value={name}
             onChange={handleNameChange}
             fullWidth
@@ -107,7 +146,7 @@ const BuildFormPage = () => {
         </Grid>
         <Grid item xs={6}>
           <TextField
-            label="Description"
+            label="Description (Optional)"
             value={description}
             onChange={handleDescriptionChange}
             fullWidth

@@ -1,7 +1,7 @@
 'use client';
-import { Checkbox, Grid, TextField, Typography } from '@mui/material';
+import { Checkbox, Grid, TextField, Typography, FormControlLabel } from '@mui/material';
 import React, { memo, useEffect, useState } from 'react';
-
+import Textarea from '@/components/utils/StyledComponent/Textarea';
 import { FormField, SubmmitField } from './types';
 
 interface DynamicFieldsTableProps {
@@ -67,6 +67,17 @@ const DynamicFieldsTable: React.FC<DynamicFieldsTableProps> = ({ fields, onChang
           />
         </div>
       );
+    } else if (field.field_type === 'textarea') {
+
+      return <Textarea
+        maxRows={4}
+        aria-label={field.field_name}
+        placeholder={field.field_name}
+        defaultValue=""
+        onChange={(e) => handleInputChange(field.form_field_id, e.target.value)}
+      />
+        ;
+
     } else if (field.field_type === 'checkbox') {
       const check = formValues.find((formValues) => formValues.form_field_id === field.form_field_id)?.response;
       let isChecked = false
@@ -74,29 +85,12 @@ const DynamicFieldsTable: React.FC<DynamicFieldsTableProps> = ({ fields, onChang
         isChecked = true
       }
       return (
-        <Grid
-          container
-          direction="row"
-          sx={{
-            justifyContent: "flex-start",
-            alignItems: "baseline",
-          }}
-          key={index}
-        >
-          <Grid item>
-            <Checkbox
-              checked={isChecked}
-              onChange={(e) => handleInputChange(field.form_field_id, e.target.checked.toString())}
-              inputProps={{ 'aria-label': 'controlled' }}
-            />
-          </Grid>
-          <Grid item>
-            <Typography variant="body1">{field.field_name}</Typography>
-          </Grid>
-        </Grid>
+        <FormControlLabel
+          control={<Checkbox value='remember' color='primary' />}
+          label={field.field_name}
+          onChange={(e) => handleInputChange(field.form_field_id, (e.target as HTMLInputElement).checked.toString())}
+        />
       );
-    } else if (field.field_type === 'date') {
-      return <div><input type="date" /></div>;
     } else if (field.field_type === 'select') {
       return (
         <div>

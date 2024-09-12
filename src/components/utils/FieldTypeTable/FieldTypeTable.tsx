@@ -1,6 +1,7 @@
 "use client"
 import { Add, Delete } from '@mui/icons-material';
 import {
+  Alert,
   Button,
   Container,
   IconButton,
@@ -13,14 +14,14 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TextField,
+  TextField
 } from '@mui/material';
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useCallback, useEffect, useState } from 'react';
 
-import { DynamicField } from '@/components/utils/FieldTypeTable/types';
-
+import FieldList from '@/components/utils/FieldList/FieldList';
+import { DropDownType, DynamicField } from '@/components/utils/FieldTypeTable/types';
 interface FieldTypeTableProps {
-  dropdownTypes: string[];
+  dropdownTypes: DropDownType[];
   onChange: (fields: DynamicField[]) => void;
 }
 
@@ -34,10 +35,10 @@ interface FieldTypeTableProps {
  * @returns {JSX.Element} The rendered FieldTypeTable component.
  */
 const FieldTypeTable: React.FC<FieldTypeTableProps> = ({ dropdownTypes, onChange }) => {
-  const [rows, setRows] = useState([{ field_name: '', field_type: '' }]);
+  const [rows, setRows] = useState([{ field_name: 'email', field_type: 'email', field_info: '' }]);
 
   const handleAddRow = () => {
-    setRows([...rows, { field_name: '', field_type: '' }]);
+    setRows([...rows, { field_name: '', field_type: '', field_info: '' }]);
   };
 
   const handleDeleteRow = (index: number) => {
@@ -57,6 +58,25 @@ const FieldTypeTable: React.FC<FieldTypeTableProps> = ({ dropdownTypes, onChange
     setRows(newRows);
   };
 
+  const handleChildTable = useCallback((index: number, updatedFields) => {
+    const newRows = [...rows];
+    newRows[index].field_info = updatedFields;
+    if (JSON.stringify(newRows) != JSON.stringify(rows)) {
+      setRows(newRows);
+    }
+    console.log(rows)
+  }, [rows]);
+
+  function getChildTable(fieldType: string, index: number) {
+    const type = dropdownTypes.find(dt => dt.dropdown_type === fieldType);
+    if (type?.child_table.enabled) {
+      return (<>
+        <Alert severity="info">{type.child_table.hints}</Alert>
+        <FieldList onChange={(updatedFields) => handleChildTable(index, updatedFields)} />
+      </>)
+    }
+  }
+
   useEffect(() => {
     const fieldsWithOrder: DynamicField[] = rows.map((field, index) => ({
       ...field,
@@ -64,6 +84,8 @@ const FieldTypeTable: React.FC<FieldTypeTableProps> = ({ dropdownTypes, onChange
     }));
     onChange(fieldsWithOrder);
   }, [rows, onChange]);
+
+
 
   return (
     <Container>
@@ -90,17 +112,20 @@ const FieldTypeTable: React.FC<FieldTypeTableProps> = ({ dropdownTypes, onChange
                     value={row.field_type}
                     onChange={(e) => handleTypeChange(index, e.target.value)}
                   >
-                    {dropdownTypes.map((type) => (
-                      <MenuItem key={type} value={type}>
-                        {type}
+                    {dropdownTypes.map((obj) => (
+                      <MenuItem key={obj.dropdown_type} value={obj.dropdown_type}>
+                        {obj.dropdown_type}
                       </MenuItem>
                     ))}
                   </Select>
+                  {getChildTable(row.field_type, index)}
                 </TableCell>
                 <TableCell>
-                  <IconButton onClick={() => handleDeleteRow(index)}>
-                    <Delete />
-                  </IconButton>
+                  {index != 0 ?
+                    <IconButton onClick={() => handleDeleteRow(index)}>
+                      <Delete />
+                    </IconButton> : <></>
+                  }
                 </TableCell>
               </TableRow>
             ))}
