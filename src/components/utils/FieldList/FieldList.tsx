@@ -30,6 +30,7 @@ const FieldList: React.FC<FieldListProps> = ({ onChange }) => {
 
   useEffect(() => {
     onChange(rows);
+    console.log("fieldList", rows)
   }, [rows, onChange]);
 
   return (

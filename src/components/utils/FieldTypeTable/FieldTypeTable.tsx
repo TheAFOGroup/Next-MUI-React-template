@@ -17,6 +17,7 @@ import {
   TextField
 } from '@mui/material';
 import React, { memo, useCallback, useEffect, useState } from 'react';
+import { isEqual } from 'lodash';
 
 import FieldList from '@/components/utils/FieldList/FieldList';
 import { DropDownType, DynamicField } from '@/components/utils/FieldTypeTable/types';
@@ -35,10 +36,10 @@ interface FieldTypeTableProps {
  * @returns {JSX.Element} The rendered FieldTypeTable component.
  */
 const FieldTypeTable: React.FC<FieldTypeTableProps> = ({ dropdownTypes, onChange }) => {
-  const [rows, setRows] = useState([{ field_name: 'email', field_type: 'email', field_info: '' }]);
+  const [rows, setRows] = useState([{ field_name: 'email', field_type: 'email', field_info: [""] }]);
 
   const handleAddRow = () => {
-    setRows([...rows, { field_name: '', field_type: '', field_info: '' }]);
+    setRows([...rows, { field_name: '', field_type: '', field_info: [""] }]);
   };
 
   const handleDeleteRow = (index: number) => {
@@ -59,23 +60,26 @@ const FieldTypeTable: React.FC<FieldTypeTableProps> = ({ dropdownTypes, onChange
   };
 
   const handleChildTable = useCallback((index: number, updatedFields) => {
-    const newRows = [...rows];
-    newRows[index].field_info = updatedFields;
-    if (JSON.stringify(newRows) != JSON.stringify(rows)) {
+    // BUG: This keep triggering
+    if (rows[index].field_info != updatedFields) {
+      const newRows = [...rows];
+      newRows[index].field_info = updatedFields;
       setRows(newRows);
     }
-    console.log(rows)
+    console.log("handleChildTable", rows)
   }, [rows]);
 
-  function getChildTable(fieldType: string, index: number) {
+  const getChildTable = (fieldType: string, index: number) => {
     const type = dropdownTypes.find(dt => dt.dropdown_type === fieldType);
     if (type?.child_table.enabled) {
-      return (<>
-        <Alert severity="info">{type.child_table.hints}</Alert>
-        <FieldList onChange={(updatedFields) => handleChildTable(index, updatedFields)} />
-      </>)
+      return (
+        <>
+          <Alert severity="info">{type.child_table.hints}</Alert>
+          <FieldList onChange={(updatedFields) => handleChildTable(index, updatedFields)} />
+        </>
+      );
     }
-  }
+  };
 
   useEffect(() => {
     const fieldsWithOrder: DynamicField[] = rows.map((field, index) => ({
@@ -83,9 +87,8 @@ const FieldTypeTable: React.FC<FieldTypeTableProps> = ({ dropdownTypes, onChange
       field_order: index + 1
     }));
     onChange(fieldsWithOrder);
+    console.log("UseEffect", fieldsWithOrder)
   }, [rows, onChange]);
-
-
 
   return (
     <Container>

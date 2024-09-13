@@ -18,7 +18,7 @@ const ValidateTextField: React.FC<ValidateTextFieldProps & TextFieldProps> = ({ 
     return z.string().refine((val) => {
       return regexPatterns.some((regexPattern) => new RegExp(regexPattern).test(val));
     }, {
-      message: 'Invalid input: This must match one of the specified patterns'
+      message: 'Invalid input: This must match one of the email:' + patterns
     });
   };
 
