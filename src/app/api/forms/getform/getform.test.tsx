@@ -22,9 +22,9 @@ describe('GetForm', () => {
           ('uuid-2', 'Another Test Form', 'Owner 2', 'This is another test form');
       `,
       `
-        INSERT INTO form_fields (form_id, field_name, field_type,field_order)
+        INSERT INTO form_fields (form_id, field_name, field_type,field_order,field_info)
         VALUES
-          (1, 'Name', 'text',1),
+          (1, 'Name', 'text',1, '["gmail.com"]'),
           (1, 'Field 2', 'checkbox',2),
           (2, 'Age', 'number',1),
           (2, 'Gender', 'radio',2);
@@ -61,12 +61,14 @@ describe('GetForm', () => {
           field_name: 'Name',
           field_type: 'text',
           field_order: 1,
+          field_info: `["gmail.com"]`,
           form_id: 1,
           form_field_id: 1,
         },
         {
           field_name: 'Field 2',
           field_type: 'checkbox',
+          field_info: ``,
           field_order: 2,
           form_id: 1,
           form_field_id: 2,

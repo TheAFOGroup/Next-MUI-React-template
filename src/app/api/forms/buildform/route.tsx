@@ -59,10 +59,10 @@ export async function POST(req: NextRequest) {
     const formId = formIdRes?.form_id;
 
     // Dynamically construct the SQL statement for form fields
-    const fieldValues = data.form_fields.map((field, index) => `(${formId}, ?, ?, ?)`).join(', ');
-    const stmt2 = `INSERT INTO form_fields (form_id, field_name, field_type, field_order) VALUES ${fieldValues};`;
+    const fieldValues = data.form_fields.map((field, index) => `(${formId}, ?, ?, ?, ?)`).join(', ');
+    const stmt2 = `INSERT INTO form_fields (form_id, field_name, field_type, field_order, field_info) VALUES ${fieldValues};`;
 
-    const fieldParams = data.form_fields.flatMap((field, index) => [field.field_name, field.field_type, field.field_order]);
+    const fieldParams = data.form_fields.flatMap((field, index) => [field.field_name, field.field_type, field.field_order, JSON.stringify(field.field_info)]);
 
     console.log('Executing SQL statement for form fields:', stmt2);
     const res = await myDb.prepare(stmt2).bind(...fieldParams).run();

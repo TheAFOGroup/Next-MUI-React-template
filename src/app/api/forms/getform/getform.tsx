@@ -48,6 +48,7 @@ WHERE
     field_name,
     field_type,
     field_order,
+    field_info,
     form_id,
     form_field_id
   FROM 

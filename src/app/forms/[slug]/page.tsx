@@ -14,6 +14,7 @@ const EventPage = ({ params }: { params: { slug: string } }) => {
   const [field, setField] = useState<SubmmitField[]>([]);
   const [formSubmitted, setFormSubmitted] = useState(false)
   const [alert, setAlert] = useState("")
+  const [error, setError] = useState<boolean>(false)
 
   const header = {
     'API_SECRET': process.env.NEXT_PUBLIC_API_SECRET
@@ -33,9 +34,10 @@ const EventPage = ({ params }: { params: { slug: string } }) => {
       .catch(error => console.error(error));
   }, []);
 
-  const handleChange = useCallback((value: SubmmitField[]) => {
-    console.log(value);
+  const handleChange = useCallback((value: SubmmitField[], error?) => {
+    console.log(value, error);
     setField(value);
+    setError(error);
   }, []);
 
   const handleSubmit = () => {
@@ -94,7 +96,7 @@ const EventPage = ({ params }: { params: { slug: string } }) => {
         <DynamicFieldsTable fields={form?.form_fields ?? []} onChange={handleChange} />
       </Grid>
       <Grid item xs={12} sm={6}>
-        <Button variant="contained" color="primary" onClick={handleSubmit}>Submit</Button>
+        <Button variant="contained" color="primary" onClick={handleSubmit} disabled={error}>Submit</Button>
       </Grid>
       {
         alert.length ?

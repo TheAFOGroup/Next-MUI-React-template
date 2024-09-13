@@ -7,8 +7,6 @@ import FieldTypeTable from '@/components/utils/FieldTypeTable/FieldTypeTable'; /
 
 import { BuildFormType } from '@/app/api/forms/buildform/type';
 
-import { DropDownType } from '@/components/utils/FieldTypeTable/types';
-
 const BuildFormPage = () => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');

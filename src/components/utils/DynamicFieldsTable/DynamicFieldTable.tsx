@@ -1,12 +1,15 @@
 'use client';
-import { Checkbox, Grid, TextField, Typography, FormControlLabel } from '@mui/material';
+import { Checkbox, FormControlLabel, Grid, TextField } from '@mui/material';
 import React, { memo, useEffect, useState } from 'react';
+
 import Textarea from '@/components/utils/StyledComponent/Textarea';
+
 import { FormField, SubmmitField } from './types';
 
+import ValidateTextField from '@/components/utils/ValidateTextField/ValidateTextField';
 interface DynamicFieldsTableProps {
   fields: FormField[];
-  onChange: (submitFields: SubmmitField[]) => void;
+  onChange: (submitFields: SubmmitField[], error?: boolean) => void;
 }
 
 /**
@@ -24,6 +27,7 @@ interface DynamicFieldsTableProps {
  */
 const DynamicFieldsTable: React.FC<DynamicFieldsTableProps> = ({ fields, onChange }) => {
   const [formValues, setFormValues] = useState<SubmmitField[]>([]);
+  const [error, setError] = useState<boolean>(false);
 
   // Update formValues when fields prop changes
   useEffect(() => {
@@ -36,7 +40,11 @@ const DynamicFieldsTable: React.FC<DynamicFieldsTableProps> = ({ fields, onChang
     }
   }, [fields]);
 
-  const handleInputChange = (form_field_id: number, response: string) => {
+  const handleInputChange = (form_field_id: number, response: string, error?: boolean) => {
+    console.log("handleInputChange", error)
+    if (error !== undefined) {
+      setError(error);
+    }
     const updatedFormValues = formValues.map((field) => {
       if (field.form_field_id === form_field_id) {
         return {
@@ -50,8 +58,8 @@ const DynamicFieldsTable: React.FC<DynamicFieldsTableProps> = ({ fields, onChang
   };
 
   useEffect(() => {
-    onChange(formValues);
-  }, [formValues, onChange]);
+    onChange(formValues, error);
+  }, [formValues, error, onChange]);
 
   const renderFieldType = (field: FormField, index: number) => {
     if (field.field_type === 'text') {
@@ -91,13 +99,20 @@ const DynamicFieldsTable: React.FC<DynamicFieldsTableProps> = ({ fields, onChang
           onChange={(e) => handleInputChange(field.form_field_id, (e.target as HTMLInputElement).checked.toString())}
         />
       );
-    } else if (field.field_type === 'select') {
+    } else if (field.field_type === 'email') {
       return (
         <div>
-          <select>
-            <option value="option1">Option 1</option>
-            <option value="option2">Option 2</option>
-          </select>
+          <ValidateTextField
+            restrictions={JSON.parse(field.field_info)}
+            key={index}
+            label={field.field_name}
+            type={field.field_type}
+            fullWidth
+            margin="normal"
+            onChange={(event: React.ChangeEvent<HTMLInputElement> & { error: boolean }) => {
+              handleInputChange(field.form_field_id, event.target.value, event.error);
+            }}
+          />
         </div>
       );
     } else {
