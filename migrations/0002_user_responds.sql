@@ -28,12 +28,12 @@ create table  IF NOT EXISTS form_fields (
     form_id integer not null,
     field_name varchar(255) not null,
     field_type varchar(255) not null,
-    field_info varchar(255) not null default '',
+    field_order integer not null,
     created_at timestamp not null default current_timestamp,
     updated_at timestamp not null default current_timestamp
 );
 
-create table  IF NOT EXISTS field_info(
+create table IF NOT EXISTS field_info(
     field_info_id integer primary key AUTOINCREMENT,
     form_field_id integer,
     field_info_item varchar(255)
