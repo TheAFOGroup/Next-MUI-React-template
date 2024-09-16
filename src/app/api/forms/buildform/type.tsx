@@ -8,8 +8,12 @@ export interface BuildFormType {
 interface FormField {
   field_name: string;
   field_type: string;
-  field_info: string;
+  field_info: string[];
   field_order: number;
+}
+
+interface FieldInfo {
+  field_info_item: string[]
 }
 
 export interface BuildFormResponse {

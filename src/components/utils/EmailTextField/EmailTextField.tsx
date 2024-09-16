@@ -2,29 +2,48 @@ import React, { useState, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import { TextFieldProps } from '@mui/material/TextField';
 import { z } from 'zod'
-interface ValidateTextFieldProps {
+interface EmailTextFieldProps {
   restrictions: string[];
   onChange: (event: React.ChangeEvent<HTMLInputElement> & { error: boolean }) => void;
 }
 
-const ValidateTextField: React.FC<ValidateTextFieldProps & TextFieldProps> = ({ restrictions, onChange, ...textFieldProps }) => {
+/**
+ * ValidateTextField component.
+ * 
+ * @component
+ * @example
+ * ```tsx
+ * <ValidateTextField
+ *   restrictions={['example.com']}
+ *   onChange={handleChange}
+ *   label="Email"
+ * />
+ * ```
+ * @param {Object} props - The component props.
+ * @param {string[]} props.restrictions - The email domain restrictions.
+ * @param {Function} props.onChange - The change event handler.
+ * @param {TextFieldProps} props.textFieldProps - The TextField component props.
+ * @returns {JSX.Element} The rendered ValidateTextField component.
+ */
+const EmailTextField: React.FC<EmailTextFieldProps & TextFieldProps> = ({ restrictions, onChange, ...textFieldProps }) => {
   const [value, setValue] = useState('');
-  const [error, setError] = useState(false);
+  const [error, setError] = useState(true);
   const [helperText, setHelperText] = useState('');
 
   const createSchema = (patterns: string[]) => {
+    if (patterns.length === 1 && patterns[0] === "") {
+      return z.string().email()
+    }
     const regexPatterns = patterns.map(pattern => `^[a-zA-Z0-9._%+-]+@${pattern}$`);
     console.log(regexPatterns)
-    return z.string().refine((val) => {
+    return z.string().email().refine((val) => {
       return regexPatterns.some((regexPattern) => new RegExp(regexPattern).test(val));
     }, {
-      message: 'Invalid input: This must match one of the email:' + patterns
+      message: 'Invalid input'
     });
   };
 
   const schema = createSchema(restrictions);
-
-  const invalidInputText = 'Invalid input: This have to contain ' + restrictions
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
@@ -51,8 +70,9 @@ const ValidateTextField: React.FC<ValidateTextFieldProps & TextFieldProps> = ({ 
       error={error}
       helperText={helperText}
       {...textFieldProps}
+      required
     />
   );
 };
 
-export default ValidateTextField;
+export default EmailTextField;

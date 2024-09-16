@@ -48,7 +48,6 @@ WHERE
     field_name,
     field_type,
     field_order,
-    field_info,
     form_id,
     form_field_id
   FROM 
@@ -61,6 +60,22 @@ WHERE
       .all<FormField>();
 
     console.log(formFieldRes)
+
+    if (formFieldRes?.results) {
+      for (const formField of formFieldRes.results) {
+        const fieldInfoStmt = `
+          SELECT 
+            field_info_item
+          FROM 
+            field_info
+          WHERE
+            form_field_id = ?;
+        `;
+        const fieldInfoRes = await myDb.prepare(fieldInfoStmt).bind(formField.form_field_id).all<{ field_info_item: string }>();
+
+        formField.field_info = fieldInfoRes?.results.map(info => info.field_info_item) || [];
+      }
+    }
 
     // Send a response back to the client
     formResult.form_fields = formFieldRes?.results || [];

@@ -26,9 +26,15 @@ export interface Env {
 import { getRequestContext } from '@cloudflare/next-on-pages'
 import { CheckAPIkey } from '@/app/api/_lib/CheckAPIkey';
 import { BuildFormType, BuildFormResponse } from '@/app/api/forms/buildform/type';
+import { getD1Database } from '@/app/api/_lib/DBService/index';
+import { BuildForm } from '@/app/api/forms/buildform/Buildform';
 
 interface formId {
   form_id: number
+}
+
+interface formFieldId {
+  form_field_id: number
 }
 
 export async function POST(req: NextRequest) {
@@ -36,42 +42,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: 'Not Authorized' }, { status: 401 });
   }
 
-  const { env } = getRequestContext()
-  const myDb = env.DB;
+  const data: BuildFormType = (await req.json()) as BuildFormType;
+  console.log('Received data:', data);
 
-  const uuid = crypto.randomUUID()
-
+  // TODO: Implenmnet rollback in case of fail transaction
   try {
-    // Get JSON data from the POST request body
-    const data: BuildFormType = (await req.json()) as BuildFormType;
-    console.log('Received data:', data);
+    const db = getD1Database()
+    const respond = await BuildForm(db, data);
 
-    const stmt = `INSERT INTO forms (form_name, form_UUID, form_owner, form_description)
-              VALUES 
-                (?,?, ?, ?)
-              returning form_id;`;
-
-    console.log('Executing SQL statement:', stmt);
-    const formIdRes = await myDb.prepare(stmt)
-      .bind(data.form_name, uuid, data.form_owner, data.form_description)
-      .first<formId>();
-
-    const formId = formIdRes?.form_id;
-
-    // Dynamically construct the SQL statement for form fields
-    const fieldValues = data.form_fields.map((field, index) => `(${formId}, ?, ?, ?, ?)`).join(', ');
-    const stmt2 = `INSERT INTO form_fields (form_id, field_name, field_type, field_order, field_info) VALUES ${fieldValues};`;
-
-    const fieldParams = data.form_fields.flatMap((field, index) => [field.field_name, field.field_type, field.field_order, JSON.stringify(field.field_info)]);
-
-    console.log('Executing SQL statement for form fields:', stmt2);
-    const res = await myDb.prepare(stmt2).bind(...fieldParams).run();
-
-    const respond: BuildFormResponse = { UUID: uuid }
-    // Send a response back to the client
-    return NextResponse.json({ message: 'Data received successfully', respond });
+    return NextResponse.json(respond)
   } catch (error) {
-    console.error('Error processing POST request:', error);
-    return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json({ message: 'An error occurred while processing the request', error }, { status: 500 });
   }
 }

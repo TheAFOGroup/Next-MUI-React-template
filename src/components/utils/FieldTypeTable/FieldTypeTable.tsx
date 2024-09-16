@@ -60,7 +60,6 @@ const FieldTypeTable: React.FC<FieldTypeTableProps> = ({ dropdownTypes, onChange
   };
 
   const handleChildTable = useCallback((index: number, updatedFields) => {
-    // BUG: This keep triggering
     if (rows[index].field_info != updatedFields) {
       const newRows = [...rows];
       newRows[index].field_info = updatedFields;

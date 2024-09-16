@@ -6,7 +6,7 @@ import Textarea from '@/components/utils/StyledComponent/Textarea';
 
 import { FormField, SubmmitField } from './types';
 
-import ValidateTextField from '@/components/utils/ValidateTextField/ValidateTextField';
+import EmailTextField from '@/components/utils/EmailTextField/EmailTextField';
 interface DynamicFieldsTableProps {
   fields: FormField[];
   onChange: (submitFields: SubmmitField[], error?: boolean) => void;
@@ -128,8 +128,8 @@ const DynamicFieldsTable: React.FC<DynamicFieldsTableProps> = ({ fields, onChang
     } else if (field.field_type === 'email') {
       return (
         <div>
-          <ValidateTextField
-            restrictions={JSON.parse(field.field_info)}
+          <EmailTextField
+            restrictions={field.field_info}
             key={index}
             label={field.field_name}
             type={field.field_type}

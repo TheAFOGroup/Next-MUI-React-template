@@ -7,11 +7,23 @@ import FieldTypeTable from '@/components/utils/FieldTypeTable/FieldTypeTable'; /
 
 import { BuildFormType } from '@/app/api/forms/buildform/type';
 
+import DynamicFieldTable from '@/components/utils/DynamicFieldsTable/DynamicFieldTable';
+import { FormField } from '@/components/utils/DynamicFieldsTable/types';
+import { DynamicField } from '@/components/utils/FieldTypeTable/types';
 const BuildFormPage = () => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [formSubmitted, setFormSubmitted] = useState(false)
-  const [fields, setFields] = useState([]);
+  const [formSubmitted, setFormSubmitted] = useState<boolean>(false)
+  const [fields, setFields] = useState<DynamicField[]>(
+    [
+      {
+        field_order: 1,
+        field_name: 'email',
+        field_type: 'text',
+        field_info: [""]
+      }
+    ]
+  );
   const [alert, setAlert] = useState("")
   const [uuid, setUUID] = useState("")
 
@@ -34,7 +46,7 @@ const BuildFormPage = () => {
       "dropdown_type": "email",
       "child_table": {
         "enabled": true,
-        "hints": `Input the allowed email domain eg. *@gmail.com.
+        "hints": `Input the allowed email domain eg. gmail.com.
          If you allow all email domain please leave it blank`
       }
     },
@@ -49,7 +61,7 @@ const BuildFormPage = () => {
       "dropdown_type": "drop down",
       "child_table": {
         "enabled": true,
-        "hints": "Input the drop down entries"
+        "hints": "Input the drop down entries(Not implenmented)"
       }
     },
   ]
@@ -62,7 +74,7 @@ const BuildFormPage = () => {
     setDescription(event.target.value);
   };
 
-  const handleFieldsSubmit = useCallback((updatedFields) => {
+  const handleFieldsSubmit = useCallback((updatedFields: DynamicField[]) => {
     setFields(updatedFields);
     console.log('Updated Fields:', updatedFields);
   }, []);
@@ -130,45 +142,86 @@ const BuildFormPage = () => {
     );
   }
 
+  const changeshape = (fields: DynamicField[]): FormField[] => {
+    const updatedFields: FormField[] = fields.map((field, index) => {
+      return {
+        ...field,
+        form_id: 1,
+        form_field_id: index + 1
+      };
+    });
+    console.log(updatedFields);
+    return updatedFields;
+  };
+
+  const fieldPreviewOnChange = (response: any, error: any) => {
+    const res = response;
+    const err = error;
+  };
+
+
   return (
     <div>
-      <h1>Create Forms</h1>
-      <Grid container direction="column" spacing={2}>
+      <Grid container direction="row" spacing={2}>
         <Grid item xs={6}>
-          <TextField
-            label="Table name"
-            value={name}
-            onChange={handleNameChange}
-            fullWidth
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <TextField
-            label="Description (Optional)"
-            value={description}
-            onChange={handleDescriptionChange}
-            fullWidth
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <FieldTypeTable dropdownTypes={dropdownTypes} onChange={handleFieldsSubmit} />
-        </Grid>
-        <Button variant="contained" color="primary" onClick={handleSubmit}>
-          Submit
-        </Button>
-        {
-          alert.length ?
-            <Grid item>
-              <Alert severity="error">
-                {alert}
-              </Alert>
+          <h1>Create Forms</h1>
+          <Grid container direction="column" spacing={2}>
+            <Grid item xs={6}>
+              <TextField
+                label="Table name"
+                value={name}
+                onChange={handleNameChange}
+                fullWidth
+              />
             </Grid>
-            :
-            <></>
-        }
+            <Grid item xs={6}>
+              <TextField
+                label="Description (Optional)"
+                value={description}
+                onChange={handleDescriptionChange}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <FieldTypeTable dropdownTypes={dropdownTypes} onChange={handleFieldsSubmit} />
+            </Grid>
+            <Button variant="contained" color="primary" onClick={handleSubmit}>
+              Submit
+            </Button>
+            {
+              alert.length ?
+                <Grid item>
+                  <Alert severity="error">
+                    {alert}
+                  </Alert>
+                </Grid>
+                :
+                <></>
+            }
+          </Grid>
+        </Grid>
+        <Grid item xs={6}>
+          <Grid container direction="column">
+
+            <Grid item xs={6}>
+              <Typography variant='h2'>Preview</Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <DynamicFieldTable fields={changeshape(fields)} onChange={fieldPreviewOnChange} />
+            </Grid>
+
+            <Grid />
+
+          </Grid>
+        </Grid>
       </Grid>
     </div>
   );
 };
 
 export default BuildFormPage;
+
+/**
+ * 
+ *           <DynamicFieldTable fields={changeshape(fields)} onChange={fieldPreviewOnChange} />
+ */
