@@ -4,11 +4,11 @@ import GlobalStyles from '@mui/material/GlobalStyles';
 import * as React from 'react';
 
 import { SignIn } from '@/components/auth/signinButton';
-import { SignOut } from '@/components/auth/signoutButton';
 import ResponsiveAppBar from '@/components/ResponsiveAppBar';
 import { GLOBAL_STYLES } from '@/styles';
 
-import { auth } from '../../auth';
+import { auth } from '../auth';
+import { SessionProvider } from 'next-auth/react';
 
 export default async function RootLayout({
   children,
@@ -24,13 +24,15 @@ export default async function RootLayout({
         <ResponsiveAppBar session={session}></ResponsiveAppBar>
         {session ? (
           <>
-            <SignOut />
-            <Container sx={{ pl: 0, pr: 0 }}>{children}</Container>
+            <SessionProvider session={session}>
+              <Container sx={{ pl: 0, pr: 0 }}>{children}</Container>
+            </SessionProvider>
+
           </>
         ) : (
           <>
-            <SignIn />
             <Typography>You must sign in to continue</Typography>
+            <SignIn />
           </>
         )}
       </body>

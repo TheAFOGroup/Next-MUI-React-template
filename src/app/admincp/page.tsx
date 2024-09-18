@@ -1,28 +1,22 @@
-import { Box } from '@mui/material';
-import { SessionProvider } from "next-auth/react";
-
-import { SignIn } from '@/components/auth/signinButton';
-import { SignOut } from '@/components/auth/signoutButton';
-import { SignUp } from '@/components/auth/signUpButton';
-import Register from '@/components/Register';
-
+import { Box, Button } from '@mui/material';
+import { redirect } from 'next/navigation';
 import { auth } from '../auth';
 
-const AppHome = async () => {
+const Admincp = async () => {
   const session = await auth();
-  console.log("DB=", process.env.DB)
-  const dbExist = process.env.DB.prepare("select 1 from users").all()
-  console.log(dbExist)
-  return (
-    <SessionProvider>
-      <Box>
-        session={JSON.stringify(session)}
-        {session ? <SignOut /> : <div><SignIn /><SignUp /></div>}
-        <Register></Register>
-      </Box>
-    </SessionProvider>
 
+  if (!session) {
+    return (
+      <></>
+    )
+  }
+  return (
+    <Box>
+      <Button variant="contained" href='/admincp/forms/buildForm'>
+        Build Form
+      </Button>
+    </Box>
   );
 };
 
-export default AppHome;
+export default Admincp;

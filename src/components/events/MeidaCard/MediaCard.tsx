@@ -7,7 +7,7 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
 
-import { Speaker } from '@/app/api/events/getSpeakers/types';
+import { Speaker } from '@/components/events/MeidaCard/types';
 import Biobutton from '@/components/events/BioButton';
 
 interface MediaCardProps {
@@ -16,7 +16,7 @@ interface MediaCardProps {
 
 const MediaCard: React.FC<MediaCardProps> = ({ speaker }) => {
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card sx={{ minWidth: "250px", minHeight: "250px" }}>
       <CardMedia
         component="img"
         sx={{ height: 140 }}

@@ -8,7 +8,7 @@ import { Loading } from '@/components/Loading';
 
 import { Speaker } from '@/app/api/events/getSpeakers/types';
 
-import MediaCard from './MediaCard';
+import MediaCard from './MeidaCard/MediaCard';
 
 
 interface MediaGridProp {

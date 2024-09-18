@@ -10,7 +10,10 @@ import { BuildFormType } from '@/app/api/forms/buildform/type';
 import DynamicFieldTable from '@/components/utils/DynamicFieldsTable/DynamicFieldTable';
 import { FormField } from '@/components/utils/DynamicFieldsTable/types';
 import { DynamicField } from '@/components/utils/FieldTypeTable/types';
+import { useSession } from 'next-auth/react';
+
 const BuildFormPage = () => {
+  const session = useSession().data
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [formSubmitted, setFormSubmitted] = useState<boolean>(false)
@@ -84,7 +87,7 @@ const BuildFormPage = () => {
     const data: BuildFormType = {
       form_name: name,
       form_description: description,
-      form_owner: "admin",
+      form_owner: session?.user?.email || '',
       form_fields: fields
     }
 
@@ -117,6 +120,24 @@ const BuildFormPage = () => {
     setUUID("");
   };
 
+  const changeshape = (fields: DynamicField[]): FormField[] => {
+    const updatedFields: FormField[] = fields.map((field, index) => {
+      return {
+        ...field,
+        form_id: 1,
+        form_field_id: index + 1
+      };
+    });
+    console.log(updatedFields);
+    return updatedFields;
+  };
+
+  const fieldPreviewOnChange = (response: any, error: any) => {
+    const res = response;
+    const err = error;
+  };
+
+
   if (formSubmitted) {
     return (
       <div>
@@ -141,24 +162,6 @@ const BuildFormPage = () => {
       </div>
     );
   }
-
-  const changeshape = (fields: DynamicField[]): FormField[] => {
-    const updatedFields: FormField[] = fields.map((field, index) => {
-      return {
-        ...field,
-        form_id: 1,
-        form_field_id: index + 1
-      };
-    });
-    console.log(updatedFields);
-    return updatedFields;
-  };
-
-  const fieldPreviewOnChange = (response: any, error: any) => {
-    const res = response;
-    const err = error;
-  };
-
 
   return (
     <div>

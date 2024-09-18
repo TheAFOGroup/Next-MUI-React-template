@@ -23,7 +23,8 @@ export interface Env {
   DB: D1Database;
 }
 import { BuildFormType, BuildFormResponse } from '@/app/api/forms/buildform/type';
-import crypto from "crypto"
+import { v4 as uuidv4 } from 'uuid';
+
 interface formId {
   form_id: number
 }
@@ -33,14 +34,11 @@ interface formFieldId {
 }
 
 export async function BuildForm(myDb: D1Database, data: BuildFormType) {
-
-  const uuid = crypto.randomUUID()
-
   // TODO: Implenmnet rollback in case of fail transaction
   try {
+    const uuid = uuidv4();
 
     // Get JSON data from the POST request body
-
     const stmt = `INSERT INTO forms (form_name, form_UUID, form_owner, form_description)
               VALUES 
                 (?,?, ?, ?)

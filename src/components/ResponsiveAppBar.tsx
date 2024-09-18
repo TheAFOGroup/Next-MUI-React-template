@@ -14,9 +14,11 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { Session } from 'next-auth';
+import { signOut, signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation'; // Import useRouter from next/router
 
-const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const pages = [];
+const settings = [];
 
 interface ResponsiveAppBarProps {
   session: Session | null;
@@ -25,6 +27,7 @@ interface ResponsiveAppBarProps {
 function ResponsiveAppBar({ session }: ResponsiveAppBarProps) {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const router = useRouter(); // Initialize useRouter
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -41,6 +44,14 @@ function ResponsiveAppBar({ session }: ResponsiveAppBarProps) {
     setAnchorElUser(null);
   };
 
+  const handleSignOut = async () => {
+    await signOut({ callbackUrl: '/admincp' });
+  };
+
+  const handleMenuItemClick = (path) => {
+    router.push(path);
+  };
+
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -50,7 +61,7 @@ function ResponsiveAppBar({ session }: ResponsiveAppBarProps) {
             variant="h6"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            href="/admincp/dashboard"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -61,7 +72,7 @@ function ResponsiveAppBar({ session }: ResponsiveAppBarProps) {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            AFO GROUP
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -98,6 +109,12 @@ function ResponsiveAppBar({ session }: ResponsiveAppBarProps) {
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
+              <MenuItem onClick={() => { handleMenuItemClick("/admincp/forms/buildform") }}>
+                <Typography textAlign="center">Build Form</Typography>
+              </MenuItem>
+              <MenuItem onClick={() => { handleMenuItemClick("/admincp/forms/viewform") }}>
+                <Typography textAlign="center">View Form Results</Typography>
+              </MenuItem>
             </Menu>
           </Box>
           <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
@@ -105,7 +122,7 @@ function ResponsiveAppBar({ session }: ResponsiveAppBarProps) {
             variant="h5"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            href="/admincp/dashboard"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -117,7 +134,7 @@ function ResponsiveAppBar({ session }: ResponsiveAppBarProps) {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            AFO GROUP
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
@@ -131,10 +148,28 @@ function ResponsiveAppBar({ session }: ResponsiveAppBarProps) {
             ))}
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', }}>
+            {session
+              ?
+              <Typography
+                noWrap
+                sx={{ my: 2, color: 'white', display: 'block', mr: 2 }}
+              >
+                {session?.user?.email}
+              </Typography>
+              :
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={() => signIn(undefined, { callbackUrl: '/admincp/dashboard' })}
+                sx={{ my: 2, mr: 2, color: 'white' }}
+              >
+                Sign In
+              </Button>
+            }
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" >{session?.user?.email}[0]</Avatar>
               </IconButton>
             </Tooltip>
             <Menu
@@ -154,10 +189,17 @@ function ResponsiveAppBar({ session }: ResponsiveAppBarProps) {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem key={setting} onClick={handleCloseUserMenu} href="/admincp/dashboard" >
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
+              <MenuItem onClick={() => { handleMenuItemClick("/admincp/dashboard") }}>
+                <Typography textAlign="center">Dashboard</Typography>
+              </MenuItem>
+              <MenuItem onClick={handleSignOut}>
+                <Typography textAlign="center">Sign out</Typography>
+              </MenuItem>
+
             </Menu>
           </Box>
         </Toolbar>

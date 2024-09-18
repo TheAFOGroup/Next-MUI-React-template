@@ -37,7 +37,6 @@ const ViewFormPage = async ({ params }: { params: { slug: string } }) => {
 
   console.log("responses", responses)
 
-
   const options = {
     filterType: 'checkbox',
   };
