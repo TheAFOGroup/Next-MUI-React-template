@@ -1,22 +1,85 @@
 "use client"
+import { Alert, Button, Grid, TextField, Typography } from '@mui/material';
+import axios from 'axios';
+import Image from 'next/image';
+import { useSession } from 'next-auth/react';
 import React, { useState } from 'react';
-import { TextField, Button, Grid, Dialog, DialogTitle, DialogContent, DialogActions, Typography } from '@mui/material';
-import Textarea from '@/components/utils/StyledComponent/Textarea';
+
 import MediaCard from '@/components/events/MeidaCard/MediaCard';
 import { Speaker } from '@/components/events/MeidaCard/types';
+import Textarea from '@/components/utils/StyledComponent/Textarea';
 
-const Page = () => {
+import { BuildEventSpeaker } from '@/app/api/speaker/buildspeaker/types';
+import { UploadImageRespond } from '@/app/api/utils/uploadimage/types';
+
+const BuildSpeakers = () => {
+  const session = useSession().data
   const [name, setName] = useState('');
   const [title, setTitle] = useState('');
   const [bio, setBio] = useState('');
-  const [photo, setPhoto] = useState('');
+  const [photo, setPhoto] = useState<Blob>(new Blob);
   const [open, setOpen] = useState(false);
   const [previewPhoto, setPreviewPhoto] = useState('');
+  const [alert, setAlert] = useState("")
 
-  const handleSubmit = () => {
-    // Handle form submission logic here
+  const handleSubmit = async () => {
+    const handleError = (error) => {
+      setAlert(error.message);
+    };
 
-    setOpen(true);
+    try {
+      // Upload photo to Cloudflare
+      const formData = new FormData();
+      formData.append('file', photo);
+      console.log("formdata", formData.get('file'))
+
+      const myHeaders = new Headers();
+      myHeaders.append("API_SECRET", process.env.NEXT_PUBLIC_API_SECRET || '');
+
+
+      const UploadImageRes = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/utils/uploadimage`, {
+        method: 'POST',
+        headers: myHeaders,
+        body: formData // Fetch automatically sets the Content-Type and boundary for FormData
+      });
+
+      if (!UploadImageRes.ok) {
+        const errorData: { errors: { message: string }[] } = await UploadImageRes.json();
+        console.error('Error response data:', errorData);
+        throw new Error(errorData?.errors[0].message);
+      }
+
+      const result: UploadImageRespond = await UploadImageRes.json()
+      console.log("result", result)
+
+      // Handle form submission logic here
+      const data: BuildEventSpeaker = {
+        events_speaker_name: name,
+        events_speaker_title: title,
+        events_speaker_bio: bio,
+        events_speaker_image_url: result.cloudflareId,
+        events_speaker_type: 1,
+        events_speaker_owner: session?.user?.email ?? ''
+      };
+
+      // Upload data to database
+      const databaseResponse = await axios({
+        method: 'post',
+        url: process.env.NEXT_PUBLIC_HOST + '/api/speaker/buildspeaker',
+        data: data,
+        headers: {
+          'Content-Type': 'application/json',
+          'API_SECRET': process.env.NEXT_PUBLIC_API_SECRET
+        }
+      });
+
+      console.log(databaseResponse.data);
+      setOpen(true);
+    } catch (error) {
+      handleError(error);
+    } finally {
+      setAlert('An error occurred');
+    }
   };
 
   const handleNewSpeaker = () => {
@@ -25,21 +88,23 @@ const Page = () => {
     setName('');
     setTitle('');
     setBio('');
-    setPhoto('');
+    setPhoto(new Blob);
     setPreviewPhoto('');
+    setAlert('')
   };
 
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      setPhoto(file);
       const reader = new FileReader();
       reader.onload = () => {
         const fileData = reader.result as string;
-        setPhoto(fileData);
         setPreviewPhoto(fileData);
       };
       reader.readAsDataURL(file);
+      setPhoto(file);
     }
   };
 
@@ -49,7 +114,7 @@ const Page = () => {
       name: name,
       title: title,
       bio: bio,
-      image_url: photo
+      image_url: previewPhoto
     }
     return speaker
   }
@@ -73,18 +138,21 @@ const Page = () => {
   return (
     <div>
       <Grid container direction="row" spacing={2}>
-
         <Grid item>
           <Grid container direction="column" spacing={2}>
             <Grid item>
               <Typography variant='h3'>Register Speakers</Typography>
             </Grid>
             <Grid item>
+              {alert && (
+                <Alert severity="error">{alert}</Alert>
+              )}
+            </Grid>
+            <Grid item>
               <TextField
                 label="Name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                required
               />
             </Grid>
             <Grid item>
@@ -116,7 +184,7 @@ const Page = () => {
                     maxHeight: { xs: 233, md: 167 },
                     maxWidth: { xs: 350, md: 250 },
                   }}>
-                  <img
+                  <Image
                     src={previewPhoto}
                     alt="Preview"
                     style={{
@@ -150,4 +218,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default BuildSpeakers;

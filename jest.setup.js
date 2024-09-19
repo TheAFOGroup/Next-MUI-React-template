@@ -31,6 +31,8 @@ beforeAll(async () => {
   db = await mf.getD1Database("DB");
 
   await ExecuteSQLFile(db, '/home/apple/template/migrations/0002_user_responds.sql');
+  await ExecuteSQLFile(db, '/home/apple/template/migrations/0003_event.sql');
+
 });
 
 afterAll(async () => {

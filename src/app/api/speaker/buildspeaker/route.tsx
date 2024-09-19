@@ -24,22 +24,21 @@ export interface Env {
   DB: D1Database;
 }
 import { CheckAPIkey } from '@/app/api/_lib/CheckAPIkey';
-import { BuildFormType, BuildFormResponse } from '@/app/api/forms/buildform/type';
 import { getD1Database } from '@/app/api/_lib/DBService/index';
-import { BuildForm } from '@/app/api/forms/buildform/Buildform';
-
+import { BuildEventSpeaker } from '@/app/api/speaker/buildspeaker/types';
+import { BuildSpeaker } from '@/app/api/speaker/buildspeaker/buildspeaker';
 export async function POST(req: NextRequest) {
   if (!(await CheckAPIkey(req))) {
     return NextResponse.json({ message: 'Not Authorized' }, { status: 401 });
   }
 
-  const data: BuildFormType = (await req.json()) as BuildFormType;
+  const data: BuildEventSpeaker = (await req.json()) as BuildEventSpeaker;
   console.log('Received data:', data);
 
   // TODO: Implenmnet rollback in case of fail transaction
   try {
     const db = getD1Database()
-    const respond = await BuildForm(db, data);
+    const respond = await BuildSpeaker(db, data);
 
     return NextResponse.json(respond)
   } catch (error) {

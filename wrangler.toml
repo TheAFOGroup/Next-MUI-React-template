@@ -13,12 +13,18 @@ AUTH_SECRET="noNpl/fUOUmBStiNn1BT2F9OP9gO/WW6L7DYAcvA710="
 AUTH_TRUST_HOST="http://localhost:8788"
 NEXT_PUBLIC_HOST="http://localhost:8788"
 NEXT_PUBLIC_API_SECRET="noNpl/fUOUmBStiNn1BT2F9OP9gO/WW6L7DYAcvA710="
+NEXT_PUBLIC_CLOUDFLARE_API_TOKEN="pVGgZLYd4rWNuuEGZiXzkodnjYdmt7pqT5MaPqQD"
+NEXT_PUBLIC_CLOUDFLARE_ACCOUNT_ID="1fb4392c717b991cda892b70a807ff50"
+NEXT_PUBLIC_CLOUDFLARE_IMAGE_DELIVERY_URL="https://imagedelivery.net/o-BjYYR9ueCFwuxXnyOGgQ/"
 
 [env.preview.vars]
 AUTH_SECRET="noNpl/fUOUmBStiNn1BT2F9OP9gO/WW6L7DYAcvA710="
 AUTH_TRUST_HOST="http://eventspeaker.next-mui-react-template-7nm.pages.dev"
 NEXT_PUBLIC_HOST="http://eventspeaker.next-mui-react-template-7nm.pages.dev"
 NEXT_PUBLIC_API_SECRET="noNpl/fUOUmBStiNn1BT2F9OP9gO/WW6L7DYAcvA710="
+NEXT_PUBLIC_CLOUDFLARE_API_TOKEN="pVGgZLYd4rWNuuEGZiXzkodnjYdmt7pqT5MaPqQD"
+NEXT_PUBLIC_CLOUDFLARE_ACCOUNT_ID="1fb4392c717b991cda892b70a807ff50"
+NEXT_PUBLIC_CLOUDFLARE_IMAGE_DELIVERY_URL="https://imagedelivery.net/o-BjYYR9ueCFwuxXnyOGgQ/"
 
 d1_databases = [
   { binding = "DB", database_id = "9df130c4-4a23-4539-9c29-27bdfe9aac4e", database_name = "nextjs-template"}
