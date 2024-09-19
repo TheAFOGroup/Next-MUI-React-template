@@ -1,21 +1,21 @@
 "use client";
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import { Session } from 'next-auth';
-import { signOut, signIn } from 'next-auth/react';
+import MenuIcon from '@mui/icons-material/Menu';
+import AppBar from '@mui/material/AppBar';
+import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Toolbar from '@mui/material/Toolbar';
+import Tooltip from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
 import { useRouter } from 'next/navigation'; // Import useRouter from next/router
+import { Session } from 'next-auth';
+import { signIn, signOut } from 'next-auth/react';
+import * as React from 'react';
 
 const pages = [];
 const settings = [];
@@ -104,11 +104,6 @@ function ResponsiveAppBar({ session }: ResponsiveAppBarProps) {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
               <MenuItem onClick={() => { handleMenuItemClick("/admincp/forms/buildform") }}>
                 <Typography textAlign="center">Build Form</Typography>
               </MenuItem>
@@ -146,6 +141,15 @@ function ResponsiveAppBar({ session }: ResponsiveAppBarProps) {
                 {page}
               </Button>
             ))}
+            <Button sx={{ my: 2, color: 'white', display: 'block' }} onClick={() => { handleMenuItemClick("/admincp/forms/buildform") }}>
+              <Typography textAlign="center">Build Form</Typography>
+            </Button>
+            <Button sx={{ my: 2, color: 'white', display: 'block' }} onClick={() => { handleMenuItemClick("/admincp/forms/viewform") }}>
+              <Typography textAlign="center">View Form Results</Typography>
+            </Button>
+            <Button sx={{ my: 2, color: 'white', display: 'block' }} onClick={() => { handleMenuItemClick("/admincp/speakers/buildspeakers") }}>
+              <Typography textAlign="center">Build Speaker</Typography>
+            </Button>
           </Box>
 
           <Box sx={{ display: 'flex', alignItems: 'center', }}>

@@ -1,19 +1,29 @@
 //import { useSession } from "next-auth/react";
-import { auth } from '../../../auth';
-import { Box, Button } from '@mui/material';
+import { Grid, Button } from '@mui/material';
 
 const Dashboard = async () => {
 
   return (
-    <Box>
-      <Button variant="contained" href='/admincp/forms/buildform'>
-        Build Form
-      </Button>
+    <Grid container spacing={2}>
+      <Grid item>
+        <Button variant="contained" href='/admincp/forms/buildform'>
+          Build Form
+        </Button>
+      </Grid>
 
-      <Button variant="contained" href='/admincp/forms/viewform'>
-        View Form
-      </Button>
-    </Box>
+      <Grid item>
+        <Button variant="contained" href='/admincp/forms/viewform'>
+          View Form
+        </Button>
+      </Grid>
+
+      <Grid item>
+        <Button variant="contained" href='/admincp/speakers/buildspeakers'>
+          Build Speakers
+        </Button>
+      </Grid>
+
+    </Grid>
   );
 }
 
