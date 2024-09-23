@@ -110,6 +110,9 @@ function ResponsiveAppBar({ session }: ResponsiveAppBarProps) {
               <MenuItem onClick={() => { handleMenuItemClick("/admincp/forms/viewform") }}>
                 <Typography textAlign="center">View Form Results</Typography>
               </MenuItem>
+              <MenuItem onClick={() => { handleMenuItemClick("/admincp/events/buildEvents") }}>
+                <Typography textAlign="center">View Form Results</Typography>
+              </MenuItem>
             </Menu>
           </Box>
           <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />

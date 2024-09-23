@@ -1,16 +1,18 @@
-import React from 'react';
-import { GetFormIndex } from '@/app/api/forms/getformindex/getformindex';
-import { auth } from '../../../../auth';
-import { getD1Database } from '@/app/api/_lib/DBService/index';
-import { Form } from '@/app/api/forms/getformindex/types';
-import { CardContent, Typography, Grid, Card } from '@mui/material';
+import { Card, CardContent, Grid, Typography } from '@mui/material';
 import Link from 'next/link';
+import React from 'react';
+
+import { getD1Database } from '@/app/api/_lib/DBService/index';
+import { GetFormIndex } from '@/app/api/forms/getformindex/getformindex';
+import { FormIndexRespond } from '@/app/api/forms/getformindex/types';
+
+import { auth } from '../../../../auth';
 
 
 const Page: React.FC = async () => {
   const session = await auth();
   const db = getD1Database();
-  const formIndex: Form[] = await GetFormIndex(db, session?.user?.email || '') as Form[];
+  const formIndex: FormIndexRespond[] = await GetFormIndex(db, session?.user?.email || '') as FormIndexRespond[];
 
   return (
     <div>

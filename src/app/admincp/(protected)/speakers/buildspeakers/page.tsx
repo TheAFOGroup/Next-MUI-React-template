@@ -7,7 +7,6 @@ import React, { useState } from 'react';
 
 import MediaCard from '@/components/events/MeidaCard/MediaCard';
 import { Speaker } from '@/components/events/MeidaCard/types';
-import Textarea from '@/components/utils/StyledComponent/Textarea';
 
 import { BuildEventSpeaker } from '@/app/api/speaker/buildspeaker/types';
 import { UploadImageRespond } from '@/app/api/utils/uploadimage/types';
@@ -135,6 +134,7 @@ const BuildSpeakers = () => {
     )
   }
 
+  // TODO: restrict image size
   return (
     <div>
       <Grid container direction="row" spacing={2}>
@@ -163,11 +163,14 @@ const BuildSpeakers = () => {
               />
             </Grid>
             <Grid item>
-              <Textarea
-                placeholder="Description"
+              <TextField
+                label="Description"
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
-                cols={30}
+                margin="normal"
+                multiline
+                maxRows={4}
+                rows={4}
               />
             </Grid>
             <Grid item>

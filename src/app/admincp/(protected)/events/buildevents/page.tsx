@@ -1,0 +1,182 @@
+"use client"
+import { Button, FormControl, Grid, InputLabel, Link, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import axios from 'axios';
+import { useSession } from 'next-auth/react';
+import React, { useCallback, useEffect, useState } from 'react';
+import 'dayjs/locale/en-gb';
+
+import DynamicAgendaList from '@/components/buildEventAgenda/DynamicAgendaList';
+import { EventAgendaProps } from '@/components/buildEventAgenda/types';
+import DynamicSpeakerDropDown from '@/components/DynamicSpeakerDropDown/DynamicSpeakerDropDown';
+import { SpeakerDropDownOption } from '@/components/DynamicSpeakerDropDown/types';
+
+import { GetSpeakersRespond } from '@/app/api/speaker/getspeakers/types';
+import { FormIndexRespond } from '@/app/api/forms/getformindex/types';
+const Page = () => {
+  const session = useSession().data
+  const [eventName, setEventName] = useState('');
+  const [eventDescription, setEventDescription] = useState('');
+  const [eventDate, setEventDate] = useState('');
+  const [eventLocation, setEventLocation] = useState('');
+  const [eventAgenda, setEventAgenda] = useState<EventAgendaProps[]>();
+  const [eventSpeakers, setEventSpeakers] = useState<string[]>();
+  const [eventSpeakersList, setEventSpeakersList] = useState<GetSpeakersRespond[]>([]);
+  const [formList, setFormList] = useState<FormIndexRespond[]>([]);
+  const [selectedForm, setselectedForm] = useState<number>();
+
+  // Fetch API result and update fields state
+  useEffect(() => {
+    const fetchSpeakers = async () => {
+      try {
+        const response = await axios.get(process.env.NEXT_PUBLIC_HOST + '/api/speaker/getspeakers?owner=' + session?.user?.email, {
+          headers: {
+            'API_SECRET': process.env.NEXT_PUBLIC_API_SECRET
+          }
+        });
+        setEventSpeakersList(response.data as GetSpeakersRespond[]);
+      } catch (error) {
+        console.error('Error fetching speakers:', error);
+      }
+    };
+
+    const fetchForms = async () => {
+      try {
+        const response = await axios.get(process.env.NEXT_PUBLIC_HOST + '/api/forms/getformindex?owner=' + session?.user?.email, {
+          headers: {
+            'API_SECRET': process.env.NEXT_PUBLIC_API_SECRET
+          }
+        });
+        setFormList(response.data as FormIndexRespond[]);
+      } catch (error) {
+        console.error('Error fetching forms:', error);
+      }
+    };
+
+    const fetchData = async () => {
+      await fetchSpeakers();
+      await fetchForms();
+    };
+
+    fetchData();
+  }, [session]);
+
+  const transformToDropDownOptions = (speakers: GetSpeakersRespond[]): SpeakerDropDownOption[] => {
+    return speakers.map(speaker => ({
+      events_speaker_id: speaker.events_speaker_id.toString(),
+      events_speaker_name: speaker.events_speaker_name
+    }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Handle form submission logic here
+    console.log('Form submitted!');
+    console.log('Event Name:', eventName);
+    console.log('Event Description:', eventDescription);
+    console.log('Event Date:', eventDate);
+    console.log('Event Location:', eventLocation);
+  };
+
+  const handleEventAgenda = useCallback((agenda: EventAgendaProps[]) => {
+    // Handle event agenda logic here
+    setEventAgenda(agenda)
+    console.log('Event Agenda:', agenda);
+  }, []);
+
+  const handleEventSpeakers = useCallback((speakers: string[]) => {
+    // Handle event speaker logic here
+    setEventSpeakers(speakers)
+    console.log('Event speaker:', speakers);
+  }, []);
+
+  const handleFormChange = (value: number) => {
+    setselectedForm(value);
+  }
+
+  // Location: Maybe use Google Maps API?
+  // https://blog.openreplay.com/global-location-search-for-your-nextjs-app/
+  return (
+    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='en-gb'>
+
+      <form onSubmit={handleSubmit}>
+        <Grid container spacing={2} direction="column" >
+
+          <Grid item xs={12}>
+            <Typography variant='h3'>You can build your event here</Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              label="Event Name"
+              value={eventName}
+              onChange={(e) => setEventName(e.target.value)}
+              fullWidth
+              margin="normal"
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              label="Event Description"
+              value={eventDescription}
+              onChange={(e) => setEventDescription(e.target.value)}
+              fullWidth
+              margin="normal"
+              multiline
+              maxRows={4}
+              rows={4}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <DatePicker label="Event Date" />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              label="Event Location"
+              value={eventLocation}
+              onChange={(e) => setEventLocation(e.target.value)}
+              fullWidth
+              margin="normal"
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant='h4'>Event Agenda</Typography>
+            <DynamicAgendaList onChange={handleEventAgenda} />
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant='h4'>Event Speakers</Typography>
+            <Link href="/admincp/speakers/buildspeakers" variant="body1">
+              Cannot find your speaker? Create a new speaker here
+            </Link>
+            <DynamicSpeakerDropDown onChange={handleEventSpeakers} dropDownOptions={transformToDropDownOptions(eventSpeakersList)} />
+          </Grid>
+
+          <FormControl fullWidth>
+            <InputLabel id="Form">Select Form</InputLabel>
+            <Select
+              labelId="Form"
+              value={selectedForm}
+              onChange={(e) => handleFormChange(e.target.value as number)}
+            >
+              {formList.map((option) => (
+                <MenuItem key={option.form_id} value={option.form_id}>
+                  {option.form_name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <Grid item xs={12}>
+            <Button type="submit" variant="contained" color="primary">
+              Submit
+            </Button>
+          </Grid>
+        </Grid>
+      </form>
+    </LocalizationProvider>
+
+  );
+};
+
+export default Page;

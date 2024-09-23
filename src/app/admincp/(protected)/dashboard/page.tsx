@@ -23,6 +23,12 @@ const Dashboard = async () => {
         </Button>
       </Grid>
 
+      <Grid item>
+        <Button variant="contained" href='/admincp/events/buildevents'>
+          Build Events
+        </Button>
+      </Grid>
+
     </Grid>
   );
 }

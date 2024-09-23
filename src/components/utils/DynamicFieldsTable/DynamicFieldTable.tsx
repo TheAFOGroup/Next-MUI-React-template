@@ -2,11 +2,9 @@
 import { Checkbox, FormControlLabel, Grid, TextField } from '@mui/material';
 import React, { memo, useEffect, useState } from 'react';
 
-import Textarea from '@/components/utils/StyledComponent/Textarea';
+import EmailTextField from '@/components/utils/EmailTextField/EmailTextField';
 
 import { FormField, SubmmitField } from './types';
-
-import EmailTextField from '@/components/utils/EmailTextField/EmailTextField';
 interface DynamicFieldsTableProps {
   fields: FormField[];
   onChange: (submitFields: SubmmitField[], error?: boolean) => void;
@@ -103,14 +101,18 @@ const DynamicFieldsTable: React.FC<DynamicFieldsTableProps> = ({ fields, onChang
       );
     } else if (field.field_type === 'textarea') {
 
-      return <Textarea
-        maxRows={4}
+      return <TextField
+        label={field.field_name}
+        value={formValues.find((formValues) => formValues.form_field_id === field.form_field_id)?.response}
+        onChange={(e) => handleInputChange(field.form_field_id, e.target.value)}
         aria-label={field.field_name}
         placeholder={field.field_name}
-        defaultValue=""
-        onChange={(e) => handleInputChange(field.form_field_id, e.target.value)}
-      />
-        ;
+        margin="normal"
+        multiline
+        fullWidth
+        maxRows={4}
+        rows={4}
+      />;
 
     } else if (field.field_type === 'checkbox') {
       const check = formValues.find((formValues) => formValues.form_field_id === field.form_field_id)?.response;
