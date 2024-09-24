@@ -20,19 +20,19 @@ const MediaCard: React.FC<MediaCardProps> = ({ speaker }) => {
       <CardMedia
         component="img"
         sx={{ height: 250, width: 250 }}
-        src={speaker.image_url}
-        title={speaker.name}
+        src={speaker.events_speaker_image_url}
+        title={speaker.events_speaker_name}
       />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
-          {speaker.name}
+          {speaker.events_speaker_name}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {speaker.title}
+          {speaker.events_speaker_title}
         </Typography>
       </CardContent>
       <CardActions>
-        <Biobutton payload={speaker.bio} />
+        <Biobutton payload={speaker.events_speaker_bio} />
       </CardActions>
     </Card>
   );

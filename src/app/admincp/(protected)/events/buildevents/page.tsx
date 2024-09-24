@@ -1,13 +1,16 @@
 "use client"
-import { Button, FormControl, Grid, InputLabel, Link, MenuItem, Select, TextField, Typography } from '@mui/material';
-import { LocalizationProvider } from '@mui/x-date-pickers';
+import { Button, FormControl, Grid, Link, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { LocalizationProvider, TimePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import axios from 'axios';
 import { Dayjs } from 'dayjs';
+import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import React, { useCallback, useEffect, useState } from 'react';
 import 'dayjs/locale/en-gb';
+
+import { useEventContext } from '@/hooks/useEventContext/useEventContext';
 
 import DynamicAgendaList from '@/components/buildEventAgenda/DynamicAgendaList';
 import { EventAgendaProps } from '@/components/buildEventAgenda/types';
@@ -16,9 +19,6 @@ import { SpeakerDropDownOption } from '@/components/DynamicSpeakerDropDown/types
 
 import { FormIndexRespond } from '@/app/api/forms/getformindex/types';
 import { GetSpeakersRespond } from '@/app/api/speaker/getspeakers/types';
-import { useEventContext } from '@/hooks/useEventContext/useEventContext';
-
-import { useRouter } from 'next/navigation'; // Import useRouter from next/router
 
 
 const Page = () => {
@@ -32,12 +32,16 @@ const Page = () => {
     eventName, setEventName,
     eventDescription, setEventDescription,
     eventDate, setEventDate,
+    eventTime, setEventTime,
     eventLocation, setEventLocation,
     eventAgenda, setEventAgenda,
     eventSpeakers, setEventSpeakers,
     selectedForm, setSelectedForm,
-    htmlContent, setHtmlContent
+    htmlContent, setHtmlContent,
+    template, setTemplate
   } = useEventContext();
+
+  const templateOptions = ["Default", "Template 1", "Template 2", "Template 3"];
 
   // Fetch API result and update fields state
   useEffect(() => {
@@ -75,7 +79,7 @@ const Page = () => {
     fetchData();
   }, [session]);
 
-  const transformToDropDownOptions = (speakers: GetSpeakersRespond[]): SpeakerDropDownOption[] => {
+  const transformSpeakersToDropDownOptions = (speakers: GetSpeakersRespond[]): SpeakerDropDownOption[] => {
     return speakers.map(speaker => ({
       events_speaker_id: speaker.events_speaker_id.toString(),
       events_speaker_name: speaker.events_speaker_name
@@ -143,6 +147,9 @@ const Page = () => {
                 <DatePicker label="Event Date" onChange={(e: Dayjs | null) => setEventDate(e)} />
               </Grid>
               <Grid item xs={12}>
+                <TimePicker label="Event Time" onChange={(e: Dayjs | null) => setEventTime(e)} />
+              </Grid>
+              <Grid item xs={12}>
                 <TextField
                   label="Event Location"
                   value={eventLocation}
@@ -167,7 +174,7 @@ const Page = () => {
                 </Link>
               </Grid>
               <Grid item xs={12}>
-                <DynamicSpeakerDropDown onChange={handleEventSpeakers} dropDownOptions={transformToDropDownOptions(eventSpeakersList)} />
+                <DynamicSpeakerDropDown onChange={handleEventSpeakers} dropDownOptions={transformSpeakersToDropDownOptions(eventSpeakersList)} />
               </Grid>
               <Grid item xs={12}>
                 <Typography variant='h4'>Event Form</Typography>
@@ -215,20 +222,43 @@ const Page = () => {
               <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
 
               <Grid item xs={12}>
-                <Button variant="contained" color="primary" onClick={() => { router.push('/admincp/events/buildevents/preview'); }}>
-                  Preview
-                </Button>
-              </Grid>
+                <Grid container spacing={2} direction="column">
+                  <Grid item xs={12}>
+                    <Typography variant='h4'>Select Template</Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <FormControl fullWidth>
+                      <Select
+                        labelId="Template"
+                        value={template}
+                        onChange={(e) => setTemplate(e.target.value as string)}
+                      >
+                        {templateOptions.map((option) => (
+                          <MenuItem key={option} value={option}>
+                            {option}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                </Grid>
 
-              <Grid item xs={12}>
-                <Button type="submit" variant="contained" color="primary">
-                  Submit
-                </Button>
-              </Grid>
+                <Grid item xs={12}>
+                  <Button variant="contained" color="primary" onClick={() => { router.push('/admincp/events/buildevents/preview'); }}>
+                    Preview
+                  </Button>
+                </Grid>
 
+                <Grid item xs={12}>
+                  <Button type="submit" variant="contained" color="primary">
+                    Submit
+                  </Button>
+                </Grid>
+
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
+          </Grid>
       </form>
     </LocalizationProvider >
   );

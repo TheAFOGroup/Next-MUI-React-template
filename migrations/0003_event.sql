@@ -45,3 +45,12 @@ create table if not exists  events_iframes (
     created_at timestamp not null default current_timestamp,
     updated_at timestamp not null default current_timestamp
 );
+
+create table if not exists events_html(
+    event_html_id integer primary key AUTOINCREMENT,
+    event_id integer not null references events(event_id),
+    html_content text not null,
+    enabled boolean not null default true,
+    created_at timestamp not null default current_timestamp,
+    updated_at timestamp not null default current_timestamp
+);

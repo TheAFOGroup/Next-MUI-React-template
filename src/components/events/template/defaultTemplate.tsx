@@ -2,12 +2,11 @@ import React from 'react';
 import { Event } from '@/app/api/events/getEventDetail/types';
 import { Grid, Typography } from '@mui/material';
 
-interface EventTemplate1Prop {
+interface DefaultTemplateProp {
   eventDetails: Event;
-
 }
 
-const EventTemplate1: React.FC<EventTemplate1Prop> = ({ eventDetails }) => {
+const DefaultTemplate: React.FC<DefaultTemplateProp> = ({ eventDetails }) => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
@@ -34,4 +33,4 @@ const EventTemplate1: React.FC<EventTemplate1Prop> = ({ eventDetails }) => {
   );
 };
 
-export default EventTemplate1;
+export default DefaultTemplate;

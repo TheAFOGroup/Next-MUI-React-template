@@ -47,9 +47,9 @@ const MediaGrid: React.FC<MediaGridProp> = ({ eventId }) => {
   return (
     <Grid container spacing={3} className="media-grid">
       {speakers?.map((speaker: Speaker) => (
-        <Grid item xs={12} sm={6} md={4} lg={3} key={speaker.event_speaker_id}>
+        <Grid item xs={12} sm={6} md={4} lg={3} key={speaker.events_speaker_id}>
           <MediaCard
-            key={speaker.event_speaker_id}
+            key={speaker.events_speaker_id}
             speaker={speaker}
           />
         </Grid>

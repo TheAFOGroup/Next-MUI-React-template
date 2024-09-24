@@ -1,5 +1,5 @@
 export interface EventSpeaker {
-  event_speaker_id: number;
+  events_speaker_id: number;
   events_speaker_name: string;
   events_speaker_title?: string;
   events_speaker_bio?: string;

@@ -109,11 +109,11 @@ const BuildSpeakers = () => {
 
   const mediaCardProps = () => {
     const speaker: Speaker = {
-      event_speaker_id: 1,
-      name: name,
-      title: title,
-      bio: bio,
-      image_url: previewPhoto
+      events_speaker_id: 1,
+      events_speaker_name: name,
+      events_speaker_title: title,
+      events_speaker_bio: bio,
+      events_speaker_image_url: previewPhoto
     }
     return speaker
   }

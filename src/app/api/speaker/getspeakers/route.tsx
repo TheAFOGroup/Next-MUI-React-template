@@ -30,17 +30,14 @@ export async function GET(req: NextRequest) {
   if (!(await CheckAPIkey(req))) {
     return NextResponse.json({ message: 'Not Authorized' }, { status: 401 });
   }
-
   const { searchParams } = new URL(req.url);
   const owner = searchParams.get('owner');
-  if (!owner) {
-    return NextResponse.json({ message: 'Invalid owner' }, { status: 400 });
-  }
+  const speakerIds = searchParams.getAll('events_speaker_id');
 
-  // TODO: Implenmnet rollback in case of fail transaction
+  // TODO: Implement rollback in case of fail transaction
   try {
-    const db = getD1Database()
-    const respond = await GetSpeakers(db, owner);
+    const db = getD1Database();
+    const respond = await GetSpeakers(db, owner, speakerIds);
     return NextResponse.json(respond)
   } catch (error) {
     return NextResponse.json({ message: 'An error occurred while processing the request', error }, { status: 500 });

@@ -44,7 +44,7 @@ const ScrollCards: React.FC<ScrollCardsProp> = ({ eventId }) => {
 
   useEffect(() => {
     if (items.length > (itemsPrev?.length || 0) && apiRef.current) {
-      const lastItemId = items.slice(-1)?.[0]?.event_speaker_id;
+      const lastItemId = items.slice(-1)?.[0]?.events_speaker_id;
       if (lastItemId) {
         const lastItemElement = (apiRef.current as any).getItemElementById?.(lastItemId);
         if (lastItemElement) {
@@ -70,7 +70,7 @@ const ScrollCards: React.FC<ScrollCardsProp> = ({ eventId }) => {
       apiRef={apiRef}
     >
       {items.map((speaker) => (
-        <MediaCard key={speaker.event_speaker_id} speaker={speaker} />
+        <MediaCard key={speaker.events_speaker_id} speaker={speaker} />
       ))}
     </ScrollMenu>
   );
