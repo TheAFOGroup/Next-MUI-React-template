@@ -12,7 +12,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-import { useRouter } from 'next/navigation'; // Import useRouter from next/router
+import { useRouter } from 'next/navigation';
 import { Session } from 'next-auth';
 import { signIn, signOut } from 'next-auth/react';
 import * as React from 'react';

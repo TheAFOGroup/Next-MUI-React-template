@@ -16,18 +16,28 @@ import { SpeakerDropDownOption } from '@/components/DynamicSpeakerDropDown/types
 
 import { FormIndexRespond } from '@/app/api/forms/getformindex/types';
 import { GetSpeakersRespond } from '@/app/api/speaker/getspeakers/types';
+import { useEventContext } from '@/hooks/useEventContext/useEventContext';
+
+import { useRouter } from 'next/navigation'; // Import useRouter from next/router
+
+
 const Page = () => {
   const session = useSession().data
-  const [eventName, setEventName] = useState('');
-  const [eventDescription, setEventDescription] = useState('');
-  const [eventDate, setEventDate] = useState<Dayjs | null>(null);
-  const [eventLocation, setEventLocation] = useState('');
-  const [eventAgenda, setEventAgenda] = useState<EventAgendaProps[]>();
-  const [eventSpeakers, setEventSpeakers] = useState<string[]>();
+  const router = useRouter();
+
   const [eventSpeakersList, setEventSpeakersList] = useState<GetSpeakersRespond[]>([]);
   const [formList, setFormList] = useState<FormIndexRespond[]>([]);
-  const [selectedForm, setselectedForm] = useState<number>();
-  const [htmlContent, setHtmlContent] = useState<string>("");
+
+  const {
+    eventName, setEventName,
+    eventDescription, setEventDescription,
+    eventDate, setEventDate,
+    eventLocation, setEventLocation,
+    eventAgenda, setEventAgenda,
+    eventSpeakers, setEventSpeakers,
+    selectedForm, setSelectedForm,
+    htmlContent, setHtmlContent
+  } = useEventContext();
 
   // Fetch API result and update fields state
   useEffect(() => {
@@ -172,7 +182,7 @@ const Page = () => {
                   <Select
                     labelId="Form"
                     value={selectedForm}
-                    onChange={(e) => setselectedForm(e.target.value as number)}
+                    onChange={(e) => setSelectedForm(e.target.value as number)}
                   >
                     {formList.map((option) => (
                       <MenuItem key={option.form_id} value={option.form_id}>
@@ -205,10 +215,17 @@ const Page = () => {
               <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
 
               <Grid item xs={12}>
+                <Button variant="contained" color="primary" onClick={() => { router.push('/admincp/events/buildevents/preview'); }}>
+                  Preview
+                </Button>
+              </Grid>
+
+              <Grid item xs={12}>
                 <Button type="submit" variant="contained" color="primary">
                   Submit
                 </Button>
               </Grid>
+
             </Grid>
           </Grid>
         </Grid>
