@@ -89,8 +89,9 @@ const FieldTypeTable: React.FC<FieldTypeTableProps> = ({ dropdownTypes, onChange
     console.log("UseEffect", fieldsWithOrder)
   }, [rows, onChange]);
 
+  // Don't know why sx is not working
   return (
-    <Container>
+    <Container maxWidth="xl" style={{ paddingLeft: 0, paddingRight: 0 }}>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>

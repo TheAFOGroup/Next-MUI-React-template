@@ -1,16 +1,15 @@
 "use client"
 import { Alert, Button, Grid, Link, TextField, Typography } from '@mui/material';
 import axios from 'axios';
+import { useSession } from 'next-auth/react';
 import React, { useCallback, useState } from 'react';
-
-import FieldTypeTable from '@/components/utils/FieldTypeTable/FieldTypeTable'; // Adjust the import path as needed
-
-import { BuildFormType } from '@/app/api/forms/buildform/type';
 
 import DynamicFieldTable from '@/components/utils/DynamicFieldsTable/DynamicFieldTable';
 import { FormField } from '@/components/utils/DynamicFieldsTable/types';
+import FieldTypeTable from '@/components/utils/FieldTypeTable/FieldTypeTable'; // Adjust the import path as needed
 import { DynamicField } from '@/components/utils/FieldTypeTable/types';
-import { useSession } from 'next-auth/react';
+
+import { BuildFormType } from '@/app/api/forms/buildform/type';
 
 const BuildFormPage = () => {
   const session = useSession().data
@@ -167,25 +166,31 @@ const BuildFormPage = () => {
     <div>
       <Grid container direction="row" spacing={2}>
         <Grid item xs={6}>
-          <h1>Create Forms</h1>
-          <Grid container direction="column" spacing={2}>
-            <Grid item xs={6}>
+          <Typography variant='h2'>Create Forms</Typography>
+          <Grid container direction="column" sx={{ gap: 3 }}>
+            <Grid item xs={12}>
               <TextField
                 label="Table name"
                 value={name}
                 onChange={handleNameChange}
                 fullWidth
+                multiline
+                maxRows={4}
+                minRows={4}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12}>
               <TextField
                 label="Description (Optional)"
                 value={description}
                 onChange={handleDescriptionChange}
                 fullWidth
+                multiline
+                maxRows={4}
+                minRows={4}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12}>
               <FieldTypeTable dropdownTypes={dropdownTypes} onChange={handleFieldsSubmit} />
             </Grid>
             <Button variant="contained" color="primary" onClick={handleSubmit}>
@@ -204,12 +209,12 @@ const BuildFormPage = () => {
           </Grid>
         </Grid>
         <Grid item xs={6}>
-          <Grid container direction="column">
+          <Grid container direction="column" sx={{ gap: 3 }}>
 
-            <Grid item xs={6}>
+            <Grid item xs={12}>
               <Typography variant='h2'>Preview</Typography>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12}>
               <DynamicFieldTable fields={changeshape(fields)} onChange={fieldPreviewOnChange} />
             </Grid>
 

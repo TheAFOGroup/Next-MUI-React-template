@@ -164,7 +164,7 @@ const BuildSpeakers = () => {
             </Grid>
             <Grid item>
               <TextField
-                label="Description"
+                label="Description (Optional)"
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
                 margin="normal"

@@ -4,6 +4,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import axios from 'axios';
+import { Dayjs } from 'dayjs';
 import { useSession } from 'next-auth/react';
 import React, { useCallback, useEffect, useState } from 'react';
 import 'dayjs/locale/en-gb';
@@ -13,19 +14,20 @@ import { EventAgendaProps } from '@/components/buildEventAgenda/types';
 import DynamicSpeakerDropDown from '@/components/DynamicSpeakerDropDown/DynamicSpeakerDropDown';
 import { SpeakerDropDownOption } from '@/components/DynamicSpeakerDropDown/types';
 
-import { GetSpeakersRespond } from '@/app/api/speaker/getspeakers/types';
 import { FormIndexRespond } from '@/app/api/forms/getformindex/types';
+import { GetSpeakersRespond } from '@/app/api/speaker/getspeakers/types';
 const Page = () => {
   const session = useSession().data
   const [eventName, setEventName] = useState('');
   const [eventDescription, setEventDescription] = useState('');
-  const [eventDate, setEventDate] = useState('');
+  const [eventDate, setEventDate] = useState<Dayjs | null>(null);
   const [eventLocation, setEventLocation] = useState('');
   const [eventAgenda, setEventAgenda] = useState<EventAgendaProps[]>();
   const [eventSpeakers, setEventSpeakers] = useState<string[]>();
   const [eventSpeakersList, setEventSpeakersList] = useState<GetSpeakersRespond[]>([]);
   const [formList, setFormList] = useState<FormIndexRespond[]>([]);
   const [selectedForm, setselectedForm] = useState<number>();
+  const [htmlContent, setHtmlContent] = useState<string>("");
 
   // Fetch API result and update fields state
   useEffect(() => {
@@ -92,90 +94,126 @@ const Page = () => {
     console.log('Event speaker:', speakers);
   }, []);
 
-  const handleFormChange = (value: number) => {
-    setselectedForm(value);
-  }
-
   // Location: Maybe use Google Maps API?
   // https://blog.openreplay.com/global-location-search-for-your-nextjs-app/
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='en-gb'>
-
       <form onSubmit={handleSubmit}>
-        <Grid container spacing={2} direction="column" >
-
+        <Grid container spacing={2} direction="column">
           <Grid item xs={12}>
             <Typography variant='h3'>You can build your event here</Typography>
           </Grid>
           <Grid item xs={12}>
-            <TextField
-              label="Event Name"
-              value={eventName}
-              onChange={(e) => setEventName(e.target.value)}
-              fullWidth
-              margin="normal"
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              label="Event Description"
-              value={eventDescription}
-              onChange={(e) => setEventDescription(e.target.value)}
-              fullWidth
-              margin="normal"
-              multiline
-              maxRows={4}
-              rows={4}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <DatePicker label="Event Date" />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              label="Event Location"
-              value={eventLocation}
-              onChange={(e) => setEventLocation(e.target.value)}
-              fullWidth
-              margin="normal"
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Typography variant='h4'>Event Agenda</Typography>
-            <DynamicAgendaList onChange={handleEventAgenda} />
-          </Grid>
-          <Grid item xs={12}>
-            <Typography variant='h4'>Event Speakers</Typography>
-            <Link href="/admincp/speakers/buildspeakers" variant="body1">
-              Cannot find your speaker? Create a new speaker here
-            </Link>
-            <DynamicSpeakerDropDown onChange={handleEventSpeakers} dropDownOptions={transformToDropDownOptions(eventSpeakersList)} />
-          </Grid>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  label="Event Name"
+                  value={eventName}
+                  onChange={(e) => setEventName(e.target.value)}
+                  fullWidth
+                  margin="normal"
+                  multiline
+                  maxRows={4}
+                  rows={4}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  label="Event Description (Optional)"
+                  value={eventDescription}
+                  onChange={(e) => setEventDescription(e.target.value)}
+                  fullWidth
+                  margin="normal"
+                  multiline
+                  maxRows={4}
+                  rows={4}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <DatePicker label="Event Date" onChange={(e: Dayjs | null) => setEventDate(e)} />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  label="Event Location"
+                  value={eventLocation}
+                  onChange={(e) => setEventLocation(e.target.value)}
+                  fullWidth
+                  margin="normal"
+                  multiline
+                  maxRows={4}
+                  rows={4}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant='h4'>Event Agenda</Typography>
+                <DynamicAgendaList onChange={handleEventAgenda} />
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant='h4'>Event Speakers</Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Link href="/admincp/speakers/buildspeakers" variant="body1">
+                  Cannot find your speaker? Create a new speaker here
+                </Link>
+              </Grid>
+              <Grid item xs={12}>
+                <DynamicSpeakerDropDown onChange={handleEventSpeakers} dropDownOptions={transformToDropDownOptions(eventSpeakersList)} />
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant='h4'>Event Form</Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Link href="/admincp/forms/buildform" variant="body1">
+                  Cannot find your form? Create a new form here
+                </Link>
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl fullWidth>
+                  <Select
+                    labelId="Form"
+                    value={selectedForm}
+                    onChange={(e) => setselectedForm(e.target.value as number)}
+                  >
+                    {formList.map((option) => (
+                      <MenuItem key={option.form_id} value={option.form_id}>
+                        {option.form_name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
 
-          <FormControl fullWidth>
-            <InputLabel id="Form">Select Form</InputLabel>
-            <Select
-              labelId="Form"
-              value={selectedForm}
-              onChange={(e) => handleFormChange(e.target.value as number)}
-            >
-              {formList.map((option) => (
-                <MenuItem key={option.form_id} value={option.form_id}>
-                  {option.form_name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+              <Grid item xs={12}>
+                <Typography variant='h4'>HTML Element</Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant='body1' style={{ color: 'red' }}>Dangerous: We are not liable for any problems caused by this field</Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  label="HTML Content"
+                  value={htmlContent}
+                  onChange={(e) => setHtmlContent(e.target.value)}
+                  fullWidth
+                  margin="normal"
+                  multiline
+                  maxRows={4}
+                  rows={4}
+                />
+              </Grid>
 
-          <Grid item xs={12}>
-            <Button type="submit" variant="contained" color="primary">
-              Submit
-            </Button>
+              <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
+
+              <Grid item xs={12}>
+                <Button type="submit" variant="contained" color="primary">
+                  Submit
+                </Button>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       </form>
-    </LocalizationProvider>
-
+    </LocalizationProvider >
   );
 };
 

@@ -48,7 +48,6 @@ const DynamicSpeakerDropDown: React.FC<DynamicSpeakerDropDownProps> = ({ onChang
           <Grid container direction="row" spacing={2}>
             <Grid item xs={11}>
               <FormControl fullWidth>
-                <InputLabel id={`dropdown-label-${index}`}>Select Speaker</InputLabel>
                 <Select
                   labelId={`dropdown-label-${index}`}
                   value={row[index]}

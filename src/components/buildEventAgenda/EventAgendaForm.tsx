@@ -60,18 +60,21 @@ const EventAgendaForm: React.FC<EventAgendaFormProps> = ({ onChange }) => {
   return (
     <div>
       <Grid container direction="row" spacing="2" alignItems="center">
-        <Grid item xs={3}>
+        <Grid item xs={6}>
           <TextField
             label="Title"
             value={formData.title}
             onChange={(e) => setTitle(e.target.value)}
             fullWidth
             margin="normal"
+            multiline
+            maxRows={3}
+            rows={3}
           />
         </Grid>
         <Grid item xs={6}>
           <TextField
-            label="Description"
+            label="Description (Optional)"
             value={formData.description}
             onChange={(e) => setDescription(e.target.value)}
             fullWidth
@@ -82,14 +85,10 @@ const EventAgendaForm: React.FC<EventAgendaFormProps> = ({ onChange }) => {
           />
         </Grid>
         <Grid item xs={3}>
-          <Grid container direction="column" spacing="2">
-            <Grid item>
-              <TimePicker label="Start Time" onChange={(e: Dayjs | null) => setStartTime(e)} />
-            </Grid>
-            <Grid item>
-              <TimePicker label="End Time" onChange={(e: Dayjs | null) => setEndTime(e)} />
-            </Grid>
-          </Grid>
+          <TimePicker label="Start Time" onChange={(e: Dayjs | null) => setStartTime(e)} />
+        </Grid>
+        <Grid item xs={3}>
+          <TimePicker label="End Time" onChange={(e: Dayjs | null) => setEndTime(e)} />
         </Grid>
       </Grid>
     </div >

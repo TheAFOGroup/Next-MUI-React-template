@@ -19,7 +19,7 @@ const MediaCard: React.FC<MediaCardProps> = ({ speaker }) => {
     <Card sx={{ minWidth: "250px", minHeight: "250px" }}>
       <CardMedia
         component="img"
-        sx={{ height: 140 }}
+        sx={{ height: 250, width: 250 }}
         src={speaker.image_url}
         title={speaker.name}
       />

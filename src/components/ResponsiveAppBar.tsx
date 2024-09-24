@@ -153,6 +153,9 @@ function ResponsiveAppBar({ session }: ResponsiveAppBarProps) {
             <Button sx={{ my: 2, color: 'white', display: 'block' }} onClick={() => { handleMenuItemClick("/admincp/speakers/buildspeakers") }}>
               <Typography textAlign="center">Build Speaker</Typography>
             </Button>
+            <Button sx={{ my: 2, color: 'white', display: 'block' }} onClick={() => { handleMenuItemClick("/admincp/events/buildevents") }}>
+              <Typography textAlign="center">Build Event</Typography>
+            </Button>
           </Box>
 
           <Box sx={{ display: 'flex', alignItems: 'center', }}>
