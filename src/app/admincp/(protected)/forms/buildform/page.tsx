@@ -10,6 +10,8 @@ import FieldTypeTable from '@/components/utils/FieldTypeTable/FieldTypeTable'; /
 import { DynamicField } from '@/components/utils/FieldTypeTable/types';
 
 import { BuildFormType } from '@/app/api/forms/buildform/type';
+import Form from '@/components/form/form';
+import { FormType } from '@/components/form/types';
 
 const BuildFormPage = () => {
   const session = useSession().data
@@ -119,7 +121,7 @@ const BuildFormPage = () => {
     setUUID("");
   };
 
-  const changeshape = (fields: DynamicField[]): FormField[] => {
+  const reshapeFormObj = (fields: DynamicField[]): FormType => {
     const updatedFields: FormField[] = fields.map((field, index) => {
       return {
         ...field,
@@ -127,8 +129,14 @@ const BuildFormPage = () => {
         form_field_id: index + 1
       };
     });
-    console.log(updatedFields);
-    return updatedFields;
+    const formData: FormType = {
+      form_id: 1,
+      form_name: name,
+      form_description: description,
+      form_fields: updatedFields
+    }
+    console.log(formData);
+    return formData;
   };
 
   const fieldPreviewOnChange = (response: any, error: any) => {
@@ -210,16 +218,13 @@ const BuildFormPage = () => {
         </Grid>
         <Grid item xs={6}>
           <Grid container direction="column" sx={{ gap: 3 }}>
-
             <Grid item xs={12}>
               <Typography variant='h2'>Preview</Typography>
             </Grid>
             <Grid item xs={12}>
-              <DynamicFieldTable fields={changeshape(fields)} onChange={fieldPreviewOnChange} />
+              <Form form={reshapeFormObj(fields)} />
             </Grid>
-
             <Grid />
-
           </Grid>
         </Grid>
       </Grid>
@@ -228,8 +233,3 @@ const BuildFormPage = () => {
 };
 
 export default BuildFormPage;
-
-/**
- * 
- *           <DynamicFieldTable fields={changeshape(fields)} onChange={fieldPreviewOnChange} />
- */

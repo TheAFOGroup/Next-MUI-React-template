@@ -233,9 +233,6 @@ const Page = () => {
                   rows={4}
                 />
               </Grid>
-
-              <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
-
               <Grid item xs={12}>
                 <Grid container spacing={2} direction="column">
                   <Grid item xs={12}>

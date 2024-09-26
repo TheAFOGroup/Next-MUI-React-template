@@ -8,6 +8,9 @@ export interface EventTemplateTypes {
   event_location?: string; // Optional field
   EventSpeaker?: EventSpeaker[]; // Optional field 
   EventAgenda?: EventAgenda[]; // Optional field
+  event_HTMLContent?: string; // Optional field
+  event_form_id?: number; // Optional field
+  event_template?: string; // Optional field
 }
 
 interface EventSpeaker {

@@ -32,6 +32,9 @@ const EventPreviewPage = () => {
     event_location: eventLocation,
     EventSpeaker: eventSpeakers,
     EventAgenda: eventAgenda,
+    event_HTMLContent: htmlContent,
+    event_form_id: selectedForm,
+    event_template: template
   };
 
   console.log('event', event);

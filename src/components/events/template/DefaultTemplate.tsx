@@ -2,15 +2,17 @@ import { Grid, Typography } from '@mui/material';
 import React from 'react';
 
 import EventAgendaTable from '@/components/events/EventAgendaTable/EventAgendaTable';
-
-import { EventTemplateTypes } from './types';
 import MediaGrid from '@/components/events/MeidaCard/MediaGrid';
 
+import { EventTemplateTypes } from './types';
+import Form from '@/components/form/form';
+import { GetForm } from '@/app/api/forms/getform/getform';
+import { getD1Database } from '@/app/api/_lib/DBService/index';
 interface DefaultTemplateProp {
   eventDetails: EventTemplateTypes;
 }
 
-const DefaultTemplate: React.FC<DefaultTemplateProp> = ({ eventDetails }) => {
+const DefaultTemplate: React.FC<DefaultTemplateProp> = async ({ eventDetails }) => {
   console.log("eventDetails", eventDetails)
   if (eventDetails.EventAgenda?.[0]?.events_agenda_title === ""
     && eventDetails.EventAgenda.length === 1) {
@@ -44,6 +46,11 @@ const DefaultTemplate: React.FC<DefaultTemplateProp> = ({ eventDetails }) => {
       <Grid item xs={12}>
         {eventDetails.EventSpeaker && <MediaGrid speakers={eventDetails.EventSpeaker} />}
       </Grid>
+
+      <Grid item xs={12}>
+        <div dangerouslySetInnerHTML={{ __html: eventDetails.event_HTMLContent || "" }} />
+      </Grid>
+
     </Grid>
 
   );

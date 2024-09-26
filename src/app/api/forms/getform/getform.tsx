@@ -3,7 +3,6 @@ import { D1Database } from '@cloudflare/workers-types'
 export interface Env {
   DB: D1Database;
 }
-import { getRequestContext } from '@cloudflare/next-on-pages'
 
 import { Form, FormField } from '@/app/api/forms/getform/types';
 /**

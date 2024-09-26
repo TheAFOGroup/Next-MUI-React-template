@@ -3,14 +3,19 @@ import { Alert, Button, Grid, Typography } from "@mui/material";
 import axios from 'axios';
 import React, { useCallback, useEffect, useState } from 'react';
 
-import DynamicFieldsTable from "@/components/utils/DynamicFieldsTable/DynamicFieldTable";
-
-import { Form } from '@/app/api/forms/getform/types';
 import { SubmitForm, SubmmitField } from '@/app/api/forms/submitform/types';
-
+import { FormType } from "@/components/form/types";
+import Form from "@/components/form/form";
 const EventPage = ({ params }: { params: { slug: string } }) => {
   const eventUUID = params.slug
-  const [form, setForm] = useState<Form>();
+  const [form, setForm] = useState<FormType>(
+    {
+      form_id: 0,
+      form_name: "",
+      form_description: "",
+      form_fields: []
+    }
+  );
   const [field, setField] = useState<SubmmitField[]>([]);
   const [formSubmitted, setFormSubmitted] = useState(false)
   const [alert, setAlert] = useState("")
@@ -29,21 +34,15 @@ const EventPage = ({ params }: { params: { slug: string } }) => {
     })
       .then(response => {
         const data = response.data;
-        setForm(data as Form);
+        setForm(data as FormType);
       })
       .catch(error => console.error(error));
   }, []);
 
-  const handleChange = useCallback((value: SubmmitField[], error?) => {
-    console.log(value, error);
-    setField(value);
-    setError(error);
-  }, []);
-
-  const handleSubmit = () => {
+  const handleSubmit = (fields: SubmmitField[]) => {
     const data: SubmitForm = {
       form_id: form?.form_id ?? 0,
-      form_fields: field
+      form_fields: fields
     }
 
     axios({
@@ -90,14 +89,8 @@ const EventPage = ({ params }: { params: { slug: string } }) => {
 
   return (
     <Grid container spacing={2} direction="column" >
-      <Typography variant="h1">{form?.form_name}</Typography>
-      <Typography variant="body1">{form?.form_description}</Typography>
-      <Grid item xs={12} sm={6}>
-        <DynamicFieldsTable fields={form?.form_fields ?? []} onChange={handleChange} />
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <Button variant="contained" color="primary" onClick={handleSubmit} disabled={error}>Submit</Button>
-      </Grid>
+      <Form form={form} onSubmit={handleSubmit} />
+
       {
         alert.length ?
           <Grid item>
