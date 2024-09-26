@@ -12,6 +12,10 @@ interface DefaultTemplateProp {
 
 const DefaultTemplate: React.FC<DefaultTemplateProp> = ({ eventDetails }) => {
   console.log("eventDetails", eventDetails)
+  if (eventDetails.EventAgenda?.[0]?.events_agenda_title === ""
+    && eventDetails.EventAgenda.length === 1) {
+    eventDetails.EventAgenda = []
+  }
   return (
     <Grid container spacing={2} justifyContent="center" alignItems="center">
       <Grid item xs={12}>

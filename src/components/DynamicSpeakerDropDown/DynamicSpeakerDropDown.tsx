@@ -13,8 +13,8 @@ import React, { memo, useCallback, useEffect, useState } from 'react';
 import { SpeakerDropDownOption } from './types';
 
 interface DynamicSpeakerDropDownProps {
-  dropDownOptions: SpeakerDropDownOption[];
-  values: string[];
+  dropDownOptions: SpeakerDropDownOption[]; // the options that will be displayed in the dropdown
+  values: string[]; // the selected values that presist the state
 
   // return an array of events_speaker_id that is selected
   onChange: (fields: string[]) => void;
@@ -46,7 +46,7 @@ const DynamicSpeakerDropDown: React.FC<DynamicSpeakerDropDownProps> = ({ onChang
     <Grid container direction="column" spacing={2}>
       {rows.map((row, index) => (
         <Grid item key={index}>
-          <Grid container direction="row" spacing={2}>
+          <Grid container direction="row" spacing={1}>
             <Grid item xs={11}>
               <FormControl fullWidth>
                 <Select

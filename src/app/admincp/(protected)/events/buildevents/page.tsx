@@ -86,6 +86,7 @@ const Page = () => {
     }));
   };
 
+  // Transform speakers to value to presist the state of the dropdown
   const transformSpeakersToValue = (speakers: GetSpeakersRespond[]): string[] => {
     return speakers.map(speaker => (
       speaker.events_speaker_id.toString()
@@ -106,12 +107,11 @@ const Page = () => {
 
   const handleEventAgenda = useCallback((agenda: EventAgendaProps[]) => {
     // Don't set the event agenda if the agenda is empty
-    if (agenda.length === 1 && agenda[0].events_agenda_title === '' && agenda[0].events_agenda_description === '') {
-      return;
+    if (JSON.stringify(agenda) !== JSON.stringify(eventAgenda)) {
+      setEventAgenda(agenda)
     }
-    setEventAgenda(agenda)
     console.log('Event Agenda:', agenda);
-  }, [setEventAgenda]);
+  }, [setEventAgenda, eventAgenda]);
 
   const handleEventSpeakers = useCallback((speakers: string[]) => {
     // find the entry in the list that that have the same speakers id
@@ -159,10 +159,10 @@ const Page = () => {
                 />
               </Grid>
               <Grid item xs={12}>
-                <DatePicker label="Event Date" onChange={(e: Dayjs | null) => setEventDate(e)} />
+                <DatePicker label="Event Date" value={eventDate} onChange={(e: Dayjs | null) => setEventDate(e)} />
               </Grid>
               <Grid item xs={12}>
-                <TimePicker label="Event Time" onChange={(e: Dayjs | null) => setEventTime(e)} />
+                <TimePicker label="Event Time" value={eventTime} onChange={(e: Dayjs | null) => setEventTime(e)} />
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -178,7 +178,7 @@ const Page = () => {
               </Grid>
               <Grid item xs={12}>
                 <Typography variant='h4'>Event Agenda</Typography>
-                <DynamicAgendaList onChange={handleEventAgenda} />
+                <DynamicAgendaList values={eventAgenda} onChange={handleEventAgenda} />
               </Grid>
               <Grid item xs={12}>
                 <Typography variant='h4'>Event Speakers</Typography>

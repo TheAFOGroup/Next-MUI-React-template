@@ -11,9 +11,10 @@ import EventAgendaForm from '@/components/buildEventAgenda/EventAgendaForm';
 import { EventAgendaProps } from '@/components/buildEventAgenda/types';
 interface DynamicAgendaListProps {
   onChange: (fields: EventAgendaProps[]) => void;
+  values: EventAgendaProps[]; // the selected values that presist the state
 }
 
-const DynamicAgendaList: React.FC<DynamicAgendaListProps> = ({ onChange }: DynamicAgendaListProps) => {
+const DynamicAgendaList: React.FC<DynamicAgendaListProps> = ({ onChange, values }: DynamicAgendaListProps) => {
   const initialEventAgendaProps: EventAgendaProps = {
     events_agenda_title: '',
     events_agenda_description: '',
@@ -21,7 +22,7 @@ const DynamicAgendaList: React.FC<DynamicAgendaListProps> = ({ onChange }: Dynam
     events_agenda_end_time: dayjs()
   };
 
-  const [rows, setRows] = useState<EventAgendaProps[]>([initialEventAgendaProps]);
+  const [rows, setRows] = useState<EventAgendaProps[]>(values);
 
   const handleAddRow = () => {
     setRows([...rows, initialEventAgendaProps]);
@@ -50,7 +51,7 @@ const DynamicAgendaList: React.FC<DynamicAgendaListProps> = ({ onChange }: Dynam
         <Grid item key={index}>
           <Grid container direction="row" spacing="2">
             <Grid item xs={11}>
-              <EventAgendaForm onChange={(data) => handleFieldChange(index, data)} />
+              <EventAgendaForm value={row} onChange={(data) => handleFieldChange(index, data)} />
             </Grid>
             <Grid item xs={1}>
               <IconButton onClick={() => handleDeleteRow(index)}>

@@ -8,16 +8,12 @@ import { EventAgendaProps } from '@/components/buildEventAgenda/types';
 
 interface EventAgendaFormProps {
   onChange: (data: EventAgendaProps) => void;
+  value: EventAgendaProps; // the selected values that presist the state
 }
 
 
-const EventAgendaForm: React.FC<EventAgendaFormProps> = ({ onChange }) => {
-  const [formData, setFormData] = useState<EventAgendaProps>({
-    events_agenda_title: '',
-    events_agenda_description: '',
-    events_agenda_start_time: dayjs(),
-    events_agenda_end_time: dayjs()
-  });
+const EventAgendaForm: React.FC<EventAgendaFormProps> = ({ onChange, value }) => {
+  const [formData, setFormData] = useState<EventAgendaProps>(value);
 
 
 
@@ -85,10 +81,10 @@ const EventAgendaForm: React.FC<EventAgendaFormProps> = ({ onChange }) => {
           />
         </Grid>
         <Grid item xs={3}>
-          <TimePicker label="Start Time" onChange={(e: Dayjs | null) => setStartTime(e)} />
+          <TimePicker label="Start Time" value={formData.events_agenda_start_time} onChange={(e: Dayjs | null) => setStartTime(e)} />
         </Grid>
         <Grid item xs={3}>
-          <TimePicker label="End Time" onChange={(e: Dayjs | null) => setEndTime(e)} />
+          <TimePicker label="End Time" value={formData.events_agenda_end_time} onChange={(e: Dayjs | null) => setEndTime(e)} />
         </Grid>
       </Grid>
     </div >
