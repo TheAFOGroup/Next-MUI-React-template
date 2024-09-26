@@ -5,11 +5,6 @@ import axios from 'axios';
 import { notFound } from 'next/navigation'
 import React, { useEffect, useState } from 'react';
 
-import EventAgendaTable from '@/components/events/EventAgendaTable';
-import EventIframeGrid from '@/components/events/EventIframeGrid';
-import EventTitle from '@/components/events/EventTitle';
-import MediaGrid from '@/components/events/MediaGrid';
-import ScrollCards from '@/components/events/Scrollcards/ScrollCard';
 import { Loading } from '@/components/Loading';
 
 import { Event } from '@/app/api/events/getEventDetail/types';
@@ -52,11 +47,6 @@ const EventPage = ({ params }: { params: { slug: string } }) => {
   }
   return (
     <Box>
-      <EventTitle eventDetails={eventDetails[0]}></EventTitle>
-      <MediaGrid eventId={eventDetails[0].event_id}></MediaGrid>
-      <ScrollCards eventId={eventDetails[0].event_id}></ScrollCards>
-      <EventAgendaTable eventId={eventDetails[0].event_id} />
-      <EventIframeGrid eventId={eventDetails[0].event_id} />
     </Box>
   )
 };

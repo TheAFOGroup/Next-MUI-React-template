@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
     const data: UploadImageRespond = {
       cloudflareId: body.result.id,
     };
-
+    console.log(body.result)
     return NextResponse.json(data);
   } catch (error: any) {
     return new NextResponse(error.message, { status: 500 });

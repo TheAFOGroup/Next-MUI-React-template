@@ -1,14 +1,19 @@
-import React from 'react';
-import { Event } from '@/app/api/events/getEventDetail/types';
 import { Grid, Typography } from '@mui/material';
+import React from 'react';
+
+import EventAgendaTable from '@/components/events/EventAgendaTable/EventAgendaTable';
+
+import { EventTemplateTypes } from './types';
+import MediaGrid from '@/components/events/MeidaCard/MediaGrid';
 
 interface DefaultTemplateProp {
-  eventDetails: Event;
+  eventDetails: EventTemplateTypes;
 }
 
 const DefaultTemplate: React.FC<DefaultTemplateProp> = ({ eventDetails }) => {
+  console.log("eventDetails", eventDetails)
   return (
-    <Grid container spacing={2}>
+    <Grid container spacing={2} justifyContent="center" alignItems="center">
       <Grid item xs={12}>
         <Typography variant="h1" component="div" gutterBottom>
           {eventDetails.event_name}
@@ -26,10 +31,17 @@ const DefaultTemplate: React.FC<DefaultTemplateProp> = ({ eventDetails }) => {
       </Grid>
       <Grid item xs={12} sm={6}>
         <Typography variant="h5">
-          {eventDetails.event_date}   {eventDetails.event_time}
+          {eventDetails.event_date?.format("DD/MM/YY")}   {eventDetails.event_time?.format("HH:mm")}
         </Typography>
       </Grid>
+      <Grid item xs={12}>
+        {eventDetails.EventAgenda && <EventAgendaTable agenda={eventDetails.EventAgenda} />}
+      </Grid>
+      <Grid item xs={12}>
+        {eventDetails.EventSpeaker && <MediaGrid speakers={eventDetails.EventSpeaker} />}
+      </Grid>
     </Grid>
+
   );
 };
 

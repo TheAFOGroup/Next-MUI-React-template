@@ -3,6 +3,8 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { Dayjs } from 'dayjs';
 import { EventAgendaProps } from '@/components/buildEventAgenda/types';
+import { GetSpeakersRespond } from '@/app/api/speaker/getspeakers/types';
+
 
 interface EventContextProps {
   eventName: string;
@@ -17,8 +19,8 @@ interface EventContextProps {
   setEventLocation: (location: string) => void;
   eventAgenda: EventAgendaProps[];
   setEventAgenda: (agenda: EventAgendaProps[]) => void;
-  eventSpeakers: string[];
-  setEventSpeakers: (speakers: string[]) => void;
+  eventSpeakers: GetSpeakersRespond[];
+  setEventSpeakers: (speakers: GetSpeakersRespond[]) => void;
   selectedForm: number | undefined;
   setSelectedForm: (form: number | undefined) => void;
   htmlContent: string;
@@ -36,7 +38,7 @@ export const EventProvider = ({ children }: { children: ReactNode }) => {
   const [eventTime, setEventTime] = useState<Dayjs | null>(null);
   const [eventLocation, setEventLocation] = useState('');
   const [eventAgenda, setEventAgenda] = useState<EventAgendaProps[]>([]);
-  const [eventSpeakers, setEventSpeakers] = useState<string[]>([]);
+  const [eventSpeakers, setEventSpeakers] = useState<GetSpeakersRespond[]>([]);
   const [selectedForm, setSelectedForm] = useState<number | undefined>(undefined);
   const [htmlContent, setHtmlContent] = useState<string>("");
   const [template, setTemplate] = useState<string>("");

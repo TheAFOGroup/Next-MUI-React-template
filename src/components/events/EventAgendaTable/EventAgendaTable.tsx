@@ -13,18 +13,14 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
-import { Loading } from '@/components/Loading';
-
-import { EventAgenda } from '@/app/api/events/getEventsAgenda/types';
-
+import { EventAgendaTableType } from '@/components/events/EventAgendaTable/types';
 interface EventAgendaTableProp {
-  eventId: number
+  agenda: EventAgendaTableType[]
 }
 
-function Row(props: { row }) {
+function Row(props: { row: EventAgendaTableType }) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
 
@@ -41,17 +37,17 @@ function Row(props: { row }) {
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
-          {row.title}
+          {row.events_agenda_title}
         </TableCell>
-        <TableCell align="right">{row.start_time}</TableCell>
-        <TableCell align="right">{row.end_time}</TableCell>
+        <TableCell align="right">{row.events_agenda_start_time.format("HH:mm")}</TableCell>
+        <TableCell align="right">{row.events_agenda_end_time.format("HH:mm")}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
               <Typography variant="h6" gutterBottom component="div">
-                {row.description}
+                {row.events_agenda_description}
               </Typography>
             </Box>
           </Collapse>
@@ -62,35 +58,12 @@ function Row(props: { row }) {
 }
 
 
-const EventAgendaTable: React.FC<EventAgendaTableProp> = ({ eventId }) => {
-  const [agenda, setAgenda] = useState<EventAgenda[]>([]);
-  const [loading, setLoading] = useState(true);
+const EventAgendaTable: React.FC<EventAgendaTableProp> = ({ agenda }) => {
 
-  useEffect(() => {
-    axios.get(process.env.NEXT_PUBLIC_HOST + '/api/events/getEventsAgenda', {
-      params: {
-        event_id: eventId
-      },
-      headers: {
-        'API_SECRET': process.env.NEXT_PUBLIC_API_SECRET
-      }
-    })
-      .then(response => {
-        const data = response.data;
-        setAgenda(data as EventAgenda[]);
-        setLoading(false);
-      })
-      .catch(error => console.error(error));
-  }, []);
-
-
-  if (loading) {
-    return (
-      <Loading />
-    )
+  console.log("agenda", agenda)
+  if (agenda.length === 0) {
+    return <></>
   }
-
-
   return (
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table">
@@ -103,8 +76,8 @@ const EventAgendaTable: React.FC<EventAgendaTableProp> = ({ eventId }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {agenda.map((row) => (
-            <Row key={row.event_agenda_id} row={row} />
+          {agenda.map((row, index) => (
+            <Row key={index} row={row} />
           ))}
         </TableBody>
       </Table>

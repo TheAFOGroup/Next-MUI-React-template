@@ -13,10 +13,10 @@ interface EventAgendaFormProps {
 
 const EventAgendaForm: React.FC<EventAgendaFormProps> = ({ onChange }) => {
   const [formData, setFormData] = useState<EventAgendaProps>({
-    title: '',
-    description: '',
-    start_time: dayjs(),
-    end_time: dayjs()
+    events_agenda_title: '',
+    events_agenda_description: '',
+    events_agenda_start_time: dayjs(),
+    events_agenda_end_time: dayjs()
   });
 
 
@@ -24,14 +24,14 @@ const EventAgendaForm: React.FC<EventAgendaFormProps> = ({ onChange }) => {
   const setTitle = (title: string) => {
     setFormData((prevData) => ({
       ...prevData,
-      title: title
+      events_agenda_title: title
     }));
   };
 
   const setDescription = (description: string) => {
     setFormData((prevData) => ({
       ...prevData,
-      description: description
+      events_agenda_description: description
     }));
   };
 
@@ -39,7 +39,16 @@ const EventAgendaForm: React.FC<EventAgendaFormProps> = ({ onChange }) => {
     if (startTime) {
       setFormData((prevData) => ({
         ...prevData,
-        start_time: startTime
+        events_agenda_start_time: startTime
+      }));
+    }
+  };
+
+  const setEndTime = (endTime: Dayjs | null) => {
+    if (endTime) {
+      setFormData((prevData) => ({
+        ...prevData,
+        events_agenda_end_time: endTime
       }));
     }
   };
@@ -48,22 +57,13 @@ const EventAgendaForm: React.FC<EventAgendaFormProps> = ({ onChange }) => {
     onChange(formData);
   }, [formData, onChange]);
 
-  const setEndTime = (endTime: Dayjs | null) => {
-    if (endTime) {
-      setFormData((prevData) => ({
-        ...prevData,
-        end_time: endTime
-      }));
-    }
-  };
-
   return (
     <div>
       <Grid container direction="row" spacing="2" alignItems="center">
         <Grid item xs={6}>
           <TextField
             label="Title"
-            value={formData.title}
+            value={formData.events_agenda_title}
             onChange={(e) => setTitle(e.target.value)}
             fullWidth
             margin="normal"
@@ -75,7 +75,7 @@ const EventAgendaForm: React.FC<EventAgendaFormProps> = ({ onChange }) => {
         <Grid item xs={6}>
           <TextField
             label="Description (Optional)"
-            value={formData.description}
+            value={formData.events_agenda_description}
             onChange={(e) => setDescription(e.target.value)}
             fullWidth
             margin="normal"

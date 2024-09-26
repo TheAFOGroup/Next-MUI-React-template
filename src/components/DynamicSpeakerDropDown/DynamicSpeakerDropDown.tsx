@@ -14,13 +14,14 @@ import { SpeakerDropDownOption } from './types';
 
 interface DynamicSpeakerDropDownProps {
   dropDownOptions: SpeakerDropDownOption[];
+  values: string[];
 
   // return an array of events_speaker_id that is selected
   onChange: (fields: string[]) => void;
 }
 
-const DynamicSpeakerDropDown: React.FC<DynamicSpeakerDropDownProps> = ({ onChange, dropDownOptions }: DynamicSpeakerDropDownProps) => {
-  const [rows, setRows] = useState<string[]>([""]);
+const DynamicSpeakerDropDown: React.FC<DynamicSpeakerDropDownProps> = ({ onChange, values, dropDownOptions }: DynamicSpeakerDropDownProps) => {
+  const [rows, setRows] = useState<string[]>(values);
 
   const handleAddRow = () => {
     setRows([...rows, ""]);
@@ -50,7 +51,7 @@ const DynamicSpeakerDropDown: React.FC<DynamicSpeakerDropDownProps> = ({ onChang
               <FormControl fullWidth>
                 <Select
                   labelId={`dropdown-label-${index}`}
-                  value={row[index]}
+                  value={values[index]}
                   onChange={(e) => handleFieldChange(index, e.target.value as string)}
                 >
                   {dropDownOptions.map((option) => (

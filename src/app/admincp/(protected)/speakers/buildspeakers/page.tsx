@@ -11,6 +11,7 @@ import { Speaker } from '@/components/events/MeidaCard/types';
 import { BuildEventSpeaker } from '@/app/api/speaker/buildspeaker/types';
 import { UploadImageRespond } from '@/app/api/utils/uploadimage/types';
 
+//https://www.npmjs.com/package/react-easy-crop Maybe implement this for image cropping
 const BuildSpeakers = () => {
   const session = useSession().data
   const [name, setName] = useState('');

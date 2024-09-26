@@ -14,20 +14,16 @@ interface DynamicAgendaListProps {
 }
 
 const DynamicAgendaList: React.FC<DynamicAgendaListProps> = ({ onChange }: DynamicAgendaListProps) => {
-  const [rows, setRows] = useState<EventAgendaProps[]>([{
-    title: '',
-    description: '',
-    start_time: dayjs(),
-    end_time: dayjs()
-  }]);
+  const initialEventAgendaProps: EventAgendaProps = {
+    events_agenda_title: '',
+    events_agenda_description: '',
+    events_agenda_start_time: dayjs(),
+    events_agenda_end_time: dayjs()
+  };
+
+  const [rows, setRows] = useState<EventAgendaProps[]>([initialEventAgendaProps]);
 
   const handleAddRow = () => {
-    const initialEventAgendaProps: EventAgendaProps = {
-      title: '',
-      description: '',
-      start_time: dayjs(),
-      end_time: dayjs()
-    };
     setRows([...rows, initialEventAgendaProps]);
   };
 

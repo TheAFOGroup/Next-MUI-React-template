@@ -86,6 +86,12 @@ const Page = () => {
     }));
   };
 
+  const transformSpeakersToValue = (speakers: GetSpeakersRespond[]): string[] => {
+    return speakers.map(speaker => (
+      speaker.events_speaker_id.toString()
+    ));
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle form submission logic here
@@ -96,17 +102,26 @@ const Page = () => {
     console.log('Event Location:', eventLocation);
   };
 
+
+
   const handleEventAgenda = useCallback((agenda: EventAgendaProps[]) => {
-    // Handle event agenda logic here
+    // Don't set the event agenda if the agenda is empty
+    if (agenda.length === 1 && agenda[0].events_agenda_title === '' && agenda[0].events_agenda_description === '') {
+      return;
+    }
     setEventAgenda(agenda)
     console.log('Event Agenda:', agenda);
-  }, []);
+  }, [setEventAgenda]);
 
   const handleEventSpeakers = useCallback((speakers: string[]) => {
-    // Handle event speaker logic here
-    setEventSpeakers(speakers)
-    console.log('Event speaker:', speakers);
-  }, []);
+    // find the entry in the list that that have the same speakers id
+
+    const filteredSpeakers = eventSpeakersList.filter(speaker => speakers.includes(speaker.events_speaker_id.toString()));
+    if (JSON.stringify(filteredSpeakers) !== JSON.stringify(eventSpeakers)) {
+      setEventSpeakers(filteredSpeakers);
+    }
+    console.log('Selected Speakers:', eventSpeakers);
+  }, [eventSpeakers, eventSpeakersList, setEventSpeakers]);
 
   // Location: Maybe use Google Maps API?
   // https://blog.openreplay.com/global-location-search-for-your-nextjs-app/
@@ -174,7 +189,7 @@ const Page = () => {
                 </Link>
               </Grid>
               <Grid item xs={12}>
-                <DynamicSpeakerDropDown onChange={handleEventSpeakers} dropDownOptions={transformSpeakersToDropDownOptions(eventSpeakersList)} />
+                <DynamicSpeakerDropDown onChange={handleEventSpeakers} values={transformSpeakersToValue(eventSpeakers)} dropDownOptions={transformSpeakersToDropDownOptions(eventSpeakersList)} />
               </Grid>
               <Grid item xs={12}>
                 <Typography variant='h4'>Event Form</Typography>
@@ -258,7 +273,7 @@ const Page = () => {
               </Grid>
             </Grid>
           </Grid>
-          </Grid>
+        </Grid>
       </form>
     </LocalizationProvider >
   );

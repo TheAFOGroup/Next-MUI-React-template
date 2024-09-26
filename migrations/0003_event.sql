@@ -26,14 +26,14 @@ create table if not exists events_speaker (
 
 create table if not exists  events_agenda (
     event_agenda_id integer primary key AUTOINCREMENT,
-    event_id integer not null references events(event_id),
-    title varchar(255) not null,
-    description text,
-    start_time time not null,
-    end_time time not null,
-    enabled boolean not null default true,
-    created_at timestamp not null default current_timestamp,
-    updated_at timestamp not null default current_timestamp
+    events_agenda_event_id integer not null references events(event_id),
+    events_agenda_title varchar(255) not null,
+    events_agenda_description text,
+    events_agenda_start_time time not null,
+    events_agenda_end_time time not null,
+    events_agenda_enabled boolean not null default true,
+    events_agenda_created_at timestamp not null default current_timestamp,
+    events_agenda_updated_at timestamp not null default current_timestamp
 );
 
 create table if not exists  events_iframes (
