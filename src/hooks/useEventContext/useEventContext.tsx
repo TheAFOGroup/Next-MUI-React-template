@@ -1,8 +1,10 @@
 // context/EventContext.tsx
 "use client"
-import React, { createContext, useContext, useState, ReactNode } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
+import React, { createContext, ReactNode, useContext, useState } from 'react';
+
 import { EventAgendaProps } from '@/components/buildEventAgenda/types';
+
 import { GetSpeakersRespond } from '@/app/api/speaker/getspeakers/types';
 
 
@@ -21,8 +23,8 @@ interface EventContextProps {
   setEventAgenda: (agenda: EventAgendaProps[]) => void;
   eventSpeakers: GetSpeakersRespond[];
   setEventSpeakers: (speakers: GetSpeakersRespond[]) => void;
-  selectedForm: number | undefined;
-  setSelectedForm: (form: number | undefined) => void;
+  selectedFormUUID: string | undefined;
+  setSelectedFormUUID: (form: string) => void;
   htmlContent: string;
   setHtmlContent: (content: string) => void;
   template: string;
@@ -45,7 +47,7 @@ export const EventProvider = ({ children }: { children: ReactNode }) => {
   const [eventLocation, setEventLocation] = useState('');
   const [eventAgenda, setEventAgenda] = useState<EventAgendaProps[]>([newEventAgenda]);
   const [eventSpeakers, setEventSpeakers] = useState<GetSpeakersRespond[]>([]);
-  const [selectedForm, setSelectedForm] = useState<number | undefined>(undefined);
+  const [selectedFormUUID, setSelectedFormUUID] = useState<string>("");
   const [htmlContent, setHtmlContent] = useState<string>("");
   const [template, setTemplate] = useState<string>("");
 
@@ -58,7 +60,7 @@ export const EventProvider = ({ children }: { children: ReactNode }) => {
       eventLocation, setEventLocation,
       eventAgenda, setEventAgenda,
       eventSpeakers, setEventSpeakers,
-      selectedForm, setSelectedForm,
+      selectedFormUUID, setSelectedFormUUID,
       htmlContent, setHtmlContent,
       template, setTemplate
     }}>

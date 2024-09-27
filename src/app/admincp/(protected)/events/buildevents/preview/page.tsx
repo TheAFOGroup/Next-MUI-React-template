@@ -1,16 +1,16 @@
 "use client"
-import React, { useState, useEffect } from 'react';
-import { useEventContext } from '@/hooks/useEventContext/useEventContext';
-import { EventTemplateTypes } from '@/components/events/template/types';
-import { GetSpeakersRespond } from '@/app/api/speaker/getspeakers/types';
-import { EventAgenda } from '@/app/api/events/getEventsAgenda/types';
-import axios from 'axios';
-import { useSession } from 'next-auth/react';
 import { Button } from '@mui/material';
-import DefaultTemplate from '@/components/events/template/DefaultTemplate';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useEventContext } from '@/hooks/useEventContext/useEventContext';
 
+import DefaultTemplate from '@/components/events/template/DefaultTemplate';
+import { EventTemplateTypes } from '@/components/events/template/types';
+
+import { getD1Database } from '@/app/api/_lib/DBService/index';
+import { GetForm } from '@/app/api/forms/getform/getform';
+import { Form } from '@/components/events/template/types';
 const EventPreviewPage = () => {
-  const { data: session } = useSession();
   const {
     eventName,
     eventDescription,
@@ -19,10 +19,29 @@ const EventPreviewPage = () => {
     eventLocation,
     eventAgenda,
     eventSpeakers,
-    selectedForm,
+    selectedFormUUID,
     htmlContent,
     template
   } = useEventContext();
+
+  const [form, setForm] = useState<Form | null>(null);
+
+  useEffect(() => {
+    const header = {
+      'API_SECRET': process.env.NEXT_PUBLIC_API_SECRET
+    }
+    axios.get(process.env.NEXT_PUBLIC_HOST + '/api/forms/getform', {
+      params: {
+        form_uuid: selectedFormUUID
+      },
+      headers: header
+    })
+      .then(response => {
+        const data = response.data;
+        setForm(data as Form);
+      })
+      .catch(error => console.error(error));
+  }, [selectedFormUUID]);
 
   const event: EventTemplateTypes = {
     event_name: eventName,
@@ -33,8 +52,8 @@ const EventPreviewPage = () => {
     EventSpeaker: eventSpeakers,
     EventAgenda: eventAgenda,
     event_HTMLContent: htmlContent,
-    event_form_id: selectedForm,
-    event_template: template
+    event_template: template,
+    EventForm: form || undefined
   };
 
   console.log('event', event);
@@ -42,7 +61,7 @@ const EventPreviewPage = () => {
   return (
     <div>
       <Button onClick={() => history.back()}>Go Back</Button>
-      <DefaultTemplate eventDetails={event}></DefaultTemplate>
+      <DefaultTemplate eventDetails={event} ></DefaultTemplate>
     </div >
   )
 };

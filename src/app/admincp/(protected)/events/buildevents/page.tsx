@@ -36,7 +36,7 @@ const Page = () => {
     eventLocation, setEventLocation,
     eventAgenda, setEventAgenda,
     eventSpeakers, setEventSpeakers,
-    selectedForm, setSelectedForm,
+    selectedFormUUID, setSelectedFormUUID,
     htmlContent, setHtmlContent,
     template, setTemplate
   } = useEventContext();
@@ -203,18 +203,17 @@ const Page = () => {
                 <FormControl fullWidth>
                   <Select
                     labelId="Form"
-                    value={selectedForm}
-                    onChange={(e) => setSelectedForm(e.target.value as number)}
+                    value={selectedFormUUID}
+                    onChange={(e) => setSelectedFormUUID(e.target.value as string)}
                   >
                     {formList.map((option) => (
-                      <MenuItem key={option.form_id} value={option.form_id}>
+                      <MenuItem key={option.form_UUID} value={option.form_UUID}>
                         {option.form_name}
                       </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
               </Grid>
-
               <Grid item xs={12}>
                 <Typography variant='h4'>HTML Element</Typography>
               </Grid>

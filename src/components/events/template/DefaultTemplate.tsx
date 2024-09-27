@@ -6,8 +6,6 @@ import MediaGrid from '@/components/events/MeidaCard/MediaGrid';
 
 import { EventTemplateTypes } from './types';
 import Form from '@/components/form/form';
-import { GetForm } from '@/app/api/forms/getform/getform';
-import { getD1Database } from '@/app/api/_lib/DBService/index';
 interface DefaultTemplateProp {
   eventDetails: EventTemplateTypes;
 }
@@ -51,7 +49,12 @@ const DefaultTemplate: React.FC<DefaultTemplateProp> = async ({ eventDetails }) 
         <div dangerouslySetInnerHTML={{ __html: eventDetails.event_HTMLContent || "" }} />
       </Grid>
 
+      <Grid item xs={12}>
+        {eventDetails.EventForm && <Form form={eventDetails.EventForm} />}
+      </Grid>
+
     </Grid>
+
 
   );
 };

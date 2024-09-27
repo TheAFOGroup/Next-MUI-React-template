@@ -22,19 +22,24 @@ const EventPage = ({ params }: { params: { slug: string } }) => {
   }
 
   useEffect(() => {
-    axios.get(process.env.NEXT_PUBLIC_HOST + '/api/events/getEventDetail', {
-      params: {
-        event_UUID: eventUUID
-      },
-      headers: header
-    })
-      .then(response => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(process.env.NEXT_PUBLIC_HOST + '/api/events/getEventDetail', {
+          params: {
+            event_UUID: eventUUID
+          },
+          headers: header
+        });
         const data = response.data;
         data.uuid
         setEventDetails(data as Event[]);
         setLoading(false);
-      })
-      .catch(error => console.error(error));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   if (loading) {

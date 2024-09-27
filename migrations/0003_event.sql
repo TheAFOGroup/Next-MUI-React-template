@@ -7,8 +7,21 @@ create table if not exists  events (
     event_date date not null,
     event_time time not null,
     event_location varchar(255),
+    event_owner varchar(255) not null default '',
     created_at timestamp not null default current_timestamp,
     updated_at timestamp not null default current_timestamp
+);
+
+create table if not exists events_event_speaker (
+    event_id integer not null references events(event_id),
+    events_speaker_id integer not null references events_speaker(events_speaker_id),
+    primary key (event_id, events_speaker_id)
+);
+
+create table if not exists events_forms (
+    event_id integer not null references events(event_id),
+    form_id integer not null  not null references forms(form_id),
+    primary key (event_id, form_id)
 );
 
 create table if not exists events_speaker (
@@ -49,7 +62,7 @@ create table if not exists  events_iframes (
 create table if not exists events_html(
     event_html_id integer primary key AUTOINCREMENT,
     event_id integer not null references events(event_id),
-    html_content text not null,
+    html_content varchar(255) not null,
     enabled boolean not null default true,
     created_at timestamp not null default current_timestamp,
     updated_at timestamp not null default current_timestamp
