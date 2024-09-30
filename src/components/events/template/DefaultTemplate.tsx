@@ -3,9 +3,9 @@ import React from 'react';
 
 import EventAgendaTable from '@/components/events/EventAgendaTable/EventAgendaTable';
 import MediaGrid from '@/components/events/MeidaCard/MediaGrid';
+import Form from '@/components/form/form';
 
 import { EventTemplateTypes } from './types';
-import Form from '@/components/form/form';
 interface DefaultTemplateProp {
   eventDetails: EventTemplateTypes;
 }
@@ -16,6 +16,13 @@ const DefaultTemplate: React.FC<DefaultTemplateProp> = async ({ eventDetails }) 
     && eventDetails.EventAgenda.length === 1) {
     eventDetails.EventAgenda = []
   }
+
+  // Transform the image URL to a Cloudflare Image Delivery URL
+  eventDetails.EventSpeaker?.forEach((speaker) => {
+    speaker.events_speaker_image_url = `${process.env.NEXT_PUBLIC_CLOUDFLARE_IMAGE_DELIVERY_URL}/${speaker.events_speaker_image_url}/250x250`;
+    console.log("speaker", speaker)
+  })
+
   return (
     <Grid container spacing={2} justifyContent="center" alignItems="center">
       <Grid item xs={12}>
@@ -38,21 +45,25 @@ const DefaultTemplate: React.FC<DefaultTemplateProp> = async ({ eventDetails }) 
           {eventDetails.event_date?.format("DD/MM/YY")}   {eventDetails.event_time?.format("HH:mm")}
         </Typography>
       </Grid>
-      <Grid item xs={12}>
-        {eventDetails.EventAgenda && <EventAgendaTable agenda={eventDetails.EventAgenda} />}
+      {eventDetails.EventAgenda &&
+        <Grid item xs={12}>
+          <EventAgendaTable agenda={eventDetails.EventAgenda} />
+        </Grid>
+      }
+      {eventDetails.EventSpeaker && <Grid item xs={12}>
+        <MediaGrid speakers={eventDetails.EventSpeaker} />
       </Grid>
-      <Grid item xs={12}>
-        {eventDetails.EventSpeaker && <MediaGrid speakers={eventDetails.EventSpeaker} />}
-      </Grid>
+      }
 
       <Grid item xs={12}>
         <div dangerouslySetInnerHTML={{ __html: eventDetails.event_HTMLContent || "" }} />
       </Grid>
 
-      <Grid item xs={12}>
-        {eventDetails.EventForm && <Form form={eventDetails.EventForm} />}
-      </Grid>
-
+      {eventDetails.EventForm &&
+        <Grid item xs={12}>
+          <Form form={eventDetails.EventForm} />
+        </Grid>
+      }
     </Grid>
 
 

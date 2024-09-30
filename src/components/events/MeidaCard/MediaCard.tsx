@@ -17,8 +17,7 @@ interface MediaCardProps {
 
 
 const MediaCard: React.FC<MediaCardProps> = ({ speaker }) => {
-  const imageUrl = `${process.env.NEXT_PUBLIC_CLOUDFLARE_IMAGE_DELIVERY_URL}/${speaker.events_speaker_image_url}/250x250`;
-  console.log("imageUrl", imageUrl)
+
   return (
     <Card sx={{ minWidth: "250px", minHeight: "250px" }}>
       <Box
@@ -39,7 +38,7 @@ const MediaCard: React.FC<MediaCardProps> = ({ speaker }) => {
             objectFit: "cover",  // Ensures image covers the box without distortion
             objectPosition: "center center",  // Centers the image within the box
           }}
-          src={imageUrl}
+          src={speaker.events_speaker_image_url}
           title={speaker.events_speaker_name}
         />
       </Box>

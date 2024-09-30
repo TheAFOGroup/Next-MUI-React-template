@@ -1,10 +1,10 @@
 "use client"
-import { Button, FormControl, Grid, Link, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { Alert, Button, FormControl, Grid, Link, MenuItem, Select, TextField, Typography } from '@mui/material';
 import { LocalizationProvider, TimePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import axios from 'axios';
-import { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -17,9 +17,9 @@ import { EventAgendaProps } from '@/components/buildEventAgenda/types';
 import DynamicSpeakerDropDown from '@/components/DynamicSpeakerDropDown/DynamicSpeakerDropDown';
 import { SpeakerDropDownOption } from '@/components/DynamicSpeakerDropDown/types';
 
+import { BuildEventType } from '@/app/api/events/buildevent/types';
 import { FormIndexRespond } from '@/app/api/forms/getformindex/types';
 import { GetSpeakersRespond } from '@/app/api/speaker/getspeakers/types';
-
 
 const Page = () => {
   const session = useSession().data
@@ -27,6 +27,10 @@ const Page = () => {
 
   const [eventSpeakersList, setEventSpeakersList] = useState<GetSpeakersRespond[]>([]);
   const [formList, setFormList] = useState<FormIndexRespond[]>([]);
+  const [formSubmitted, setFormSubmitted] = useState<boolean>(false);
+  const [alert, setAlert] = useState<string>('');
+  const [UUID, setUUID] = useState<string>('');
+  const [eventFormId, setEventFormId] = useState<number>();
 
   const {
     eventName, setEventName,
@@ -93,17 +97,55 @@ const Page = () => {
     ));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log('Form submitted!');
-    console.log('Event Name:', eventName);
-    console.log('Event Description:', eventDescription);
-    console.log('Event Date:', eventDate);
-    console.log('Event Location:', eventLocation);
+
+    // Check all the necessary fields are filled
+    if (eventName === '') {
+      setAlert('Event Name is required');
+      return;
+    }
+
+    // Transform the props into BuildEventType
+    const data: BuildEventType = {
+      event_name: eventName,
+      event_description: eventDescription,
+      event_date: eventDate || undefined,
+      event_time: eventTime || undefined,
+      event_location: eventLocation,
+      eventSpeaker: eventSpeakers.map(speaker => speaker.events_speaker_id),
+      eventAgenda: eventAgenda.map(agenda => ({
+        events_agenda_title: agenda.events_agenda_title,
+        events_agenda_description: agenda.events_agenda_description,
+        events_agenda_start_time: agenda.events_agenda_start_time,
+        events_agenda_end_time: agenda.events_agenda_end_time
+      })),
+      event_HTMLContent: [htmlContent],
+      event_template: template,
+      event_form_id: eventFormId,
+      event_owner: session?.user?.email || ''
+    };
+
+
+    axios({
+      method: 'post',
+      url: process.env.NEXT_PUBLIC_HOST + '/api/events/buildevent',
+      data: data,
+      headers: {
+        'Content-Type': 'application/json',
+        'API_SECRET': process.env.NEXT_PUBLIC_API_SECRET
+      }
+    }).then((res) => {
+      console.log(res.data)
+      setUUID(res.data.respond.UUID);
+      setFormSubmitted(true);
+    })
+      .catch((error) => {
+        setAlert(error.message || 'An error occurred');
+      }).finally(() => {
+        setAlert('An error occurred');
+      })
   };
-
-
 
   const handleEventAgenda = useCallback((agenda: EventAgendaProps[]) => {
     // Don't set the event agenda if the agenda is empty
@@ -123,6 +165,51 @@ const Page = () => {
     console.log('Selected Speakers:', eventSpeakers);
   }, [eventSpeakers, eventSpeakersList, setEventSpeakers]);
 
+  const handleEventForm = async (e) => {
+    setSelectedFormUUID(e.target.value as string)
+    setEventFormId(formList.find(form => form.form_UUID == e.target.value)?.form_id)
+    //console.log('Selected Form:', eventFormId);
+  }
+
+  const handleNewSpeaker = () => {
+    // Handle starting a new speaker logic here
+    setFormSubmitted(false);
+    setEventName('');
+    setEventDescription('');
+    setEventDate(null);
+    setEventTime(null);
+    setEventLocation('');
+    setEventAgenda([]);
+    setEventSpeakers([]);
+    setSelectedFormUUID('');
+    setEventFormId(undefined);
+    setHtmlContent('');
+    setTemplate('Default');
+    setAlert('');
+    setUUID('');
+  };
+
+  if (formSubmitted) {
+    return (
+      <Grid container direction="column" spacing={2}>
+        <Grid item>
+          <Typography variant="h6">Form Submission Successful</Typography>
+        </Grid>
+        <Grid item>
+          <Typography>Event page submitted successfully!</Typography>
+        </Grid>
+        <Grid item>
+          <Link href={`${process.env.NEXT_PUBLIC_HOST}/events/${UUID}`} target="_blank" rel="noopener noreferrer">
+            {`${process.env.NEXT_PUBLIC_HOST}/events/${UUID}`}
+          </Link>
+        </Grid>
+        <Grid item>
+          <Button onClick={handleNewSpeaker}>Start New Event</Button>
+        </Grid>
+      </Grid>
+    )
+  }
+
   // Location: Maybe use Google Maps API?
   // https://blog.openreplay.com/global-location-search-for-your-nextjs-app/
   return (
@@ -134,7 +221,7 @@ const Page = () => {
           </Grid>
           <Grid item xs={12}>
             <Grid container spacing={2}>
-              <Grid item xs={12}>
+              <Grid item xs={11}>
                 <TextField
                   label="Event Name"
                   value={eventName}
@@ -142,11 +229,10 @@ const Page = () => {
                   fullWidth
                   margin="normal"
                   multiline
-                  maxRows={4}
-                  rows={4}
+                  required={true}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={11}>
                 <TextField
                   label="Event Description (Optional)"
                   value={eventDescription}
@@ -158,13 +244,13 @@ const Page = () => {
                   rows={4}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={3}>
                 <DatePicker label="Event Date" value={eventDate} onChange={(e: Dayjs | null) => setEventDate(e)} />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={3}>
                 <TimePicker label="Event Time" value={eventTime} onChange={(e: Dayjs | null) => setEventTime(e)} />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={11}>
                 <TextField
                   label="Event Location"
                   value={eventLocation}
@@ -194,17 +280,17 @@ const Page = () => {
               <Grid item xs={12}>
                 <Typography variant='h4'>Event Form</Typography>
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={11}>
                 <Link href="/admincp/forms/buildform" variant="body1">
                   Cannot find your form? Create a new form here
                 </Link>
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={11}>
                 <FormControl fullWidth>
                   <Select
                     labelId="Form"
                     value={selectedFormUUID}
-                    onChange={(e) => setSelectedFormUUID(e.target.value as string)}
+                    onChange={handleEventForm}
                   >
                     {formList.map((option) => (
                       <MenuItem key={option.form_UUID} value={option.form_UUID}>
@@ -220,7 +306,7 @@ const Page = () => {
               <Grid item xs={12}>
                 <Typography variant='body1' style={{ color: 'red' }}>Dangerous: We are not liable for any problems caused by this field</Typography>
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={11}>
                 <TextField
                   label="HTML Content"
                   value={htmlContent}
@@ -234,10 +320,10 @@ const Page = () => {
               </Grid>
               <Grid item xs={12}>
                 <Grid container spacing={2} direction="column">
-                  <Grid item xs={12}>
+                  <Grid item xs={11}>
                     <Typography variant='h4'>Select Template</Typography>
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid item xs={11}>
                     <FormControl fullWidth>
                       <Select
                         labelId="Template"
@@ -259,6 +345,17 @@ const Page = () => {
                     Preview
                   </Button>
                 </Grid>
+
+                {
+                  alert.length ?
+                    <Grid item>
+                      <Alert severity="error">
+                        {alert}
+                      </Alert>
+                    </Grid>
+                    :
+                    <></>
+                }
 
                 <Grid item xs={12}>
                   <Button type="submit" variant="contained" color="primary">

@@ -30,6 +30,8 @@ const EventPreviewPage = () => {
     const header = {
       'API_SECRET': process.env.NEXT_PUBLIC_API_SECRET
     }
+    if (!selectedFormUUID) return;
+
     axios.get(process.env.NEXT_PUBLIC_HOST + '/api/forms/getform', {
       params: {
         form_uuid: selectedFormUUID

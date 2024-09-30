@@ -139,11 +139,6 @@ const BuildFormPage = () => {
     return formData;
   };
 
-  const fieldPreviewOnChange = (response: any, error: any) => {
-    const res = response;
-    const err = error;
-  };
-
 
   if (formSubmitted) {
     return (
