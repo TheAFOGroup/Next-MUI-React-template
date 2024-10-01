@@ -32,7 +32,7 @@ export async function GET(req: NextRequest) {
   }
   const { searchParams } = new URL(req.url);
   const owner = searchParams.get('owner');
-  const speakerIds = searchParams.getAll('events_speaker_id');
+  const speakerIds = searchParams.getAll('events_speaker_id').map(Number);
 
   // TODO: Implement rollback in case of fail transaction
   try {

@@ -7,7 +7,7 @@ import { getDatabase } from 'jest.setup';
 
 import { BuildSpeaker } from './buildspeaker';
 import { BuildEventSpeaker } from '@/app/api/speaker/buildspeaker/types';
-import { EventSpeaker } from '@/app/api/_lib/DBService/types/speaker';
+import { EventSpeaker } from '@/app/api/_lib/DBService/types/events';
 
 describe('BuildSpeaker', () => {
   let db: D1Database;

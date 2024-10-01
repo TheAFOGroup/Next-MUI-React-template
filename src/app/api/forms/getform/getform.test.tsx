@@ -55,8 +55,35 @@ describe('GetForm', () => {
     await db.batch(batchStatements);
   });
 
-  it('should retrieve the form and its fields', async () => {
-    const form = await GetForm(db, "uuid-1");
+  it('should retrieve the form and its fields by uuid', async () => {
+    const form = await GetForm(db, "uuid-1", undefined);
+    expect(form).toEqual<Form>({
+      form_id: 1,
+      form_name: 'Test Form',
+      form_description: 'This is a test form',
+      form_fields: [
+        {
+          field_name: 'Name',
+          field_type: 'text',
+          field_order: 1,
+          field_info: ["gmail.com"],
+          form_id: 1,
+          form_field_id: 1,
+        },
+        {
+          field_name: 'Field 2',
+          field_type: 'checkbox',
+          field_info: [],
+          field_order: 2,
+          form_id: 1,
+          form_field_id: 2,
+        },
+      ],
+    });
+  });
+
+  it('should retrieve the form and its fields by id', async () => {
+    const form = await GetForm(db, undefined, 1);
     expect(form).toEqual<Form>({
       form_id: 1,
       form_name: 'Test Form',

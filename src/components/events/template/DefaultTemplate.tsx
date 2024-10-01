@@ -19,7 +19,10 @@ const DefaultTemplate: React.FC<DefaultTemplateProp> = async ({ eventDetails }) 
 
   // Transform the image URL to a Cloudflare Image Delivery URL
   eventDetails.EventSpeaker?.forEach((speaker) => {
-    speaker.events_speaker_image_url = `${process.env.NEXT_PUBLIC_CLOUDFLARE_IMAGE_DELIVERY_URL}/${speaker.events_speaker_image_url}/250x250`;
+    if (process.env.NEXT_PUBLIC_CLOUDFLARE_IMAGE_DELIVERY_URL && speaker.events_speaker_image_url &&
+      !speaker.events_speaker_image_url.includes(process.env.NEXT_PUBLIC_CLOUDFLARE_IMAGE_DELIVERY_URL)) {
+      speaker.events_speaker_image_url = `${process.env.NEXT_PUBLIC_CLOUDFLARE_IMAGE_DELIVERY_URL}/${speaker.events_speaker_image_url}/250x250`;
+    }
     console.log("speaker", speaker)
   })
 

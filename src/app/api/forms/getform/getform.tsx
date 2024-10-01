@@ -12,24 +12,30 @@ import { Form, FormField } from '@/app/api/forms/getform/types';
  * @returns A Promise that resolves to the retrieved form object.
  * @throws If the form is not found in the database or an error occurs during retrieval.
  */
-export async function GetForm(myDb: D1Database, uuid: string) {
+export async function GetForm(myDb: D1Database, uuid?: string, formId?: number): Promise<Form> {
+  // Get JSON data from the POST request body
+  console.log('Received data:', uuid);
 
-  try {
-    // Get JSON data from the POST request body
-    console.log('Received data:', uuid);
+  if (!uuid && !formId) {
+    throw Error('No form UUID or ID provided');
+  }
 
-    const stmt = `SELECT 
-    form_id,
-    form_name,
-    form_description
-FROM 
-    forms
-WHERE
-    form_UUID = ?;
-`;
+  let formResult: Form | null = null;
+
+  if (!formId) {
+    const stmt = `
+        SELECT 
+          form_id,
+          form_name,
+          form_description
+        FROM 
+          forms
+        WHERE
+          form_UUID = ?;
+      `;
 
     console.log('Executing SQL statement:', stmt);
-    const formResult = await myDb.prepare(stmt)
+    formResult = await myDb.prepare(stmt)
       .bind(uuid)
       .first<Form>();
 
@@ -39,10 +45,32 @@ WHERE
       throw Error('Form not found');
     }
 
-    const formId = formResult?.form_id;
+    formId = formResult?.form_id;
+  } else {
+    const stmt = `
+        SELECT 
+          form_id,
+          form_name,
+          form_description
+        FROM 
+          forms
+        WHERE
+          form_id = ?;
+      `;
 
-    // Dynamically construct the SQL statement for form fields
-    const stmt2 = `
+    console.log('Executing SQL statement:', stmt);
+
+    formResult = await myDb.prepare(stmt)
+      .bind(formId)
+      .first<Form>();
+
+    if (formResult == null) {
+      throw Error('Form not found');
+    }
+  }
+
+  // Dynamically construct the SQL statement for form fields
+  const stmt2 = `
     SELECT 
     field_name,
     field_type,
@@ -55,14 +83,14 @@ WHERE
     form_id = ${formId}
   ORDER BY field_order;
     `;
-    const formFieldRes = await myDb.prepare(stmt2)
-      .all<FormField>();
+  const formFieldRes = await myDb.prepare(stmt2)
+    .all<FormField>();
 
-    console.log(formFieldRes)
+  console.log(formFieldRes)
 
-    if (formFieldRes?.results) {
-      for (const formField of formFieldRes.results) {
-        const fieldInfoStmt = `
+  if (formFieldRes?.results) {
+    for (const formField of formFieldRes.results) {
+      const fieldInfoStmt = `
           SELECT 
             field_info_item
           FROM 
@@ -70,17 +98,13 @@ WHERE
           WHERE
             form_field_id = ?;
         `;
-        const fieldInfoRes = await myDb.prepare(fieldInfoStmt).bind(formField.form_field_id).all<{ field_info_item: string }>();
+      const fieldInfoRes = await myDb.prepare(fieldInfoStmt).bind(formField.form_field_id).all<{ field_info_item: string }>();
 
-        formField.field_info = fieldInfoRes?.results.map(info => info.field_info_item) || [];
-      }
+      formField.field_info = fieldInfoRes?.results.map(info => info.field_info_item) || [];
     }
-
-    // Send a response back to the client
-    formResult.form_fields = formFieldRes?.results || [];
-
-    return formResult
-  } catch (error) {
-    return error
   }
+
+  formResult.form_fields = formFieldRes?.results || [];
+
+  return formResult
 }
