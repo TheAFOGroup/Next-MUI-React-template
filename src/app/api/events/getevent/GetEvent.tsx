@@ -12,11 +12,11 @@ import { GetForm } from '@/app/api/forms/getform/getform';
 import { Form as FormType } from '@/app/api/forms/getform/types';
 import { GetSpeakers } from '@/app/api/speaker/getspeakers/getspeakers';
 import { GetSpeakersRespond } from '@/app/api/speaker/getspeakers/types';
-export async function GetEvent(myDb: D1Database, uuid: string) {
+export async function GetEvent(myDb: D1Database, URL: string) {
   // Fetch event details
   const eventStmt = `SELECT event_id, event_name, event_description, event_date, event_time, 
-  event_location, event_owner FROM events WHERE event_UUID = ?`;
-  const rawEvent = await myDb.prepare(eventStmt).bind(uuid).first<Event>();
+  event_location, event_owner FROM events WHERE event_url = ?`;
+  const rawEvent = await myDb.prepare(eventStmt).bind(URL).first<Event>();
 
   if (!rawEvent) {
     throw new Error('Event not found');

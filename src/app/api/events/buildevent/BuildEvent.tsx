@@ -17,7 +17,7 @@ export async function BuildEvent(myDb: D1Database, data: BuildEventType) {
     const url = data.eventURL ? data.eventURL : uuidv4();
 
     // Get JSON data from the POST request body
-    const stmt = `INSERT INTO events (event_UUID, event_name, event_description, event_date, event_time, event_location,event_owner)
+    const stmt = `INSERT INTO events (event_url, event_name, event_description, event_date, event_time, event_location,event_owner)
           VALUES 
           (?, ?, ?, ?, ?, ?, ?)
           returning event_id;`;
@@ -61,7 +61,7 @@ export async function BuildEvent(myDb: D1Database, data: BuildEventType) {
 
     // Execute all batch statements
     await myDb.batch(batchStatment);
-    const respond: BuildEventResponse = { UUID: url }
+    const respond: BuildEventResponse = { URL: url }
     // Send a response back to the client
     return ({ message: 'Data received successfully', respond });
   } catch (error) {

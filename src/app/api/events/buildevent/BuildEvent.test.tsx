@@ -125,14 +125,14 @@ describe('BuildEvent', () => {
     expect(res).toEqual({
       message: "Data received successfully",
       respond: expect.objectContaining({
-        UUID: expect.any(String)
+        URL: expect.any(String)
       })
     });
 
     const event = await db.prepare("SELECT * FROM events WHERE event_id = 1").first();
     expect(event).toEqual({
       event_id: 1,
-      event_UUID: expect.any(String),
+      event_url: expect.any(String),
       event_name: data.event_name,
       event_description: data.event_description,
       event_date: data.event_date?.toString(),

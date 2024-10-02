@@ -50,7 +50,7 @@ describe('GetEvent', () => {
           (2, 4, 'Male');
       `,
       `
-        INSERT INTO events (event_UUID, event_name, event_description, event_date, event_time, event_location, event_owner, created_at, updated_at)
+        INSERT INTO events (event_url, event_name, event_description, event_date, event_time, event_location, event_owner, created_at, updated_at)
         VALUES ('uuid-1234', 'Sample Event', 'This is a sample event', '2024-09-30T13:14:26.000Z', '2024-09-30T13:14:26.000Z', 'Sample Location', 'owner-1234', '2024-08-15T13:07:59.578Z', '2024-08-15T13:07:59.578Z');
       `,
       `

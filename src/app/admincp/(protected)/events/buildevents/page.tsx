@@ -29,7 +29,7 @@ const Page = () => {
   const [formList, setFormList] = useState<FormIndexRespond[]>([]);
   const [formSubmitted, setFormSubmitted] = useState<boolean>(false);
   const [alert, setAlert] = useState<string>('');
-  const [UUID, setUUID] = useState<string>('');
+  const [URL, setURL] = useState<string>('');
 
   const {
     eventName, setEventName,
@@ -137,7 +137,7 @@ const Page = () => {
       }
     }).then((res) => {
       console.log(res.data)
-      setUUID(res.data.respond.UUID);
+      setURL(res.data.respond.URL);
       setFormSubmitted(true);
     })
       .catch((error) => {
@@ -184,7 +184,7 @@ const Page = () => {
     setHtmlContent('');
     setTemplate('Default');
     setAlert('');
-    setUUID('');
+    setURL('');
   };
 
   if (formSubmitted) {
@@ -197,8 +197,8 @@ const Page = () => {
           <Typography>Event page submitted successfully!</Typography>
         </Grid>
         <Grid item>
-          <Link href={`${process.env.NEXT_PUBLIC_HOST}/eventPage/${UUID}`} target="_blank" rel="noopener noreferrer">
-            {`${process.env.NEXT_PUBLIC_HOST}/eventPage/${UUID}`}
+          <Link href={`${process.env.NEXT_PUBLIC_HOST}/eventPage/${URL}`} target="_blank" rel="noopener noreferrer">
+            {`${process.env.NEXT_PUBLIC_HOST}/eventPage/${URL}`}
           </Link>
         </Grid>
         <Grid item>

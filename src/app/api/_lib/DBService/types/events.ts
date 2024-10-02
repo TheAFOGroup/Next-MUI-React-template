@@ -1,7 +1,7 @@
 // Interface for the events table
 export interface Event {
   event_id: number;
-  event_UUID: string;
+  event_url: string;
   event_name: string;
   event_description: string;
   event_date: string; // Using string to represent date

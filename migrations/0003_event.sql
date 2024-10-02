@@ -1,7 +1,7 @@
 -- Migration number: 0003 	 2024-08-15T13:07:59.578Z
 create table if not exists  events (
     event_id integer primary key AUTOINCREMENT,
-    event_UUID string not null unique,
+    event_url string not null unique,
     event_name varchar(255) not null,
     event_description text not null,
     event_date date not null,

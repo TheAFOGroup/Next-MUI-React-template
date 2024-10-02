@@ -16,7 +16,7 @@ export interface BuildEventType {
 }
 
 export interface BuildEventResponse {
-  UUID: string;
+  URL: string;
 }
 
 interface EventAgenda {
