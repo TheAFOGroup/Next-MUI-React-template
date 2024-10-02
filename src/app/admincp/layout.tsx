@@ -22,19 +22,7 @@ export default async function RootLayout({
       <GlobalStyles styles={GLOBAL_STYLES} />
       <body>
         <ResponsiveAppBar session={session}></ResponsiveAppBar>
-        {session ? (
-          <>
-            <SessionProvider session={session}>
-              <Container sx={{ pl: 0, pr: 0 }}>{children}</Container>
-            </SessionProvider>
-
-          </>
-        ) : (
-          <>
-            <Typography>You must sign in to continue</Typography>
-            <SignIn />
-          </>
-        )}
+        <Container sx={{ pl: 0, pr: 0 }}>{children}</Container>
       </body>
     </html>
   );

@@ -29,3 +29,22 @@ export async function IsAdmin(userId: string): Promise<boolean> {
   }
 }
 
+// hasAdmin Check if there is any admin in the database
+export async function hasAdmin(): Promise<boolean> {
+  const { env } = getRequestContext()
+  const myDb = env.DB;
+  const stmt = `SELECT admin FROM authorize LIMIT 1`;
+  try {
+    // Prepare and execute the query
+    const res = await myDb.prepare(stmt).first<isAdmin>()
+    console.log(res) // Send a response back to the client
+    if (res === null) {
+      return false;
+    }
+
+    return res.admin;
+  } catch (error) {
+    console.error('Error processing GET request:', error);
+    return false;
+  }
+}

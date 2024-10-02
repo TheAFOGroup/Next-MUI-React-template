@@ -10,7 +10,7 @@ import type { Provider } from 'next-auth/providers';
 import Credentials from "next-auth/providers/credentials"
 import { z } from 'zod';
 
-import { GetUser } from "@/app/api/_lib/GetUser";
+import { GetUser } from "@/app/api/auth/GetUser";
 
 
 type credentials = Record<string, CredentialInput>;

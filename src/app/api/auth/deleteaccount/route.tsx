@@ -1,7 +1,7 @@
 export const runtime = 'edge';
 import { D1Database } from '@cloudflare/workers-types'
 
-import { GetUser } from '@/app/api/_lib/GetUser';
+import { GetUser } from '@/app/api/auth/GetUser';
 export interface Env {
   DB: D1Database;
 }
