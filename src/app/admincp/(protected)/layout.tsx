@@ -21,6 +21,7 @@ export default async function RootLayout({
     <html lang='en'>
       <GlobalStyles styles={GLOBAL_STYLES} />
       <body>
+        <ResponsiveAppBar session={session}></ResponsiveAppBar>
         {session ? (
           <>
             <SessionProvider session={session}>

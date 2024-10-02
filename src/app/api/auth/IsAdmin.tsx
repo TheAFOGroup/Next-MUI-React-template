@@ -30,10 +30,14 @@ export async function IsAdmin(userId: string): Promise<boolean> {
 }
 
 // hasAdmin Check if there is any admin in the database
-export async function hasAdmin(): Promise<boolean> {
+export async function HasAdmin(): Promise<boolean> {
   const { env } = getRequestContext()
   const myDb = env.DB;
-  const stmt = `SELECT admin FROM authorize LIMIT 1`;
+  const stmt = `SELECT EXISTS (
+  SELECT 1
+  FROM authorize
+  WHERE admin = true
+) as admin;`;
   try {
     // Prepare and execute the query
     const res = await myDb.prepare(stmt).first<isAdmin>()

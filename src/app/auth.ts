@@ -10,8 +10,11 @@ import type { Provider } from 'next-auth/providers';
 import Credentials from "next-auth/providers/credentials"
 import { z } from 'zod';
 
+import { getD1Database } from '@/app/api/_lib/DBService/index';
 import { GetUser } from "@/app/api/auth/GetUser";
-
+import { HasAdmin } from "@/app/api/auth/IsAdmin";
+import { Signup } from "@/app/api/auth/signup/signup";
+import { SignUpData } from "@/app/api/auth/signup/type";
 
 type credentials = Record<string, CredentialInput>;
 
@@ -33,24 +36,44 @@ const providers: Provider[] = [
       if (!credentials) {
         return null;
       }
-      const parsedCredentials = z
-        .object({ email: z.string().email(), password: z.string() })
-        .safeParse(credentials);
+      try {
+        const parsedCredentials = z
+          .object({ email: z.string().email(), password: z.string() })
+          .safeParse(credentials);
 
-      if (parsedCredentials.success) {
-        const { email, password } = parsedCredentials.data;
-        const user = await GetUser(email)
-        if (user === null) return null;
+        if (parsedCredentials.success) {
+          const { email, password } = parsedCredentials.data;
+          const db = getD1Database()
 
-        // check if password is valid
-        const isPasswordValid = await bcrypt.compare(password, user.password)
-        if (isPasswordValid) {
-          return { id: user.id, email: email } as User;
+          // First time login, create an admin account
+          if (!(await HasAdmin())) {
+            const data: SignUpData = {
+              email,
+              password,
+              authorize: {
+                admin: true,
+              },
+            };
+            const userId = await Signup(db, data);
+            return { id: userId, email: email } as User;
+          }
+
+          const user = await GetUser(email)
+          if (user === null) return null;
+
+          // check if password is valid
+          const isPasswordValid = await bcrypt.compare(password, user.password)
+          if (isPasswordValid) {
+            return { id: user.id, email: email } as User;
+          }
         }
+        return null
+      } catch (error) {
+        console.log(error)
+        return null
       }
-      return null
     }
-    ,
+
   })
 
 ];

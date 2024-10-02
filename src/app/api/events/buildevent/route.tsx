@@ -5,7 +5,6 @@ export interface Env {
   DB: D1Database;
 }
 import { CheckAPIkey } from '@/app/api/_lib/CheckAPIkey';
-import { BuildFormType, BuildFormResponse } from '@/app/api/forms/buildform/type';
 import { getD1Database } from '@/app/api/_lib/DBService/index';
 import { BuildEvent } from './BuildEvent';
 import { BuildEventType } from '@/app/api/events/buildevent/types';
