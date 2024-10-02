@@ -10,8 +10,8 @@ import { getD1Database } from '@/app/api/_lib/DBService/index';
 import { GetEvent } from '@/app/api/events/getevent/GetEvent';
 import { GetEventType } from '@/app/api/events/getevent/types';
 
-const EventPage = async ({ params }: { params: { slug: string } }) => {
-  const eventUUID = params.slug
+const EventPage = async ({ params }: { params: { slug: string[] } }) => {
+  const eventUUID = params.slug.join('/');
   const db = getD1Database();
   const event: GetEventType = await GetEvent(db, eventUUID);
 

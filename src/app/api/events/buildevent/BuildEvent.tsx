@@ -4,7 +4,8 @@ export interface Env {
   DB: D1Database;
 }
 import { v4 as uuidv4 } from 'uuid';
-import { BuildEventType, BuildEventResponse } from '@/app/api/events/buildevent/types';
+
+import { BuildEventResponse, BuildEventType } from '@/app/api/events/buildevent/types';
 interface eventId {
   event_id: number
 }
@@ -12,7 +13,8 @@ interface eventId {
 export async function BuildEvent(myDb: D1Database, data: BuildEventType) {
   // TODO: Implenmnet rollback in case of fail transaction
   try {
-    const uuid = uuidv4();
+    // 
+    const url = data.eventURL ? data.eventURL : uuidv4();
 
     // Get JSON data from the POST request body
     const stmt = `INSERT INTO events (event_UUID, event_name, event_description, event_date, event_time, event_location,event_owner)
@@ -22,7 +24,7 @@ export async function BuildEvent(myDb: D1Database, data: BuildEventType) {
 
     console.log('Executing SQL statement:', stmt);
     const eventIdRes = await myDb.prepare(stmt)
-      .bind(uuid, data.event_name, data.event_description, data.event_date ? data.event_date.toString() : "", data.event_time ? data.event_time.toString() : "", data.event_location, data.event_owner)
+      .bind(url, data.event_name, data.event_description, data.event_date ? data.event_date.toString() : "", data.event_time ? data.event_time.toString() : "", data.event_location, data.event_owner)
       .first<eventId>();
 
     const eventId = eventIdRes?.event_id;
@@ -59,7 +61,7 @@ export async function BuildEvent(myDb: D1Database, data: BuildEventType) {
 
     // Execute all batch statements
     await myDb.batch(batchStatment);
-    const respond: BuildEventResponse = { UUID: uuid }
+    const respond: BuildEventResponse = { UUID: url }
     // Send a response back to the client
     return ({ message: 'Data received successfully', respond });
   } catch (error) {

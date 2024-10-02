@@ -41,7 +41,8 @@ const Page = () => {
     eventSpeakers, setEventSpeakers,
     selectedFormUUID, setSelectedFormUUID,
     htmlContent, setHtmlContent,
-    template, setTemplate
+    template, setTemplate,
+    eventURL, setEventURL
   } = useEventContext();
 
   const templateOptions = ["Default", "Template 1", "Template 2", "Template 3"];
@@ -122,7 +123,8 @@ const Page = () => {
       event_HTMLContent: [htmlContent],
       event_template: template,
       event_form_id: formList.find(form => form.form_UUID == selectedFormUUID)?.form_id,
-      event_owner: session?.user?.email || ''
+      event_owner: session?.user?.email || '',
+      eventURL: eventURL
     };
 
     axios({
@@ -226,6 +228,18 @@ const Page = () => {
                   margin="normal"
                   multiline
                   required={true}
+                />
+              </Grid>
+              <Grid item xs={11}>
+                <Alert severity="info">
+                  <Typography variant='body1'>If no event URL is provided, the event page will be a random UUID url</Typography>
+                </Alert>
+                <TextField
+                  label="Event URL"
+                  value={eventURL}
+                  onChange={(e) => setEventURL(e.target.value)}
+                  fullWidth
+                  margin="normal"
                 />
               </Grid>
               <Grid item xs={11}>

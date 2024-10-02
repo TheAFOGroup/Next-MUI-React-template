@@ -12,6 +12,7 @@ export interface BuildEventType {
   event_template?: string; // Optional field
   event_form_id?: number; // Optional field
   event_owner: string;
+  eventURL?: string;
 }
 
 export interface BuildEventResponse {
