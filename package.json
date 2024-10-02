@@ -19,7 +19,7 @@
     "api": "wrangler pages dev .",
     "cloudflare-start": " npx wrangler pages dev .vercel/output/static",
     "apply-d1-remote": "wrangler d1 migrations apply template-demo --remote",
-    "pages:build": "npx @cloudflare/next-on-pages",
+    "pages:build": "npx @cloudflare/next-on-pages --experimental-minify",
     "preview": "npm run pages:build && wrangler pages dev",
     "deploy": "npm run pages:build && wrangler pages deploy"
   },
