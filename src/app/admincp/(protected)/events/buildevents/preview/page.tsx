@@ -53,7 +53,7 @@ const EventPreviewPage = () => {
     event_location: eventLocation,
     EventSpeaker: eventSpeakers,
     EventAgenda: eventAgenda,
-    event_HTMLContent: htmlContent,
+    event_HTMLContent: [htmlContent],
     event_template: template,
     EventForm: form || undefined
   };

@@ -3,13 +3,10 @@
  */
 
 import { D1Database } from '@cloudflare/workers-types';
+import dayjs from 'dayjs';
 import { getDatabase } from 'jest.setup';
 
-import { EventsAgenda, EventsHtml, EventsSpeaker } from '@/app/api/_lib/DBService/types/events';
-import { Form as FormType } from '@/app/api/forms/getform/types';
-
 import { GetEvent } from './GetEvent';
-import dayjs from 'dayjs';
 
 describe('GetEvent', () => {
   let db: D1Database;
@@ -89,13 +86,12 @@ describe('GetEvent', () => {
 
   const expectedStatement = {
     "event_id": 1,
-    "created_at": "2024-08-15T13:07:59.578Z",
-    "updated_at": "2024-08-15T13:07:59.578Z",
-    "event_UUID": "uuid-1234",
+    "created_at": expect.anything(),
+    "updated_at": expect.anything(),
     "event_name": "Sample Event",
     "event_description": "This is a sample event",
-    "event_date": "2024-09-30T13:14:26.000Z",
-    "event_time": "2024-09-30T13:14:26.000Z",
+    "event_date": dayjs("2024-09-30T13:14:26.000Z"),
+    "event_time": dayjs("2024-09-30T13:14:26.000Z"),
     "event_location": "Sample Location",
     "event_owner": "owner-1234",
     "eventSpeaker": [
@@ -108,8 +104,8 @@ describe('GetEvent', () => {
         "events_speaker_type": 1,
         "events_speaker_enabled": 1,
         "events_speaker_owner": "owner-1234",
-        "created_at": expect.any(String),
-        "updated_at": expect.any(String)
+        "created_at": expect.anything(),
+        "updated_at": expect.anything()
       }
     ],
     "eventAgenda": [

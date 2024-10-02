@@ -12,10 +12,6 @@ interface DefaultTemplateProp {
 
 const DefaultTemplate: React.FC<DefaultTemplateProp> = async ({ eventDetails }) => {
   console.log("eventDetails", eventDetails)
-  if (eventDetails.EventAgenda?.[0]?.events_agenda_title === ""
-    && eventDetails.EventAgenda.length === 1) {
-    eventDetails.EventAgenda = []
-  }
 
   // Transform the image URL to a Cloudflare Image Delivery URL
   eventDetails.EventSpeaker?.forEach((speaker) => {
@@ -45,7 +41,7 @@ const DefaultTemplate: React.FC<DefaultTemplateProp> = async ({ eventDetails }) 
       </Grid>
       <Grid item xs={12} sm={6}>
         <Typography variant="h5">
-          {eventDetails.event_date?.format("DD/MM/YY")}   {eventDetails.event_time?.format("HH:mm")}
+          {eventDetails.event_date ? eventDetails.event_date.format("DD/MM/YY") : <></>} {eventDetails.event_time ? eventDetails.event_time.format("HH:mm") : <></>}
         </Typography>
       </Grid>
       {eventDetails.EventAgenda &&
@@ -58,9 +54,11 @@ const DefaultTemplate: React.FC<DefaultTemplateProp> = async ({ eventDetails }) 
       </Grid>
       }
 
-      <Grid item xs={12}>
-        <div dangerouslySetInnerHTML={{ __html: eventDetails.event_HTMLContent || "" }} />
-      </Grid>
+      {eventDetails.event_HTMLContent?.map((content, index) => (
+        <Grid item xs={12} key={index}>
+          <div dangerouslySetInnerHTML={{ __html: content || "" }} />
+        </Grid>
+      ))}
 
       {eventDetails.EventForm &&
         <Grid item xs={12}>
@@ -68,8 +66,6 @@ const DefaultTemplate: React.FC<DefaultTemplateProp> = async ({ eventDetails }) 
         </Grid>
       }
     </Grid>
-
-
   );
 };
 

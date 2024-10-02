@@ -3,13 +3,11 @@
  */
 
 import { D1Database } from '@cloudflare/workers-types';
+import dayjs from 'dayjs';
 import { getDatabase } from 'jest.setup';
 
-import { BuildEventType } from './types';
-
 import { BuildEvent } from './BuildEvent';
-
-import dayjs, { Dayjs } from 'dayjs';
+import { BuildEventType } from './types';
 
 
 describe('BuildEvent', () => {
@@ -118,7 +116,7 @@ describe('BuildEvent', () => {
       ],
       "event_HTMLContent": ["<p>Welcome to the Annual Conference</p>"],
       "event_template": "default",
-      "event_form_id": "1",
+      "event_form_id": 1,
       "event_owner": "Jane Smith"
     }
 

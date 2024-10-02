@@ -4,7 +4,7 @@ import { LocalizationProvider, TimePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import axios from 'axios';
-import dayjs, { Dayjs } from 'dayjs';
+import { Dayjs } from 'dayjs';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -30,7 +30,6 @@ const Page = () => {
   const [formSubmitted, setFormSubmitted] = useState<boolean>(false);
   const [alert, setAlert] = useState<string>('');
   const [UUID, setUUID] = useState<string>('');
-  const [eventFormId, setEventFormId] = useState<number>();
 
   const {
     eventName, setEventName,
@@ -122,10 +121,9 @@ const Page = () => {
       })),
       event_HTMLContent: [htmlContent],
       event_template: template,
-      event_form_id: eventFormId,
+      event_form_id: formList.find(form => form.form_UUID == selectedFormUUID)?.form_id,
       event_owner: session?.user?.email || ''
     };
-
 
     axios({
       method: 'post',
@@ -167,7 +165,6 @@ const Page = () => {
 
   const handleEventForm = async (e) => {
     setSelectedFormUUID(e.target.value as string)
-    setEventFormId(formList.find(form => form.form_UUID == e.target.value)?.form_id)
     //console.log('Selected Form:', eventFormId);
   }
 
@@ -182,7 +179,6 @@ const Page = () => {
     setEventAgenda([]);
     setEventSpeakers([]);
     setSelectedFormUUID('');
-    setEventFormId(undefined);
     setHtmlContent('');
     setTemplate('Default');
     setAlert('');
@@ -199,8 +195,8 @@ const Page = () => {
           <Typography>Event page submitted successfully!</Typography>
         </Grid>
         <Grid item>
-          <Link href={`${process.env.NEXT_PUBLIC_HOST}/events/${UUID}`} target="_blank" rel="noopener noreferrer">
-            {`${process.env.NEXT_PUBLIC_HOST}/events/${UUID}`}
+          <Link href={`${process.env.NEXT_PUBLIC_HOST}/eventPage/${UUID}`} target="_blank" rel="noopener noreferrer">
+            {`${process.env.NEXT_PUBLIC_HOST}/eventPage/${UUID}`}
           </Link>
         </Grid>
         <Grid item>

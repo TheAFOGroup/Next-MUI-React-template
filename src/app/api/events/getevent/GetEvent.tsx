@@ -6,7 +6,7 @@ export interface Env {
 
 import dayjs from 'dayjs';
 
-import { EventsAgenda, EventsEventSpeaker, EventsForm, EventsHtml } from '@/app/api/_lib/DBService/types/events';
+import { Event, EventsAgenda, EventsEventSpeaker, EventsForm, EventsHtml } from '@/app/api/_lib/DBService/types/events';
 import { GetEventEventAgenda, GetEventType } from '@/app/api/events/getevent/types';
 import { GetForm } from '@/app/api/forms/getform/getform';
 import { Form as FormType } from '@/app/api/forms/getform/types';
@@ -14,14 +14,28 @@ import { GetSpeakers } from '@/app/api/speaker/getspeakers/getspeakers';
 import { GetSpeakersRespond } from '@/app/api/speaker/getspeakers/types';
 export async function GetEvent(myDb: D1Database, uuid: string) {
   // Fetch event details
-  const eventStmt = `SELECT * FROM events WHERE event_UUID = ?`;
-  const event = await myDb.prepare(eventStmt).bind(uuid).first<GetEventType>();
+  const eventStmt = `SELECT event_id, event_name, event_description, event_date, event_time, 
+  event_location, event_owner FROM events WHERE event_UUID = ?`;
+  const rawEvent = await myDb.prepare(eventStmt).bind(uuid).first<Event>();
 
-  if (!event) {
+  if (!rawEvent) {
     throw new Error('Event not found');
   }
 
-  const eventId = event.event_id
+  // Transform the event to match the expected response
+  const event: GetEventType = {
+    event_id: rawEvent.event_id,
+    event_name: rawEvent.event_name,
+    event_description: rawEvent.event_description,
+    event_date: rawEvent.event_date == "" ? undefined : dayjs(rawEvent.event_date),
+    event_time: rawEvent.event_time == "" ? undefined : dayjs(rawEvent.event_time),
+    event_location: rawEvent.event_location,
+    event_owner: rawEvent.event_owner,
+    created_at: dayjs(rawEvent.created_at),
+    updated_at: dayjs(rawEvent.updated_at)
+  };
+
+  const eventId = rawEvent.event_id
   // Fetch event agenda
   const agendaStmt = `SELECT events_agenda_title,events_agenda_description,events_agenda_start_time,events_agenda_end_time FROM events_agenda WHERE events_agenda_event_id = ? order by event_agenda_id`;
   const rawAgenda = await myDb.prepare(agendaStmt).bind(eventId).all<EventsAgenda>();

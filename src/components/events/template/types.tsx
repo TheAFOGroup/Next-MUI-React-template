@@ -10,7 +10,7 @@ export interface EventTemplateTypes {
   EventSpeaker?: EventSpeaker[]; // Optional field 
   EventAgenda?: EventAgenda[]; // Optional field
   EventForm?: Form; // Optional field
-  event_HTMLContent?: string; // Optional field
+  event_HTMLContent?: string[]; // Optional field
   event_form_id?: number; // Optional field
   event_template?: string; // Optional field
 }
@@ -28,8 +28,8 @@ interface EventSpeaker {
 interface EventAgenda {
   events_agenda_title: string; // Assuming a title field for the agenda
   events_agenda_description?: string; // Optional field
-  events_agenda_start_time: Dayjs; // Use string for time to match SQL time type
-  events_agenda_end_time: Dayjs; // Use string for time to match SQL time type
+  events_agenda_start_time: Dayjs | string; // Use string for time to match SQL time type
+  events_agenda_end_time: Dayjs | string; // Use string for time to match SQL time type
 }
 
 export interface Form {

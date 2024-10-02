@@ -67,3 +67,13 @@ create table if not exists events_html(
     created_at timestamp not null default current_timestamp,
     updated_at timestamp not null default current_timestamp
 );
+
+create table if not exists events_layouts(
+    event_layout_id integer primary key AUTOINCREMENT,
+    event_id integer not null references events(event_id),
+    template varchar(255) not null,
+    css varchar(255) not null,
+    enabled boolean not null default true,
+    created_at timestamp not null default current_timestamp,
+    updated_at timestamp not null default current_timestamp
+);

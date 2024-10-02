@@ -1,57 +1,49 @@
-"use client"
-
-import { Box } from '@mui/material';
-import axios from 'axios';
+import { ThemeProvider, StyledEngineProvider, Box } from '@mui/material';
 import { notFound } from 'next/navigation'
-import React, { useEffect, useState } from 'react';
-
-import { Loading } from '@/components/Loading';
-
-import { Event } from '@/app/api/events/getEventDetail/types';
+import React from 'react';
 
 
-const EventPage = ({ params }: { params: { slug: string } }) => {
+import DefaultTemplate from '@/components/events/template/DefaultTemplate';
+import { EventTemplateTypes } from '@/components/events/template/types';
+
+import { getD1Database } from '@/app/api/_lib/DBService/index';
+import { GetEvent } from '@/app/api/events/getevent/GetEvent';
+import { GetEventType } from '@/app/api/events/getevent/types';
+
+const EventPage = async ({ params }: { params: { slug: string } }) => {
   const eventUUID = params.slug
+  const db = getD1Database();
+  const event: GetEventType = await GetEvent(db, eventUUID);
 
-  const [eventDetails, setEventDetails] = useState<Event[]>([]);
+  console.log(event);
 
-  const [loading, setLoading] = useState(true);
-
-  const header = {
-    'API_SECRET': process.env.NEXT_PUBLIC_API_SECRET
+  if (!event) {
+    return notFound();
   }
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(process.env.NEXT_PUBLIC_HOST + '/api/events/getEventDetail', {
-          params: {
-            event_UUID: eventUUID
-          },
-          headers: header
-        });
-        const data = response.data;
-        data.uuid
-        setEventDetails(data as Event[]);
-        setLoading(false);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  if (loading) {
-    return (
-      <Loading />
-    )
+  // Transform from GetEventType tp EventTemplateTypes
+  const eventTemplate: EventTemplateTypes = {
+    event_name: event.event_name,
+    event_description: event.event_description,
+    event_date: event.event_date,
+    event_time: event.event_time,
+    event_location: event.event_location,
+    EventSpeaker: event.eventSpeaker,
+    EventAgenda: event.eventAgenda?.map(agenda => ({
+      ...agenda,
+      events_agenda_start_time: agenda.events_agenda_start_time.toISOString(), // Convert to string
+      events_agenda_end_time: agenda.events_agenda_end_time.toISOString() // Convert to string
+    })),
+    event_HTMLContent: event.event_HTMLContent,
+    event_template: event.event_template,
+    EventForm: event.eventForm
   }
-  if (eventDetails.length === 0) {
-    notFound()
-  }
+
+
+
   return (
     <Box>
+      <DefaultTemplate eventDetails={eventTemplate} />
     </Box>
   )
 };

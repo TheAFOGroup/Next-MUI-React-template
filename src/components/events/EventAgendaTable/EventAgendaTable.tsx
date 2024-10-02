@@ -14,13 +14,21 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import React from 'react';
+import dayjs, { Dayjs } from 'dayjs';
 
 import { EventAgendaTableType } from '@/components/events/EventAgendaTable/types';
 interface EventAgendaTableProp {
   agenda: EventAgendaTableType[]
 }
 
-function Row(props: { row: EventAgendaTableType }) {
+interface serialisedAgendaType {
+  events_agenda_title: string; // Agenda title, required varchar
+  events_agenda_description?: string; // Agenda description, optional text
+  events_agenda_start_time: Dayjs; // Start time of the agenda, stored as a string in the format 'HH:MM:SS'
+  events_agenda_end_time: Dayjs; // End time of the agenda, stored as a string in the format 'HH:MM:SS'
+}
+
+function Row(props: { row: serialisedAgendaType }) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
 
@@ -39,8 +47,8 @@ function Row(props: { row: EventAgendaTableType }) {
         <TableCell component="th" scope="row">
           {row.events_agenda_title}
         </TableCell>
-        <TableCell align="right">{row.events_agenda_start_time.format("HH:mm")}</TableCell>
-        <TableCell align="right">{row.events_agenda_end_time.format("HH:mm")}</TableCell>
+        <TableCell align="right">{row.events_agenda_start_time ? row.events_agenda_start_time.format("HH:mm") : ""}</TableCell>
+        <TableCell align="right">{row.events_agenda_end_time ? row.events_agenda_end_time.format("HH:mm") : ""}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -57,13 +65,34 @@ function Row(props: { row: EventAgendaTableType }) {
   );
 }
 
-
 const EventAgendaTable: React.FC<EventAgendaTableProp> = ({ agenda }) => {
 
-  console.log("agenda", agenda)
   if (agenda.length === 0) {
     return <></>
   }
+
+
+  const serialisedAgenda: serialisedAgendaType[] = agenda ? agenda.map(agenda => {
+    let startTime;
+    let endTime;
+    if (typeof agenda.events_agenda_start_time === 'string') {
+      startTime = agenda.events_agenda_start_time = dayjs(agenda.events_agenda_start_time);
+    } else {
+      startTime = agenda.events_agenda_start_time
+    }
+    if (typeof agenda.events_agenda_end_time === 'string') {
+      endTime = agenda.events_agenda_end_time = dayjs(agenda.events_agenda_end_time);
+    } else {
+      endTime = agenda.events_agenda_end_time
+    }
+    return ({
+      ...agenda,
+      events_agenda_start_time: startTime, // Convert back to Dayjs
+      events_agenda_end_time: endTime // Convert back to Dayjs
+    })
+  }) : [];
+
+
   return (
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table">
@@ -76,7 +105,7 @@ const EventAgendaTable: React.FC<EventAgendaTableProp> = ({ agenda }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {agenda.map((row, index) => (
+          {serialisedAgenda.map((row, index) => (
             <Row key={index} row={row} />
           ))}
         </TableBody>
