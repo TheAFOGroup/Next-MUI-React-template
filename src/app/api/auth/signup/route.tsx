@@ -26,7 +26,7 @@ export async function POST(req: Request) {
 
 
   try {
-    if (await GetUser(data.email)) {
+    if (await GetUser(db, data.email)) {
       console.error("User already exist");
       return NextResponse.json({ message: 'User already exists' }, { status: 400 });
     }

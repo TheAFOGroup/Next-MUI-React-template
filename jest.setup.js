@@ -8,9 +8,10 @@ import { TextDecoder, TextEncoder } from 'util';
 global.TextDecoder = TextDecoder;
 global.TextEncoder = TextEncoder;
 
-import { beforeAll, afterAll } from '@jest/globals';
-import { ExecuteSQLFile } from '@/app/api/_lib/DBService/ExecuteSQLFile';
+import { afterAll, beforeAll } from '@jest/globals';
 import { Miniflare } from 'miniflare';
+
+import { ExecuteSQLFile } from '@/app/api/_lib/DBService/ExecuteSQLFile';
 
 
 // Allow router mocks.
@@ -32,6 +33,8 @@ beforeAll(async () => {
 
   await ExecuteSQLFile(db, '/home/apple/template/migrations/0002_user_responds.sql');
   await ExecuteSQLFile(db, '/home/apple/template/migrations/0003_event.sql');
+  await ExecuteSQLFile(db, '/home/apple/template/migrations/0004_next-auth.sql');
+
 
 });
 

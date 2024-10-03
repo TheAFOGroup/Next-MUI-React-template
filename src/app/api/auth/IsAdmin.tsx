@@ -4,15 +4,12 @@ import { D1Database } from '@cloudflare/workers-types'
 export interface Env {
   DB: D1Database;
 }
-import { getRequestContext } from '@cloudflare/next-on-pages'
 
 interface isAdmin {
   admin: boolean
 }
 
-export async function IsAdmin(userId: string): Promise<boolean> {
-  const { env } = getRequestContext()
-  const myDb = env.DB;
+export async function IsAdmin(myDb: D1Database, userId: string): Promise<boolean> {
   const stmt = `SELECT admin FROM authorize WHERE id = '${userId}'`;
   try {
     // Prepare and execute the query
@@ -22,7 +19,7 @@ export async function IsAdmin(userId: string): Promise<boolean> {
       return false;
     }
 
-    return res.admin;
+    return !!res.admin;
   } catch (error) {
     console.error('Error processing GET request:', error);
     return false;
@@ -30,9 +27,7 @@ export async function IsAdmin(userId: string): Promise<boolean> {
 }
 
 // hasAdmin Check if there is any admin in the database
-export async function HasAdmin(): Promise<boolean> {
-  const { env } = getRequestContext()
-  const myDb = env.DB;
+export async function HasAdmin(myDb: D1Database): Promise<boolean> {
   const stmt = `SELECT EXISTS (
   SELECT 1
   FROM authorize
@@ -46,7 +41,7 @@ export async function HasAdmin(): Promise<boolean> {
       return false;
     }
 
-    return res.admin;
+    return !!res.admin;
   } catch (error) {
     console.error('Error processing GET request:', error);
     return false;

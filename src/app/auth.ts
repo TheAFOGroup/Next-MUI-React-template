@@ -46,7 +46,7 @@ const providers: Provider[] = [
           const db = getD1Database()
 
           // First time login, create an admin account
-          if (!(await HasAdmin())) {
+          if (!(await HasAdmin(db))) {
             const data: SignUpData = {
               email,
               password,
@@ -58,7 +58,7 @@ const providers: Provider[] = [
             return { id: userId, email: email } as User;
           }
 
-          const user = await GetUser(email)
+          const user = await GetUser(db, email)
           if (user === null) return null;
 
           // check if password is valid

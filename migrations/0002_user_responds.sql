@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS form_history_fields (
 -- Table for storing form fields
 create table  IF NOT EXISTS form_fields (
     form_field_id integer primary key AUTOINCREMENT,
-    form_id integer not null,
+    form_id integer not null references forms(form_id),
     field_name varchar(255) not null,
     field_type varchar(255) not null,
     field_order integer not null,
@@ -42,14 +42,14 @@ create table IF NOT EXISTS field_info(
 -- Table for storing user responses
 create table IF NOT EXISTS user_responses (
     response_id integer primary key AUTOINCREMENT,
-    form_id integer not null,
+    form_id integer not null references forms(form_id),
     created_at timestamp not null default current_timestamp
 );
 
 -- Table for storing individual response entries
 create table IF NOT EXISTS response_entries (
     response_entry_id integer primary key AUTOINCREMENT,
-    response_id integer not null,
-    form_field_id integer not null,
+    response_id integer not null references user_responses(response_id),
+    form_field_id integer not null references form_fields(form_field_id),
     response text null
 );

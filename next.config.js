@@ -3,6 +3,11 @@ const { setupDevPlatform } = require('@cloudflare/next-on-pages/next-dev');
 if (process.env.NODE_ENV === 'development') {
   setupDevPlatform();
 }
+
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+})
+
 const nextConfig = {
   eslint: {
     dirs: ['src'],
@@ -51,4 +56,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+module.exports = withBundleAnalyzer(nextConfig);

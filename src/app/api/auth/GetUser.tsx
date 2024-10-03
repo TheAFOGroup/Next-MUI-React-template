@@ -4,7 +4,6 @@ import { D1Database } from '@cloudflare/workers-types'
 export interface Env {
   DB: D1Database;
 }
-import { getRequestContext } from '@cloudflare/next-on-pages'
 
 export interface User {
   id: string | null;
@@ -15,9 +14,7 @@ export interface User {
   password: string | null;
 }
 
-export async function GetUser(email: string): Promise<User | null> {
-  const { env } = getRequestContext()
-  const myDb = env.DB;
+export async function GetUser(myDb: D1Database, email: string): Promise<User | null> {
   const stmt = `SELECT * FROM users WHERE email = '${email}'`;
   try {
     // Prepare and execute the query

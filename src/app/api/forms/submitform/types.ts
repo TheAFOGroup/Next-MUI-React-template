@@ -1,4 +1,4 @@
-export interface SubmitForm {
+export interface SubmitFormType {
   form_id: number;
   form_fields: SubmmitField[];
 };

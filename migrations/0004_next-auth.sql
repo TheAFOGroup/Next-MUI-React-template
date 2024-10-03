@@ -44,14 +44,3 @@ CREATE TABLE IF NOT EXISTS sessions (
     admin boolean NOT NULL DEFAULT FALSE,
     PRIMARY KEY (id)
 );
-
--- Insert a user into the users table
-INSERT INTO users (id, name, email, emailVerified, image, password) 
-VALUES ('user_id_123', 'John Doe', 'john.doe@example.com', NULL, 'http://example.com/johndoe.jpg', '1234');
-
--- Insert an account for the user into the accounts table
-INSERT INTO accounts (id, userId, type, provider, providerAccountId) 
-VALUES ('account_id_123', 'user_id_123', 'oauth', 'google', 'provider_account_id_123');
-
--- Authorise admin access to the user
-INSERT INTO authorize (id, admin) SELECT 'admin_user', TRUE WHERE NOT EXISTS ( SELECT 1 FROM authorize WHERE id = 'admin_user' );

@@ -22,7 +22,7 @@ export async function DELETE(req: Request) {
   const data: DeleteAccountData = (await req.json()) as DeleteAccountData;
   console.log('Received data:', data);
 
-  const user = await GetUser(data.email);
+  const user = await GetUser(myDb, data.email);
 
   if (!user) {
     console.error("User does not exist");

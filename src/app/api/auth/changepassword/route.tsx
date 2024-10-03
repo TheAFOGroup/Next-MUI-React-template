@@ -23,7 +23,7 @@ export async function PUT(req: Request) {
   const data: ChangePasswordData = (await req.json()) as ChangePasswordData;
   console.log('Received data:', data);
 
-  const user = await GetUser(data.email);
+  const user = await GetUser(myDb, data.email);
 
   if (!user) {
     console.error("User does not exist");

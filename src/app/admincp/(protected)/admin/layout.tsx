@@ -9,6 +9,7 @@ import { IsAdmin } from '@/app/api/auth/IsAdmin';
 import { GLOBAL_STYLES } from '@/styles';
 
 import { auth } from '../../../auth';
+import { getD1Database } from '@/app/api/_lib/DBService/index';
 
 export default async function RootLayout({
   children,
@@ -16,7 +17,9 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const session = await auth();
-  const admin = await IsAdmin(session?.user?.id ?? "");
+
+  const db = getD1Database();
+  const admin = await IsAdmin(db, session?.user?.id ?? "");
 
   return (
     <html lang='en'>

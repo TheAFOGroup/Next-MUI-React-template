@@ -4,9 +4,10 @@ export interface Env {
   DB: D1Database;
 }
 
-import { SignUpData } from '@/app/api/auth/signup/type';
 import bcrypt from "bcryptjs";
+import { v4 as uuidv4 } from 'uuid';
 
+import { SignUpData } from '@/app/api/auth/signup/type';
 /**
  * Signup create a new user
  * @param myDb 
@@ -15,7 +16,7 @@ import bcrypt from "bcryptjs";
  */
 export async function Signup(myDb: D1Database, data: SignUpData) {
 
-  const userId = crypto.randomUUID()
+  const userId = uuidv4();
 
   const saltRounds = 10
   const salt = await bcrypt.genSalt(saltRounds)

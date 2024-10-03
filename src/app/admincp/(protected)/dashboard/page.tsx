@@ -2,10 +2,12 @@ import { Grid, Button } from '@mui/material';
 import { auth } from '../../../auth';
 import { IsAdmin } from '@/app/api/auth/IsAdmin';
 import React from 'react';
+import { getD1Database } from '@/app/api/_lib/DBService/index';
 
 const Dashboard = async () => {
   const session = await auth();
-  const admin = await IsAdmin(session?.user?.id ?? "");
+  const db = getD1Database();
+  const admin = await IsAdmin(db, session?.user?.id ?? "");
 
   return (
     <Grid container spacing={2}>

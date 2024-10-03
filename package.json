@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "analyze": "ANALYZE=true yarn build",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -19,7 +20,7 @@
     "api": "wrangler pages dev .",
     "cloudflare-start": " npx wrangler pages dev .vercel/output/static",
     "apply-d1-remote": "wrangler d1 migrations apply template-demo --remote",
-    "pages:build": "npx @cloudflare/next-on-pages --experimental-minify",
+    "pages:build": "npx @cloudflare/next-on-pages",
     "preview": "npm run pages:build && wrangler pages dev",
     "deploy": "npm run pages:build && wrangler pages deploy"
   },
@@ -33,6 +34,7 @@
     "@mui/icons-material": "^5.14.9",
     "@mui/material": "^5.14.10",
     "@mui/x-date-pickers": "^6.20.2",
+    "@next/bundle-analyzer": "^14.2.14",
     "@next/env": "^14.2.5",
     "@toolpad/core": "^0.5.2",
     "@types/node": "^22.2.0",
