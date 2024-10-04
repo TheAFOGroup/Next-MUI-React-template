@@ -10,9 +10,9 @@ interface responseId {
 }
 
 /**
- * Retrieves a form from the database based on the provided UUID.
+ * SubmitForm Submit a entry of answer to the form.
  * 
- * @param uuid - The UUID of the form to retrieve.
+ * @param data 
  * @returns A Promise that resolves to the retrieved form object.
  * @throws If the form is not found in the database or an error occurs during retrieval.
  */

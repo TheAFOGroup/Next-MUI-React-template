@@ -1,13 +1,15 @@
 export const runtime = 'edge';
 import { NextRequest, NextResponse } from 'next/server';
+
 import { CheckAPIkey } from '@/app/api/_lib/CheckAPIkey';
-import { GetFormResult } from '@/app/api/forms/getformresult/getformresult';
+import { getD1Database } from '@/app/api/_lib/DBService/index';
+import { GetEvent } from '@/app/api/events/getevent/GetEvent';
 
 /**
  * Retrieves a form based on the provided form UUID.
  * 
  * @param req - The NextRequest object representing the incoming request. 
- * form_uuid: string - The UUID of the form to retrieve.
+ * form_url: string - The url of the form to retrieve.
  * @returns A JSON response containing the form data if successful, or an error message if unsuccessful.
  * @throws 401 - Unauthorized: The request does not include a valid API key.
  * @throws 500 - Internal Server Error: An error occurred while processing the request.
@@ -20,19 +22,24 @@ export async function GET(req: NextRequest) {
   }
 
   const { searchParams } = new URL(req.url);
-  const uuid = searchParams.get('form_uuid');
-  if (!uuid) {
-    return NextResponse.json({ message: 'UUID is missing' }, { status: 400 });
+  const url = searchParams.get('url');
+  if (!url) {
+    return NextResponse.json({ message: 'URL is missing' }, { status: 400 });
   }
 
   try {
-    const form = await GetFormResult(uuid);
+    const db = getD1Database()
+    const form = await GetEvent(db, url);
     if (Object.keys(form as object).length > 0) {
       return NextResponse.json(form);
     } else {
-      return NextResponse.json({ message: 'Form not found' }, { status: 404 });
+      return NextResponse.json({ message: 'Event not found' }, { status: 404 });
     }
-  } catch (error) {
-    return NextResponse.json({ message: 'An error occurred while processing the request ' + error }, { status: 500 });
+  } catch (error: any) {
+    if (error.message === 'Event not found') {
+      return NextResponse.json({ message: 'Event not found' }, { status: 404 });
+    } else {
+      return NextResponse.json({ message: 'An error occurred while processing the request ' + error }, { status: 500 });
+    }
   }
 }

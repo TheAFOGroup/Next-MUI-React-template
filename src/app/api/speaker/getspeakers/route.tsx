@@ -40,6 +40,6 @@ export async function GET(req: NextRequest) {
     const respond = await GetSpeakers(db, owner, speakerIds);
     return NextResponse.json(respond)
   } catch (error) {
-    return NextResponse.json({ message: 'An error occurred while processing the request', error }, { status: 500 });
+    return NextResponse.json({ message: 'An error occurred while processing the request ' + error }, { status: 500 });
   }
 }

@@ -60,9 +60,9 @@ const DefaultTemplate: React.FC<DefaultTemplateProp> = async ({ eventDetails }) 
         </Grid>
       ))}
 
-      {eventDetails.EventForm &&
+      {eventDetails.EventForm && eventDetails.EventForm.form_id != 0 &&
         <Grid item xs={12}>
-          <Form form={eventDetails.EventForm} />
+          <Form form={eventDetails.EventForm} onSubmit={eventDetails.EventForm.form_on_submit} />
         </Grid>
       }
     </Grid>

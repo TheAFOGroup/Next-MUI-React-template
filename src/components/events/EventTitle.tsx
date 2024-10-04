@@ -1,11 +1,7 @@
 'use client';
 
 import { Box, Typography } from '@mui/material';
-import axios from 'axios';
-import { notFound } from 'next/navigation'
-import React, { useEffect, useState } from 'react';
-
-import { Loading } from '@/components/Loading';
+import React from 'react';
 
 import { Event } from '@/app/api/events/getEventDetail/types';
 

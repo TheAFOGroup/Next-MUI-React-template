@@ -19,7 +19,7 @@ import { SubmitForm } from '@/app/api/forms/submitform/submitform';
  */
 export async function POST(req: NextRequest) {
   if (!(await CheckAPIkey(req))) {
-    return NextResponse.json({ message: 'Not Authorized' }, { status: 401 });
+    return NextResponse.json({ message: 'Not Authorized', success: false }, { status: 401 });
   }
 
   const { env } = getRequestContext()
@@ -28,9 +28,10 @@ export async function POST(req: NextRequest) {
   try {
     // Get JSON data from the POST request body
     const data: SubmitFormType = (await req.json()) as SubmitFormType;
-    await SubmitForm(myDb, data);
+    const res = await SubmitForm(myDb, data);
+    return NextResponse.json(res);
   } catch (error) {
     console.error('Error processing POST request:', error);
-    return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json({ message: 'Internal Server Error', success: false }, { status: 500 });
   }
 }

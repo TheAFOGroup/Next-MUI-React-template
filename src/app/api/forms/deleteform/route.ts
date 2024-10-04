@@ -30,6 +30,6 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ message: 'Form not found' }, { status: 404 });
     }
   } catch (error) {
-    return NextResponse.json({ message: 'An error occurred while processing the request', error }, { status: 500 });
+    return NextResponse.json({ message: 'An error occurred while processing the request ' + error }, { status: 500 });
   }
 }

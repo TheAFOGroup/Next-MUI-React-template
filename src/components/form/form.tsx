@@ -1,12 +1,11 @@
 "use client"
-import { Button, Grid, Typography, Alert } from '@mui/material';
-import React, { useCallback, useState, useEffect } from 'react';
-
-import DynamicFieldsTable from "@/components/utils/DynamicFieldsTable/DynamicFieldTable";
+import { Button, Grid, Typography } from '@mui/material';
+import React, { useCallback, useState } from 'react';
 
 import { FormType } from '@/components/form/types';
-import { SubmitForm, SubmmitField } from '@/app/api/forms/submitform/types';
-import { BorderStyle } from '@mui/icons-material';
+import DynamicFieldsTable from "@/components/utils/DynamicFieldsTable/DynamicFieldTable";
+
+import { SubmmitField } from '@/app/api/forms/submitform/types';
 
 interface FormProps {
   // Define your component props here

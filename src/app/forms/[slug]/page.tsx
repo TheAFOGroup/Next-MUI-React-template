@@ -1,12 +1,16 @@
 "use client"
 import { Alert, Button, Grid, Typography } from "@mui/material";
 import axios from 'axios';
-import React, { useCallback, useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 
-import { SubmitForm, SubmmitField } from '@/app/api/forms/submitform/types';
-import { FormType } from "@/components/form/types";
 import Form from "@/components/form/form";
+import { FormType } from "@/components/form/types";
+
+import { SubmitFormType, SubmmitField } from '@/app/api/forms/submitform/types';
 const EventPage = ({ params }: { params: { slug: string } }) => {
+  const router = useRouter();
+
   const eventUUID = params.slug
   const [form, setForm] = useState<FormType>(
     {
@@ -16,10 +20,9 @@ const EventPage = ({ params }: { params: { slug: string } }) => {
       form_fields: []
     }
   );
-  const [field, setField] = useState<SubmmitField[]>([]);
   const [formSubmitted, setFormSubmitted] = useState(false)
   const [alert, setAlert] = useState("")
-  const [error, setError] = useState<boolean>(false)
+  const [notfound, setNotFound] = useState(false)
 
   const header = {
     'API_SECRET': process.env.NEXT_PUBLIC_API_SECRET
@@ -36,11 +39,19 @@ const EventPage = ({ params }: { params: { slug: string } }) => {
         const data = response.data;
         setForm(data as FormType);
       })
-      .catch(error => console.error(error));
+      .catch(error => {
+        console.error(error)
+        setNotFound(true);
+      });
   }, []);
 
+  if (notfound) {
+    router.push('/404');
+    return <></>;
+  }
+
   const handleSubmit = (fields: SubmmitField[]) => {
-    const data: SubmitForm = {
+    const data: SubmitFormType = {
       form_id: form?.form_id ?? 0,
       form_fields: fields
     }
@@ -65,7 +76,6 @@ const EventPage = ({ params }: { params: { slug: string } }) => {
   };
 
   const handleNewForm = () => {
-    setField([]);
     setFormSubmitted(false);
     setAlert("");
   };

@@ -1,8 +1,9 @@
 export const runtime = 'edge';
 import { NextRequest, NextResponse } from 'next/server';
+
 import { CheckAPIkey } from '@/app/api/_lib/CheckAPIkey';
-import { GetForm } from '@/app/api/forms/getform/getform';
 import { getD1Database } from '@/app/api/_lib/DBService/index';
+import { GetForm } from '@/app/api/forms/getform/getform';
 
 /**
  * Retrieves a form based on the provided form UUID.
@@ -22,19 +23,20 @@ export async function GET(req: NextRequest) {
 
   const { searchParams } = new URL(req.url);
   const uuid = searchParams.get('form_uuid');
+  const formId = searchParams.get('form_id');
   if (!uuid) {
     return NextResponse.json({ message: 'UUID is missing' }, { status: 400 });
   }
 
   try {
     const db = getD1Database()
-    const form = await GetForm(db, uuid);
+    const form = await GetForm(db, uuid, formId ? parseInt(formId) : undefined);
     if (Object.keys(form as object).length > 0) {
       return NextResponse.json(form);
     } else {
       return NextResponse.json({ message: 'Form not found' }, { status: 404 });
     }
   } catch (error) {
-    return NextResponse.json({ message: 'An error occurred while processing the request', error }, { status: 500 });
+    return NextResponse.json({ message: 'An error occurred while processing the request ' + error }, { status: 500 });
   }
 }

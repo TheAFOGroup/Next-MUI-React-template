@@ -3,7 +3,7 @@ import { Alert, Button, FormControl, Grid, Link, MenuItem, Select, TextField, Ty
 import { LocalizationProvider, TimePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { Dayjs } from 'dayjs';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
@@ -140,10 +140,13 @@ const Page = () => {
       setURL(res.data.respond.URL);
       setFormSubmitted(true);
     })
-      .catch((error) => {
-        setAlert(error.message || 'An error occurred');
-      }).finally(() => {
-        setAlert('An error occurred');
+      .catch((error: Error | AxiosError) => {
+        //UNIQUE constraint failed: events.event_url
+        if (axios.isAxiosError(error) && error.response?.data?.message.includes('UNIQUE constraint failed: events.event_url')) {
+          setAlert('Event URL already exists. Please choose a different URL.');
+        } else {
+          setAlert(error.message);
+        }
       })
   };
 
@@ -328,56 +331,52 @@ const Page = () => {
                   rows={4}
                 />
               </Grid>
-              <Grid item xs={12}>
-                <Grid container spacing={2} direction="column">
-                  <Grid item xs={11}>
-                    <Typography variant='h4'>Select Template</Typography>
-                  </Grid>
-                  <Grid item xs={11}>
-                    <FormControl fullWidth>
-                      <Select
-                        labelId="Template"
-                        value={template}
-                        onChange={(e) => setTemplate(e.target.value as string)}
-                      >
-                        {templateOptions.map((option) => (
-                          <MenuItem key={option} value={option}>
-                            {option}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                </Grid>
-
-                <Grid item xs={12}>
-                  <Button variant="contained" color="primary" onClick={() => { router.push('/admincp/events/buildevents/preview'); }}>
-                    Preview
-                  </Button>
-                </Grid>
-
-                {
-                  alert.length ?
-                    <Grid item>
-                      <Alert severity="error">
-                        {alert}
-                      </Alert>
-                    </Grid>
-                    :
-                    <></>
-                }
-
-                <Grid item xs={12}>
-                  <Button type="submit" variant="contained" color="primary">
-                    Submit
-                  </Button>
-                </Grid>
-
+              <Grid item xs={11}>
+                <Typography variant='h4'>Select Template</Typography>
               </Grid>
+              <Grid item xs={11}>
+                <FormControl fullWidth>
+                  <Select
+                    labelId="Template"
+                    value={template}
+                    onChange={(e) => setTemplate(e.target.value as string)}
+                  >
+                    {templateOptions.map((option) => (
+                      <MenuItem key={option} value={option}>
+                        {option}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12}>
+                <Button variant="contained" color="primary" onClick={() => { router.push('/admincp/events/buildevents/preview'); }}>
+                  Preview
+                </Button>
+              </Grid>
+
+              {
+                alert.length ?
+                  <Grid item>
+                    <Alert severity="error">
+                      {alert}
+                    </Alert>
+                  </Grid>
+                  :
+                  <></>
+              }
+
+              <Grid item xs={12}>
+                <Button type="submit" variant="contained" color="primary">
+                  Submit
+                </Button>
+              </Grid>
+
             </Grid>
           </Grid>
         </Grid>
-      </form>
+      </form >
     </LocalizationProvider >
   );
 };
