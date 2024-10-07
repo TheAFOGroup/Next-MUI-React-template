@@ -8,6 +8,7 @@ import { getDatabase } from 'jest.setup';
 
 import { BuildEvent } from './BuildEvent';
 import { BuildEventType } from './types';
+import { EventLayout } from '@/app/api/_lib/DBService/types/events';
 
 
 describe('BuildEvent', () => {
@@ -117,7 +118,8 @@ describe('BuildEvent', () => {
       "event_HTMLContent": ["<p>Welcome to the Annual Conference</p>"],
       "event_template": "default",
       "event_form_id": 1,
-      "event_owner": "Jane Smith"
+      "event_owner": "Jane Smith",
+      "event_css": "css"
     }
 
     const res: any = await BuildEvent(db, data);
@@ -174,6 +176,17 @@ describe('BuildEvent', () => {
     expect(eventHTMLContent).toEqual({
       event_id: 1,
       html_content: data.event_HTMLContent?.[0] ?? ""
+    });
+
+    const eventLayout = await db.prepare(`
+      SELECT event_id, template, css
+      FROM events_layouts
+      WHERE event_id = 1
+    `).first();
+    expect(eventLayout).toEqual({
+      event_id: 1,
+      template: data.event_template ?? "",
+      css: data.event_css ?? ""
     });
 
     // Select from events_agenda table

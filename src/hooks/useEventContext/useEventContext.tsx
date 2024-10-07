@@ -31,6 +31,8 @@ interface EventContextProps {
   setTemplate: (template: string) => void; // Update the type of setTemplate
   eventURL: string;
   setEventURL: (url: string) => void;
+  css: string;
+  setCss: (css: string) => void;
 }
 
 const EventContext = createContext<EventContextProps | undefined>(undefined);
@@ -45,8 +47,9 @@ export const EventProvider = ({ children }: { children: ReactNode }) => {
   const [eventSpeakers, setEventSpeakers] = useState<GetSpeakersRespond[]>([]);
   const [selectedFormUUID, setSelectedFormUUID] = useState<string>("");
   const [htmlContent, setHtmlContent] = useState<string>("");
-  const [template, setTemplate] = useState<string>("");
+  const [template, setTemplate] = useState<string>("Default");
   const [eventURL, setEventURL] = useState<string>("");
+  const [css, setCss] = useState<string>("");
 
   return (
     <EventContext.Provider value={{
@@ -60,7 +63,8 @@ export const EventProvider = ({ children }: { children: ReactNode }) => {
       selectedFormUUID, setSelectedFormUUID,
       htmlContent, setHtmlContent,
       template, setTemplate,
-      eventURL, setEventURL
+      eventURL, setEventURL,
+      css, setCss
     }}>
       {children}
     </EventContext.Provider>

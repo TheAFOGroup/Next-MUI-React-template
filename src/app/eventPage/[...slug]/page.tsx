@@ -30,7 +30,6 @@ const EventPage = ({ params }: { params: { slug: string[] } }) => {
   const [formSubmitted, setFormSubmitted] = useState(false)
   const [notfound, setNotFound] = useState(false);
 
-
   const header = {
     'API_SECRET': process.env.NEXT_PUBLIC_API_SECRET
   }

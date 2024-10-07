@@ -59,6 +59,10 @@ export async function BuildEvent(myDb: D1Database, data: BuildEventType) {
       batchStatment.push(myDb.prepare(prepareString).bind(...bindParams));
     }
 
+    // Insert event layouts
+    const prepareString = `INSERT INTO events_layouts (event_id, template, css) VALUES (?, ?, ?)`;
+    batchStatment.push(myDb.prepare(prepareString).bind(eventId, data.event_template ?? "", data.event_css ?? ""));
+
     // Execute all batch statements
     await myDb.batch(batchStatment);
     const respond: BuildEventResponse = { URL: url }

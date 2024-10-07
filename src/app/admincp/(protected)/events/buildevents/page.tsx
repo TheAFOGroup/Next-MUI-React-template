@@ -42,7 +42,8 @@ const Page = () => {
     selectedFormUUID, setSelectedFormUUID,
     htmlContent, setHtmlContent,
     template, setTemplate,
-    eventURL, setEventURL
+    eventURL, setEventURL,
+    css, setCss
   } = useEventContext();
 
   const templateOptions = ["Default", "Template 1", "Template 2", "Template 3"];
@@ -124,7 +125,8 @@ const Page = () => {
       event_template: template,
       event_form_id: formList.find(form => form.form_UUID == selectedFormUUID)?.form_id,
       event_owner: session?.user?.email || '',
-      eventURL: eventURL
+      eventURL: eventURL,
+      event_css: css
     };
 
     axios({
@@ -188,6 +190,7 @@ const Page = () => {
     setTemplate('Default');
     setAlert('');
     setURL('');
+    setCss('');
   };
 
   if (formSubmitted) {
@@ -332,6 +335,21 @@ const Page = () => {
                 />
               </Grid>
               <Grid item xs={11}>
+                <Typography variant='h4'>CSS</Typography>
+              </Grid>
+              <Grid item xs={11}>
+                <TextField
+                  label="CSS"
+                  value={css}
+                  onChange={(e) => setCss(e.target.value)}
+                  fullWidth
+                  margin="normal"
+                  multiline
+                  maxRows={4}
+                  rows={4}
+                />
+              </Grid>
+              <Grid item xs={11}>
                 <Typography variant='h4'>Select Template</Typography>
               </Grid>
               <Grid item xs={11}>
@@ -339,6 +357,7 @@ const Page = () => {
                   <Select
                     labelId="Template"
                     value={template}
+                    defaultValue={templateOptions[0]}
                     onChange={(e) => setTemplate(e.target.value as string)}
                   >
                     {templateOptions.map((option) => (

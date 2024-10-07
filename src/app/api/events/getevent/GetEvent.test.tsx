@@ -76,7 +76,12 @@ describe('GetEvent', () => {
       `
         INSERT INTO events_forms (event_id, form_id)
         VALUES (1, 1);
+      `,
       `
+        INSERT INTO events_layouts (event_id, template, css)
+        VALUES (1, "default", "default.css");
+      `
+
     ];
 
     const batchStatements = statements.map(statement => db.prepare(statement));
@@ -94,6 +99,8 @@ describe('GetEvent', () => {
     "event_time": dayjs("2024-09-30T13:14:26.000Z"),
     "event_location": "Sample Location",
     "event_owner": "owner-1234",
+    "event_template": "default",
+    "event_css": "default.css",
     "eventSpeaker": [
       {
         "events_speaker_id": 1,

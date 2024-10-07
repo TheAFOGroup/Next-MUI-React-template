@@ -13,6 +13,7 @@ export interface BuildEventType {
   event_form_id?: number; // Optional field
   event_owner: string;
   eventURL?: string;
+  event_css?: string;
 }
 
 export interface BuildEventResponse {

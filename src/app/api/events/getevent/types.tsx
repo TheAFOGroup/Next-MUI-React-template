@@ -16,6 +16,7 @@ export interface GetEventType {
   event_owner: string;
   created_at: Dayjs; // Use string for timestamp to match SQL timestamp type
   updated_at: Dayjs; // Use string for timestamp to match SQL timestamp type
+  event_css?: string; // Optional field
 }
 
 export interface GetEventEventAgenda {

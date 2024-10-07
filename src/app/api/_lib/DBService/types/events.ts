@@ -71,3 +71,13 @@ export interface EventsHtml {
   created_at: string; // Using string to represent timestamp
   updated_at: string; // Using string to represent timestamp
 }
+
+export interface EventLayout {
+  event_layout_id: number;
+  event_id: number;
+  template: string;
+  css: string;
+  enabled: boolean;
+  created_at: Date;
+  updated_at: Date;
+}

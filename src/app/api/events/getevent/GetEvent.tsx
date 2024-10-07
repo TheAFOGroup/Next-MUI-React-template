@@ -6,7 +6,7 @@ export interface Env {
 
 import dayjs from 'dayjs';
 
-import { Event, EventsAgenda, EventsEventSpeaker, EventsForm, EventsHtml } from '@/app/api/_lib/DBService/types/events';
+import { Event, EventLayout, EventsAgenda, EventsEventSpeaker, EventsForm, EventsHtml } from '@/app/api/_lib/DBService/types/events';
 import { GetEventEventAgenda, GetEventType } from '@/app/api/events/getevent/types';
 import { GetForm } from '@/app/api/forms/getform/getform';
 import { Form as FormType } from '@/app/api/forms/getform/types';
@@ -71,18 +71,25 @@ export async function GetEvent(myDb: D1Database, URL: string) {
   // Fetch event HTML content
   const htmlStmt = `SELECT * FROM events_html WHERE event_id = ?`;
   const htmlContent = await myDb.prepare(htmlStmt).bind(event.event_id).all<EventsHtml>();
-
   // Transform the HTML content to match the expected response
   const htmlContentString = htmlContent.results.map((htmlItem) => {
     return htmlItem.html_content;
   });
+
+
+  // Fetch event_layout
+  const layoutStmt = `SELECT * FROM events_layouts WHERE event_id = ?`;
+  const layout = await myDb.prepare(layoutStmt).bind(event.event_id).first<EventLayout>();
+
   // Combine all results
   const result: GetEventType = {
     ...event,
     eventAgenda: agenda,
     eventSpeaker: speakers,
     eventForm: form,
-    event_HTMLContent: htmlContentString
+    event_HTMLContent: htmlContentString,
+    event_css: layout?.css,
+    event_template: layout?.template
   };
 
   // Return the combined result
