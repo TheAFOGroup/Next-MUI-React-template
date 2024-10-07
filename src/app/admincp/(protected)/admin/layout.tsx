@@ -23,8 +23,9 @@ export default async function RootLayout({
 
   return (
     <html lang='en'>
-      <GlobalStyles styles={GLOBAL_STYLES} />
       <body>
+        <GlobalStyles styles={GLOBAL_STYLES} />
+
         {admin ? (
           <>
             <ResponsiveAppBar session={session}></ResponsiveAppBar>

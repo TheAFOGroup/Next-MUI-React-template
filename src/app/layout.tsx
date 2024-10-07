@@ -55,8 +55,9 @@ export default async function RootLayout({
 }) {
   return (
     <html lang='en'>
-      <GlobalStyles styles={GLOBAL_STYLES} />
       <body>
+        <GlobalStyles styles={GLOBAL_STYLES} />
+
         <Container sx={{ pl: 0, pr: 0 }}>
           <Suspense fallback={<Loading />}>
             {children}
