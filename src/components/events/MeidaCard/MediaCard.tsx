@@ -19,7 +19,11 @@ interface MediaCardProps {
 const MediaCard: React.FC<MediaCardProps> = ({ speaker }) => {
 
   return (
-    <Card sx={{ minWidth: "250px", minHeight: "250px" }}>
+    <Card sx={{
+      minWidth: "250px",
+      minHeight: "250px",
+      maxWidth: "min-content",  // Ensures the image does not exceed the box
+    }}>
       <Box
         sx={{
           width: "100%",

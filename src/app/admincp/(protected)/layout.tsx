@@ -1,14 +1,15 @@
 export const runtime = 'edge'
-import { Container, Typography } from '@mui/material';
+import { Container } from '@mui/material';
 import GlobalStyles from '@mui/material/GlobalStyles';
+import { redirect } from 'next/navigation';
+import { SessionProvider } from 'next-auth/react';
 import * as React from 'react';
 
-import { SignIn } from '@/components/auth/signinButton';
 import ResponsiveAppBar from '@/components/ResponsiveAppBar';
+
 import { GLOBAL_STYLES } from '@/styles';
 
 import { auth } from '../../auth';
-import { SessionProvider } from 'next-auth/react';
 
 export default async function RootLayout({
   children,
@@ -17,24 +18,23 @@ export default async function RootLayout({
 }) {
   const session = await auth();
 
+  if (!session) {
+    redirect(process.env.NEXT_PUBLIC_HOST + '/admincp/signIn');
+    return null; // Return null to prevent further rendering  }
+  }
   return (
     <html lang='en'>
       <body>
         <GlobalStyles styles={GLOBAL_STYLES} />
-
-        <ResponsiveAppBar session={session}></ResponsiveAppBar>
         {session ? (
           <>
             <SessionProvider session={session}>
+              <ResponsiveAppBar session={session}></ResponsiveAppBar>
               <Container sx={{ pl: 0, pr: 0 }}>{children}</Container>
             </SessionProvider>
-
           </>
         ) : (
-          <>
-            <Typography>You must sign in to continue</Typography>
-            <SignIn />
-          </>
+          <></>
         )}
       </body>
     </html>

@@ -3,13 +3,15 @@ import { Alert, Button, Grid, TextField, Typography } from '@mui/material';
 import axios from 'axios';
 import Image from 'next/image';
 import { useSession } from 'next-auth/react';
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 
 import MediaCard from '@/components/events/MeidaCard/MediaCard';
 import { Speaker } from '@/components/events/MeidaCard/types';
 
 import { BuildEventSpeaker } from '@/app/api/speaker/buildspeaker/types';
 import { UploadImageRespond } from '@/app/api/utils/uploadimage/types';
+import ImageCrop from '@/components/utils/ImageCrop/imageCrop';
+import { set } from 'zod';
 
 //https://www.npmjs.com/package/react-easy-crop Maybe implement this for image cropping
 const BuildSpeakers = () => {
@@ -94,19 +96,10 @@ const BuildSpeakers = () => {
   };
 
 
-  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setPhoto(file);
-      const reader = new FileReader();
-      reader.onload = () => {
-        const fileData = reader.result as string;
-        setPreviewPhoto(fileData);
-      };
-      reader.readAsDataURL(file);
-      setPhoto(file);
-    }
-  };
+  const handleImageChange = useCallback((croppedImage: string) => {
+    setPhoto(new Blob([croppedImage]));
+    setPreviewPhoto(croppedImage);
+  }, [])
 
   const mediaCardProps = () => {
     const speaker: Speaker = {
@@ -175,11 +168,7 @@ const BuildSpeakers = () => {
               />
             </Grid>
             <Grid item>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handlePhotoChange}
-              />
+              <ImageCrop onChange={handleImageChange} aspectRatio={4 / 3} />
               {previewPhoto && (
                 <Grid item
                   sx={{
